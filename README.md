@@ -39,3 +39,13 @@ nptool --install epic
 ```
 
 ## Create your project
+
+To create your project:
+[Project Management](https://nptool.in2p3.fr/manual-v4/project-management/)
+```bash
+cd /folder/of/your/nptoolV4/projects/
+nptool --new-project EPICproject
+# This will
+# - update the project.list in ~/.local/nptool/default/
+# - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
+```

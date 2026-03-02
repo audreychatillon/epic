@@ -66,27 +66,33 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
   cout << "//// EpicDetector::ReadConfiguration" << endl;
   auto blocks = parser.GetAllBlocksWithToken("epic");
-  vector<string> posFC     = {"POS"};        // x y z of the center of the EPIC fission chamber
-  vector<string> nAnodesFC = {"nAnodes"};    // number of anodes in the EPIC fission chamber
-  vector<string> zOffsetA1 = {"zOFFSET_A1"}; // Offset position of the first anode
+  vector<string> pos       = {"POS"};        // x y z of the center of the EPIC fission chamber
+  vector<string> nAnodes   = {"nAnodes"};    // number of anodes in the EPIC fission chamber
+  vector<string> zOffsetA1 = {"zOFFSET_A1"}; // Offset position of the origin of the anode compare to the center of the chamber
+  vector<string> DZprevA   = {"DZ_prevA"}; // Offset position of the origin of the anode compare to the center of the chamber
+  vector<string> actinide  = {"actinide"};   // isotope of the actinide on the cathode
 
   vector<double> Pos;
-  string         Type;
   int            nA;
   int            nAtot=0;
   double         zOff;
+  vector<double> dz;
 
   for (auto block : blocks) {
     // read position of the EPIC fission chamber
-    if (block->HasTokenList(posFC)) {
+    if (block->HasTokenList(pos)) {
       Pos = block->GetVector3("POS", "mm");
     } else {
       cout << "ERROR: could not find POS, check your input file formatting "<< endl;
       exit(1);
     }
     // read the number of anodes of the EPIC fission chamber
-    if (block->HasTokenList(nAnodesFC)) {
+    if (block->HasTokenList(nAnodes)) {
       nA = block->GetInt("nANODES");
+      if(block->HasTokenList(DZprevA)){
+        if(nA==1) dz.push_back(0.);
+        else      dz = block->GetVectorDouble("DZ_prevA","mm");
+      }
     } else {
       cout << "ERROR: could not find nAnodes, check your input file formatting "<< endl;
       exit(1);
@@ -101,7 +107,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     nAtot += nA;
     m_nFC++;
     m_nAnodes.push_back(nA);
-    AddEpic(Pos, Type, nA, zOff);
+    AddEpic(Pos, nA, zOff, dz);
   }
 
   // initialization prior to the ReadConversionConfiguration
@@ -170,22 +176,14 @@ void EpicDetector::ReadConversionConfig() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::AddEpic(vector<double> pos, string Type, int nA, double zOff) {
+void EpicDetector::AddEpic(vector<double> pos, int nA, double zOff, vector<double> dz) {
 
-  // TODO should be changed to remove hard coding
-  // for Pu: anodes are separated by 5.8mm and 6 mm and anode 6 in center,
-  //         anode is the middle point betwen the two cathodes containing the
-  //         deposits
-  //double Zpos = -29.6; // position of anode 1 (i=0)
+  // zOff = origin of the z position compared to the center of the chamber
   double Zpos = zOff; // position of anode 1 (i=0)
   for (int i = 0; i < nA; i++) {
+    Zpos += dz[i];
     TVector3 AnodePos(pos[0], pos[1], pos[2] + Zpos);
     m_posA.push_back(AnodePos);
-    if (i % 2 == 0) {
-      Zpos += 6.0; // Add 6 for even iterations
-    } else {
-      Zpos += 5.8; // Add 5.8 for odd iterations
-    }
   }
   
 

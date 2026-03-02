@@ -9,7 +9,7 @@
 - Set the number of anodes per chamber.  
 - Support for multi-body fission chambers.  
 - Anode distances are dynamically read (depending on grounding; may vary between experiments).  
-- One sample per event is saved — specifically, the anode with the maximum signal.  
+- One sampler signal per event is saved — specifically, the anode with the maximum signal.  
 
 ## Namespace
 
@@ -54,7 +54,7 @@ nptool --new-project EPICproject
 In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag `--disable-mt` 
 See an example: [project.yaml](https://github.com/audreychatillon/EPICatGELINA/blob/main/project.yaml)
 
-To compile (after each update of the plungin), in your project folder:
+To compile (after each update of the plugin), in your project folder:
 ```bash
 mkdir build install
 cmake -B build -DCMAKE_INSTALL_PREFIX=install ./

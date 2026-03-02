@@ -109,7 +109,7 @@ private:
   vector<unsigned int> m_nAnodes;
   vector<TVector3> m_posFC; 
   vector<TVector3> m_posA; 
-  void AddEpic(vector<double> Pos, string Type, int nA, double zOff);
+  void AddEpic(vector<double> Pos, int nA, double zOff, vector<double> dz);
 
   // configuration parameters
   int m_Get_Sampler_Qmax;

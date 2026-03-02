@@ -2,7 +2,7 @@ Package:
  name: Epic
  type: detector
  groups: cea
- url: git@github.com:audreychatillon/epic.git
+ url: https://github.com/audreychatillon/epic.git
  version: 0.1
  author: Audrey Chatillon with the help of Benoit Mauss, Pierre Morfouace
  mail: audrey.chatillon@cea.fr

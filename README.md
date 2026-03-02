@@ -54,7 +54,7 @@ nptool --new-project EPICproject
 In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag `--disable-mt` 
 See an example: [project.yaml](https://github.com/audreychatillon/EPICatGELINA/blob/main/project.yaml)
 
-To compile, in your project folder:
+To compile (after each update of the plungin), in your project folder:
 ```bash
 mkdir build install
 cmake -B build -DCMAKE_INSTALL_PREFIX=install ./
@@ -62,11 +62,11 @@ make -C build/ install
 ```
 
 To read FASTER data, configuration files must be provided:
- - `sample.pid` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
- - `detector/detector.yaml` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
- - `ConfigEPIC.dat` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
+ - `sample.pid`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
+ - `detector/detector.yaml`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
+ - `ConfigEPIC.dat`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
 ```bash
-# To write a TTree 
+# To write a TTree in output/conversion folder (see project.yaml) 
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root
 # for on-line monitoriing in a browser with localhost:8082
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,8081

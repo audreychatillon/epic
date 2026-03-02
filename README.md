@@ -36,6 +36,8 @@ nptool --install epic
 # This will
 # - install the epic plugin in ~/.local/nptool/default/
 # - copy all EpicXXX.h in ~/.local/nptool/default/include/ 
+nptool --update epic
+# This will update the last features of the plugin
 ```
 
 ## Create and manage your project with the EPIC plugin
@@ -49,16 +51,20 @@ nptool --new-project EPICproject
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
 ```
-
-In your project folder, configuration files must be added:
-```bash
-detector/detector.yaml
-configEPIC.dat
-```
+In the EPICproject folder, edit project.yaml and uncomment line 10, adding the flag --disable-mt 
 
 To compile, in your project folder:
 ```bash
 mkdir build install
 cmake -B build -DCMAKE_INSTALL_PREFIX=install ./
 make -C build/ install
+```
+
+To read FASTER data, configuration files must be added: sample.pid, detector/detector.yaml, ConfigEPIC.dat
+```bash
+# To write a TTree 
+npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root
+# for on-line monitoriing in a browser with localhost:8082
+npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,8081
+nponline --input-raw root,localhost:8081 --interface root,8082
 ```

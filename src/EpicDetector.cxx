@@ -67,7 +67,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   cout << "//// EpicDetector::ReadConfiguration" << endl;
   auto blocks = parser.GetAllBlocksWithToken("epic");
   vector<string> posFC     = {"POS"};        // x y z of the center of the EPIC fission chamber
-  vector<string> typeFC    = {"TYPE"};       // TODO remove and find a solution for the interdistance anode  
   vector<string> nAnodesFC = {"nAnodes"};    // number of anodes in the EPIC fission chamber
   vector<string> zOffsetA1 = {"zOFFSET_A1"}; // Offset position of the first anode
 
@@ -83,13 +82,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
       Pos = block->GetVector3("POS", "mm");
     } else {
       cout << "ERROR: could not find POS, check your input file formatting "<< endl;
-      exit(1);
-    }
-    // TODO remove read type of the EPIC fission chamber
-    if (block->HasTokenList(typeFC)) {
-      Type = block->GetString("TYPE");
-    } else {
-      cout << "ERROR: could not find TYPE, check your input file formatting "<< endl;
       exit(1);
     }
     // read the number of anodes of the EPIC fission chamber
@@ -180,32 +172,22 @@ void EpicDetector::ReadConversionConfig() {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::AddEpic(vector<double> pos, string Type, int nA, double zOff) {
 
-  if(Type=="Cf"){
   // TODO should be changed to remove hard coding
-        for (int i = 0; i < nA; i++) {
-          //TVector3 AnodePos(pos[0], pos[1], pos[2] - 27.5 + i * 5.5 - 2.5);
-          //TVector3 AnodePos(pos[0], pos[1], pos[2] - 30.0 + i * 5.5);
-          TVector3 AnodePos(pos[0], pos[1], pos[2] + zOff + i * 5.5);
-          m_posA.push_back(AnodePos);
-        }
+  // for Pu: anodes are separated by 5.8mm and 6 mm and anode 6 in center,
+  //         anode is the middle point betwen the two cathodes containing the
+  //         deposits
+  //double Zpos = -29.6; // position of anode 1 (i=0)
+  double Zpos = zOff; // position of anode 1 (i=0)
+  for (int i = 0; i < nA; i++) {
+    TVector3 AnodePos(pos[0], pos[1], pos[2] + Zpos);
+    m_posA.push_back(AnodePos);
+    if (i % 2 == 0) {
+      Zpos += 6.0; // Add 6 for even iterations
+    } else {
+      Zpos += 5.8; // Add 5.8 for odd iterations
+    }
   }
-  else{ // "Pu" or "multi" TODO should be changed to remove hard coding
-        // for Pu: anodes are separated by 5.8mm and 6 mm and anode 6 in center,
-        //         anode is the middle point betwen the two cathodes containing the
-        //         deposits
-        //double Zpos = -29.6; // position of anode 1 (i=0)
-        double Zpos = zOff; // position of anode 1 (i=0)
-        for (int i = 0; i < nA; i++) {
-          TVector3 AnodePos(pos[0], pos[1], pos[2] + Zpos);
-          m_posA.push_back(AnodePos);
-          if (i % 2 == 0) {
-            Zpos += 6.0; // Add 6 for even iterations
-          } else {
-            Zpos += 5.8; // Add 5.8 for odd iterations
-          }
-        }
   
-  }
 
 }
 

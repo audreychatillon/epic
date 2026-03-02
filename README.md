@@ -60,7 +60,10 @@ cmake -B build -DCMAKE_INSTALL_PREFIX=install ./
 make -C build/ install
 ```
 
-To read FASTER data, configuration files must be added: sample.pid, detector/detector.yaml, ConfigEPIC.dat
+To read FASTER data, configuration files must be provided:
+ - `sample.pid`
+ - `detector/detector.yaml`
+ - `ConfigEPIC.dat`
 ```bash
 # To write a TTree 
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root

@@ -64,7 +64,7 @@ make -C build/ install
 To read FASTER data, configuration files must be provided:
  - `sample.pid` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
  - `detector/detector.yaml` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
- - `ConfigEPIC.dat` [example]()
+ - `ConfigEPIC.dat` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
 ```bash
 # To write a TTree 
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root

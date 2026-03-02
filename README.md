@@ -22,16 +22,20 @@ namespace epic {
     class EpicSpectra {};
     class EpicGeant4 {};
 }
+```
 
 ## Installation
 
-for installation of NPTool V4:
-https://nptool.in2p3.fr/manual-v4/manual-installation-v4/
-for plugin management:
-https://nptool.in2p3.fr/manual-v4/plugins-management/
+For installation of NPTool V4:
+[NPTool V4 Installation Manual](https://nptool.in2p3.fr/manual-v4/manual-installation-v4/)
 
+For plugin management:
+[Plugins Management](https://nptool.in2p3.fr/manual-v4/plugins-management/)
+```bash
 nptool --install epic
- - install the epic plugin in ~/.local/nptool/default/
- - copy all EpicXXX.h in ~/.local/nptool/default/include/ 
+# This will
+# - install the epic plugin in ~/.local/nptool/default/
+# - copy all EpicXXX.h in ~/.local/nptool/default/include/ 
+```
 
 ## Create your project

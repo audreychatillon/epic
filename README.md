@@ -38,7 +38,7 @@ nptool --install epic
 # - copy all EpicXXX.h in ~/.local/nptool/default/include/ 
 ```
 
-## Create your project
+## Create and manage your project with the EPIC plugin
 
 To create your project:
 [Project Management](https://nptool.in2p3.fr/manual-v4/project-management/)
@@ -48,4 +48,9 @@ nptool --new-project EPICproject
 # This will
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
+```
+In your project folder, configurations file must be added:
+```bash
+detector/detector.yaml
+configEPIC.dat
 ```

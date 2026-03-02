@@ -128,7 +128,7 @@ void EpicDetector::ReadConversionConfig() {
   if (ifs.is_open()) {
 
     vector<string> info_sample = {"get_sampler_qmax"};
-    nptool::InputParser parser("./configs/ConfigEPIC.dat", false);
+    nptool::InputParser parser("./config_files/ConfigEPIC.dat", false);
 
     auto blocks = parser.GetAllBlocksWithToken("ConfigEPIC");
     for (auto block : blocks) {

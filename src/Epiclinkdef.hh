@@ -2,6 +2,6 @@
 #pragma link off all globals;
 #pragma link off all classes;
 #pragma link off all functions;
-#pragma link C++ class fission_chamber::EpicData+;
-#pragma link C++ class fission_chamber::EpicPhysics+;
+#pragma link C++ class epic::EpicData+;
+#pragma link C++ class epic::EpicPhysics+;
 #endif

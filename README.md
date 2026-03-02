@@ -49,8 +49,16 @@ nptool --new-project EPICproject
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
 ```
-In your project folder, configurations file must be added:
+
+In your project folder, configuration files must be added:
 ```bash
 detector/detector.yaml
 configEPIC.dat
+```
+
+To compile, in your project folder:
+```bash
+mkdir build install
+cmake -B build -DCMAKE_INSTALL_PREFIX=install ./
+make -C build/ install
 ```

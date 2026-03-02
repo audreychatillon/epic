@@ -124,7 +124,7 @@ void EpicDetector::ReadConversionConfig() {
 
   cout << "//// EpicDetector::ReadConversionConfig" << endl;
   cout << "     Number of EPIC fission chamber found : " << m_nFC << endl;
-  std::ifstream ifs("./configs/ConfigEPIC.dat");
+  std::ifstream ifs("./config_files/ConfigEPIC.dat");
   if (ifs.is_open()) {
 
     vector<string> info_sample = {"get_sampler_qmax"};

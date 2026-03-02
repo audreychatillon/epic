@@ -51,7 +51,7 @@ nptool --new-project EPICproject
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
 ```
-In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag --disable-mt` 
+In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag `--disable-mt` 
 See an example: [project.yaml](https://github.com/audreychatillon/EPICatGELINA/blob/main/project.yaml)
 
 To compile, in your project folder:
@@ -62,9 +62,9 @@ make -C build/ install
 ```
 
 To read FASTER data, configuration files must be provided:
- - `sample.pid`
- - `detector/detector.yaml`
- - `ConfigEPIC.dat`
+ - `sample.pid` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
+ - `detector/detector.yaml` [example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
+ - `ConfigEPIC.dat` [example]()
 ```bash
 # To write a TTree 
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root

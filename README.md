@@ -51,7 +51,8 @@ nptool --new-project EPICproject
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
 ```
-In the EPICproject folder, edit project.yaml and uncomment line 10, adding the flag --disable-mt 
+In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag --disable-mt` 
+See an example: [project.yaml](https://github.com/audreychatillon/EPICatGELINA/blob/main/project.yaml)
 
 To compile, in your project folder:
 ```bash

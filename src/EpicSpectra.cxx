@@ -217,7 +217,7 @@ void EpicSpectra::FillRaw() {
   // loop over the raw data
   // search for qmax per FC
   for(int i = 0 ; i < FC_mult ; i++){
-    if(m_RawData->GetIsFakeFission(i)) continue;
+    if(m_RawData->GetPulserTrig(i)) continue;
     int det = m_RawData->GetDetNbr(i);
     int anode = m_RawData->GetAnodeNbr(i);
     double qmax = m_RawData->GetQmax(i); 

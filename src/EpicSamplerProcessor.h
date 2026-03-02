@@ -4,7 +4,7 @@
 #include <vector>
 #include <TCanvas.h>
 
-class EpicSamplerProcessorFC {
+class EpicSamplerProcessor {
   private:
     bool applyFilter;                      // if LowPassFiltrer is necessary
     std::vector<double> samples;           // from Signal  = (sample - BLR)

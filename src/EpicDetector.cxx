@@ -250,7 +250,7 @@ void EpicDetector::BuildPhysicalEvent() {
     for (int i = 0; i < multFC; i++) {
         short   det  = m_RawData->GetDetNbr(i);
         short anode  = m_RawData->GetAnodeNbr(i);
-        bool    kFF  = m_RawData->GetIsFakeFission(i);
+        bool    kFF  = m_RawData->GetPulserTrig(i);
         double t_fc   = m_RawData->GetTimeFC(i);
         double tofraw = m_RawData->GetTofRaw(i);  
         double t_cfd  = m_RawData->GetTimeCfd(i);
@@ -295,7 +295,7 @@ void EpicDetector::BuildPhysicalEvent() {
     for (int i = 0; i < multFC; i++) {
       short AnodeNumber = m_RawData->GetAnodeNbr(i);
       bool isFakeFission = false;
-      isFakeFission = m_RawData->GetIsFakeFission(i);
+      isFakeFission = m_RawData->GetPulserTrig(i);
       double Time_FC = m_RawData->GetTimeFC(i);
       double cfd = m_RawData->GetTimeCfd(i);
       // TODO offset with det number
@@ -366,7 +366,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ2(0);
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
-      m_RawData->SetFakeFissionStatus(true);
+      m_RawData->SetPulserTrig(true);
       m_RawData->SetTimePrevHF(m_TimeHF_prev);
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
@@ -383,7 +383,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ2(fc_data.q2);
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
-      m_RawData->SetFakeFissionStatus(true);
+      m_RawData->SetPulserTrig(true);
       m_RawData->SetTimePrevHF(m_TimeHF_prev);
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
@@ -476,7 +476,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 m_RawData->SetTimeFC(TimeFC);
                 m_RawData->SetTimeCfd(T_cfd);
                 m_RawData->SetTimeQmax(T_qmax); 
-                m_RawData->SetFakeFissionStatus(false);
+                m_RawData->SetPulserTrig(false);
                 if(m_RawData->GetFCMult()==1){ 
                     // no need to overwrite the same data
                     m_RawData->SetTimePrevHF(m_TimeHF_prev);

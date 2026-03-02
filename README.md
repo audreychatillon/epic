@@ -1,15 +1,22 @@
-# Epic
-Epic plugin for NPTool V4
+# Epic Plugin for NPTool V4
 
-This plugin is "inspired" by the fission chamber plugin with different features
-- no hard coding
-- set the number of the fission chamber
-- set the number of anodes
-- multi-body fission chamber
-- distance of the anodes are read out (depending on the grounding, this may change from an experiment to another)
-- one sample is saved per event (the anode with the max signal)
+**Epic** is a plugin for **NPTool V4**, inspired by the fission chamber plugin but introducing flexible features.  
 
-namespace epic{
+## Features
+
+- No hard-coded values — fully configurable.  
+- Set the number of fission chambers.  
+- Set the number of anodes per chamber.  
+- Support for multi-body fission chambers.  
+- Anode distances are dynamically read (depending on grounding; may vary between experiments).  
+- One sample per event is saved — specifically, the anode with the maximum signal.  
+
+## Namespace
+
+All classes are contained in the `epic` namespace:
+
+```cpp
+namespace epic {
     class EpicData {};
     class EpicPhysics {};
     class EpicSpectra {};

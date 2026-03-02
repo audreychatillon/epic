@@ -1,0 +1,24 @@
+Package:
+ name: Epic
+ type: detector
+ groups: cea
+ url: git@github.com:audreychatillon/epic.git
+ version: 0.1
+ author: Audrey Chatillon with the help of Benoit Mauss, Pierre Morfouace
+ mail: audrey.chatillon@cea.fr
+ description: Epic is a / several multi body fission chamber(s) with no predefined number of anodes
+ dependencies: root
+
+Plugin: 
+  token: epic
+  library: NPEpic
+ 
+Plugin: 
+  token: epic-geant4
+  library: NPEpicGeant4
+ 
+PluginCitation:
+ type: Analysis
+ citation: something else
+ url: www.another-link.org
+

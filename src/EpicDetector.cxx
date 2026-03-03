@@ -136,26 +136,52 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::PrintConfig(){
+    constexpr int colWidth = 20;
     cout << "//// EpicDetector::PringConversion Config" << endl;
     cout << "     Number of EPIC fission chamber found : " << m_nFC << endl;
     size_t offset = 0 ;
     for(int d = 0 ; d < m_nFC ; d++){
         cout << "     ==== EPIC fission chamber # " << d+1 << endl;
         cout << "          number of anodes : " << m_nAnodes[d] << endl;
-        cout << "          sample material  : " ;
-        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << m_actinide[offset+a] << "  "; cout << endl;
+        // actinide material
+        cout << "          sample material        : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << left << setw(colWidth) << m_actinide[offset+a] ; cout << endl;
+        // CFD parameters
         cout << "          CFD (frac, dly, thrs)  : " ;
-        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "("<< m_cfd_fract[offset+a] << "," << m_cfd_delay[offset+a] << "," << m_cfd_thres[offset+a] << ")  "; cout << endl;
-        cout << "          Q1 gate  : " ;
-        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q1_gate_start[offset+a]*-1. << ":" << m_Q1_gate_stop[offset+a] << "]  "; cout << endl;
-        cout << "          Q2 gate  : " ;
-        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q2_gate_start[offset+a]*-1. << ":" << m_Q2_gate_stop[offset+a] << "]  "; cout << endl;
-        cout << "          Q3 gate  : " ;
-        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q3_gate_start[offset+a] << ":" << m_Q3_gate_stop[offset+a] << "]  "; cout << endl;
-        offset += m_nAnodes[d];
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) {
+            ostringstream oss;
+            oss << "("<< m_cfd_fract[offset+a] << "," << m_cfd_delay[offset+a] << "," << m_cfd_thres[offset+a] << ")";
+            cout << left << setw(colWidth) << oss.str();
+        }
+        cout << endl;
+        // Q1 gate
+        cout << "          Q1 gate                : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++){ 
+            ostringstream oss;
+            oss << "["<< m_Q1_gate_start[offset+a]*-1. << ":" << m_Q1_gate_stop[offset+a] << "]"; 
+            cout << left << setw(colWidth) << oss.str();
+        }
+        cout << endl;
+        // Q2 gate
+        cout << "          Q2 gate                : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++){ 
+            ostringstream oss;
+            oss << "["<< m_Q2_gate_start[offset+a]*-1. << ":" << m_Q2_gate_stop[offset+a] << "]"; 
+            cout << left << setw(colWidth) << oss.str();
+        }
+        cout << endl;
+        // Q3 gate
+        cout << "          Q3 gate                : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++){ 
+            ostringstream oss;
+            oss << "["<< m_Q3_gate_start[offset+a] << ":" << m_Q3_gate_stop[offset+a] << "]"; 
+            cout << left << setw(colWidth) << oss.str();
+        }
+        cout << endl;
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::ReadConversionConfig() {
 
   cout << "//// EpicDetector::ReadConversionConfig" << endl;

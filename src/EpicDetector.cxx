@@ -178,9 +178,14 @@ void EpicDetector::PrintConfig(){
             cout << left << setw(colWidth) << oss.str();
         }
         cout << endl;
+        // TofRaw max
+        cout << "          TofRawMax (*)          : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << left << setw(colWidth) << m_TofRaw_max[offset+a] ; cout << endl;
     
         offset += m_nAnodes[d];
     }
+    cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > TofRawMax are rejected " << endl;
+    cout << "                if < 0, no alpha rejection" << endl; 
 }
 
 ////////////////////////////////////////////////////////////////////////////////

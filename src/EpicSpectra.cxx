@@ -2,10 +2,20 @@
 #include "NPApplication.h"
 
 using namespace epic;
+
+////////////////////////////////////////////////////////////////////////////////
+TCanvas* EpicSpectra::CreateCanvas(const std::string& name)
+{
+  TCanvas* c = new TCanvas(name.c_str(), name.c_str(), 1200, 800);
+  c->Divide(6,2);
+  return c;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 EpicSpectra::EpicSpectra() {
 
-  cout << "//// EpicSpectra::EpicSpectra()" << endl;
+  std::cout << "//// EpicSpectra::EpicSpectra()" << std::endl;
 
   // Set Pointers:
   m_detector = std::dynamic_pointer_cast<EpicDetector>(
@@ -13,141 +23,81 @@ EpicSpectra::EpicSpectra() {
   m_RawData = m_detector->GetRawData();
   m_Physics = m_detector->GetPhysics();
 
-  check_time = 0;
-  int nDets = m_detector->GetNumberOfDets() ;
-  vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
-  vector<string> actinide = m_detector->GetActinideMaterial();
+  // get some config constants
+  unsigned int nDets = m_detector->GetNumberOfDets();
+  unsigned int nAnodesTot = m_detector->GetNumberOfAnodesTot();
+  std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
+  std::vector<std::string> actinide = m_detector->GetActinideMaterial();
 
-  char name[100];
+  // Resize histogram containers
+  m_hQ2vQ1.resize(nAnodesTot);
+  m_hQ2Q3vQ1.resize(nAnodesTot);
+  m_hQmvQ1.resize(nAnodesTot);
+  m_hQm.resize(nAnodesTot);
+  m_hQ1.resize(nAnodesTot);
+  m_hQ2.resize(nAnodesTot);
+  m_hQ3.resize(nAnodesTot);
+  m_hTof.resize(nAnodesTot);
+  m_hDT.resize(nAnodesTot);
+  m_hAid.resize(nDets);
+  m_hAid_ifQmax.resize(nDets);
+  m_hQ1vAid.resize(nDets);
 
-  for(int d = 1 ; d <= nDets ; d++){
+  m_can.resize(nDets);
 
-    // Build Raw Canvas
-    sprintf(name,"EPIC%i_Q2vQ1",d);
-    auto c_raw1 = new TCanvas(name);
-    c_raw1->Divide(6,2);
+  // loop over nDets
+  for(unsigned int d = 1 ; d <= nDets ; d++){
 
-    sprintf(name,"EPIC%i_QmaxvQ1",d);
-    auto c_raw2 = new TCanvas(name);
-    c_raw2->Divide(6,2);
-    
-    sprintf(name,"EPIC%i_Q1",d);
-    auto c_raw3 = new TCanvas(name);
-    c_raw3->Divide(6,2);
-    
-    sprintf(name,"EPIC%i_Qmax",d);
-    auto c_raw4 = new TCanvas(name);
-    c_raw4->Divide(6,2);
-    
-    sprintf(name,"EPIC%i_Tof",d);
-    auto c_raw5 = new TCanvas(name);
-    c_raw5->Divide(6,2);
+    // create the canvas per detector
+    std::string base = "EPIC" + std::to_string(d);
+    m_can[d-1][0] = CreateCanvas(base + "_Q2vQ1");
+    m_can[d-1][1] = CreateCanvas(base + "_QmaxvQ1");
+    m_can[d-1][2] = CreateCanvas(base + "_Q1");
+    m_can[d-1][3] = CreateCanvas(base + "_Qmax");
+    m_can[d-1][4] = CreateCanvas(base + "_Tof");
+    m_can[d-1][5] = CreateCanvas(base + "_Q2Q3vQ1");
+    m_can[d-1][6] = CreateCanvas(base + "_DT_Tqmax_Tcfd");
 
-    sprintf(name,"EPIC%i_Q2Q3vQ1",d);
-    auto c_raw6 = new TCanvas(name);
-    c_raw6->Divide(6,2);
+    // loop over the anodes
+    for(unsigned int a = 1 ; a <= nAnodes[d-1] ; a++){
 
-    sprintf(name,"EPIC%i_DT_Tqmax_Tcfd",d);
-    auto c_raw7 = new TCanvas(name);
-    c_raw7->Divide(6,2);
-
-    // Declare Raw Spectra
-    for(int a = 1 ; a <=nAnodes[d-1] ; a ++){
         int i = m_detector->GetIndex(d,a);
-
-        sprintf(name,"det%i_A%02i_%s_Q2vQ1",d,a,actinide[i].c_str());
-        m_raw_hist2d[name] = new TH2F(name,name,1500,0,300000,500,0,200000);
-        c_raw1->cd(a); gPad->SetLogz(); m_raw_hist[name]->Draw("colz");
-
-        sprintf(name,"det%i_A%02i_%s_QmaxvQ1",d,a,actinide[i].c_str());
-        m_raw_hist2d[name] = new TH2F(name,name,1000,0,200000,200,0,20000);
-        c_raw2->cd(a); gPad->SetLogz(); m_raw_hist[name]->Draw("colz");
-
-        sprintf(name,"det%i_A%02i_%s_Q1",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,15000,0,300000);
-        c_raw3->cd(a); gPad->SetLogy(); m_raw_hist[name]->Draw();
         
-        sprintf(name,"det%i_A%02i_%s_Q2",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,15000,0,300000);
-        m_raw_hist[name]->SetLineColor(8);
-        c_raw3->cd(a); m_raw_hist[name]->Draw("same");
-        
-        sprintf(name,"det%i_A%02i_%s_Q3",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,15000,0,300000);
-        m_raw_hist[name]->SetLineColor(kCyan);
-        c_raw3->cd(a); m_raw_hist[name]->Draw("same");
+        ostringstream name;
+        name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a << "_" << actinide[i];
+        string prefix = name.str();
 
-        sprintf(name,"det%i_A%02i_%s_Qmax",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,2500,0,25000);
-        c_raw4->cd(a); gPad->SetLogy(); m_raw_hist[name]->Draw();
+        m_hQ2vQ1[i]   = new TH2F((prefix+"_Q2vQ1").c_str(),(prefix+"_Q2vQ1").c_str(),1500,0,300000,500,0,200000); 
+        m_hQmvQ1[i]   = new TH2F((prefix+"_QmaxvQ1").c_str(),(prefix+"_QmaxvQ1").c_str(),1000,0,200000,200,0,20000);
+        m_hQ2Q3vQ1[i] = new TH2F((prefix+"_Q2Q3vQ1").c_str(),(prefix+"_Q2Q3vQ1").c_str(),1500,0,300000,500,0,10); 
 
-        sprintf(name,"det%i_A%02i_%s_Tof",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,3000,-200,2800);
-        c_raw5->cd(a); m_raw_hist[name]->Draw();
+        m_hQm[i]  = new TH1F((prefix+"_Qmax").c_str(),(prefix+"_Qmax").c_str(),2500,0,25000);
+        m_hQ1[i]  = new TH1F((prefix+"_Q1").c_str(),(prefix+"_Q1").c_str(),15000,0,300000);
+        m_hQ2[i]  = new TH1F((prefix+"_Q2").c_str(),(prefix+"_Q2").c_str(),15000,0,300000); 
+        m_hQ3[i]  = new TH1F((prefix+"_Q3").c_str(),(prefix+"_Q3").c_str(),15000,0,300000);
+        m_hTof[i] = new TH1F((prefix+"_Tof").c_str(),(prefix+"_Tof").c_str(),3000,-200,2800);
+        m_hDT[i]  = new TH1F((prefix+"_Tqmax_Tcfd").c_str(),(prefix+"_Tqmax_Tcfd").c_str(),1000,-50,50);
 
-        sprintf(name,"det%i_A%02i_%s_Q2Q3vQ1",d,a,actinide[i].c_str());
-        m_raw_hist2d[name] = new TH2F(name,name,1500,0,300000,500,0,10);
-        c_raw6->cd(a); gPad->SetLogz(); m_raw_hist[name]->Draw("colz");
+        m_hQ2[i]->SetLineColor(8);
+        m_hQ3[i]->SetLineColor(kCyan);
 
-        sprintf(name,"det%i_A%02i_%s_Tqmax_Tcfd",d,a,actinide[i].c_str());
-        m_raw_hist[name] = new TH1F(name,name,1000,-50,50);
-        c_raw7->cd(a); m_raw_hist[name]->Draw();
-    }
+        m_can[d-1][0]->cd(a); gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");     
+        m_can[d-1][1]->cd(a); gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");     
+        m_can[d-1][2]->cd(a); gPad->SetLogy(); m_hQ1[i]->Draw(); m_hQ2[i]->Draw("same"); m_hQ3[i]->Draw("same");
+        m_can[d-1][3]->cd(a); gPad->SetLogy(); m_hQm[i]->Draw();
+        m_can[d-1][4]->cd(a); gPad->SetLogy(); m_hTof[i]->Draw();
+        m_can[d-1][5]->cd(a); gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
+        m_can[d-1][6]->cd(a); m_hDT[i]->Draw(); 
+    }// end of loop over nAnodes[d-1]
 
+    std::string detPrefix = "det" + std::to_string(d);
 
-    sprintf(name,"det%i_AnodeID",d);
-    m_raw_hist[name] = new TH1F(name,name,13,-0.5,12.5);
-    m_raw_hist[name]->SetLineColor(kBlack);
-    c_raw1->cd(12); m_raw_hist[name]->Draw();
-    sprintf(name,"det%i_AnodeID_ifQmax",d);
-    m_raw_hist[name] = new TH1F(name,name,13,-0.5,12.5);
-    c_raw1->cd(12); m_raw_hist[name]->Draw("same");
-
-    sprintf(name,"det%i_Q1vAnodeID",d);
-    m_raw_hist2d[name] = new TH2F(name,name,13,-0.5,12.5,1500,0,300000);
-    c_raw3->cd(12); gPad->SetLogz(); m_raw_hist[name]->Draw("colz"); 
-  }
+    m_hAid[d-1]        = new TH1F((detPrefix+"_AnodeID").c_str(),(detPrefix+"_AnodeID").c_str(),13,-0.5,12.5);
+    m_hAid_ifQmax[d-1] = new TH1F((detPrefix+"_AnodeID_ifQmax").c_str(),(detPrefix+"_AnodeID_ifQmax").c_str(),13,-0.5,12.5);
+    m_hQ1vAid[d-1]     = new TH2F((detPrefix+"_Q1vAnodeID").c_str(),(detPrefix+"_Q1vAnodeID").c_str(),13,-0.5,12.5,1500,0,300000);
+  }// end of loop over nDets
 
 
-  //auto c_raw2 = new TCanvas("FC raw inToF");
-  //m_raw_hist["inToF"] = new TH1F("Raw inToF ", "Raw inToF", 4000, -2000, 5000);
-  //m_raw_hist["inToF"]->Draw();
-
-
-    //TODO
-  //m_graph_sampler = new TGraph();
-  //TH2F *h2 = new TH2F("FC Sample", "FC Sample", 100, -50, 100, 100, -200, 5000);
-  //auto c_raw_sampler = new TCanvas("FC Sampler");
-  //h2->GetXaxis()->SetTitle("Time (ns)");
-  //h2->Draw();
-  //m_graph_sampler->Draw("plsame");
-
-    //TODO
-  //// Declare Phy Spectra
-  //m_phy_hist["inToF"] = new TH1F("inToF", "inToF", 4000, 0, 2000);
-  //m_phy_hist["inEnergy"] = new TH1F("inEnergy", "inEnergy", 8000, 0, 700);
-  //m_phy_hist["ToFvsID"] =
-  //    new TH2F("ToFvsID", "ToFvsID", 11, 1, 12, 4000, 0, 2000);
-  //m_phy_hist["inEvsID"] =
-  //    new TH2F("inEvsID", "inEvsID", 11, 1, 12, 4000, 0, 700);
-
-    //TODO
-  //// Build Phy Canvas
-  //auto c_phy1 = new TCanvas("FC Phy 1");
-  //c_phy1->Divide(1, 2);
-  //c_phy1->cd(1);
-  //m_phy_hist["inToF"]->Draw();
-  //gPad->SetLogy();
-  //c_phy1->cd(2);
-  //m_phy_hist["inEnergy"]->Draw();
-  //gPad->SetLogy();
-
-  //auto c_phy2 = new TCanvas("FC Phy 2");
-  //c_phy2->Divide(1, 2);
-  //c_phy2->cd(1);
-  //m_phy_hist["ToFvsID"]->Draw("colz");
-  //c_phy2->cd(2);
-  //m_phy_hist["inEvsID"]->Draw("colz");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,63 +107,8 @@ void EpicSpectra::FillRaw() {
 
   unsigned int nAnodesTot = m_detector->GetNumberOfAnodesTot();
   unsigned int nDets = m_detector->GetNumberOfDets() ;
-  vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
-  vector<string> actinide = m_detector->GetActinideMaterial();
-
-  TH2F * hQ2vQ1[nAnodesTot];
-  TH2F * hQ2Q3vQ1[nAnodesTot];
-  TH2F * hQmvQ1[nAnodesTot];
-  TH1F * hQm[nAnodesTot];
-  TH1F * hQ1[nAnodesTot];
-  TH1F * hQ2[nAnodesTot];
-  TH1F * hQ3[nAnodesTot];
-  TH1F * hAid[nDets];
-  TH1F * hAid_ifQmax[nDets];
-  TH2F * hQ1vAid[nDets];
-  TH1F * hTof[nAnodesTot];
-  TH1F * hDT[nAnodesTot];
-
-  for(int d = 1 ; d <= nDets ; d++){
-    sprintf(name,"det%i_AnodeID",d);
-    hAid[d-1] = (TH1F*)(m_raw_hist[name]);
-
-    sprintf(name,"det%i_AnodeID_ifQmax",d);
-    hAid_ifQmax[d-1] = (TH1F*)(m_raw_hist[name]);
-    
-    sprintf(name,"det%i_Q1vAnodeID",d);
-    hQ1vAid[d-1] = (TH2F*)(m_raw_hist2d[name]);
-
-    for(int a = 1 ; a <=nAnodes[d-1] ; a ++){
-      int index = m_detector->GetIndex(d,a) ;
-        sprintf(name,"det%i_A%02i_%s_Q2Q3vQ1",d,a,actinide[index].c_str());
-        hQ2Q3vQ1[index] = (TH2F*)(m_raw_hist2d[name]);
-
-        sprintf(name,"det%i_A%02i_%s_Q2vQ1",d,a,actinide[index].c_str());
-        hQ2vQ1[index] = (TH2F*)(m_raw_hist2d[name]);
-
-        sprintf(name,"det%i_A%02i_%s_QmaxvQ1",d,a,actinide[index].c_str());
-        hQmvQ1[index] = (TH2F*)(m_raw_hist2d[name]);
-
-        sprintf(name,"det%i_A%02i_%s_Q1",d,a,actinide[index].c_str());
-        hQ1[index] = (TH1F*)(m_raw_hist[name]);
-
-        sprintf(name,"det%i_A%02i_%s_Q2",d,a,actinide[index].c_str());
-        hQ2[index] = (TH1F*)(m_raw_hist[name]);
-
-        sprintf(name,"det%i_A%02i_%s_Q3",d,a,actinide[index].c_str());
-        hQ3[index] = (TH1F*)(m_raw_hist[name]);
-        
-        sprintf(name,"det%i_A%02i_%s_Qmax",d,a,actinide[index].c_str());
-        hQm[index] = (TH1F*)(m_raw_hist[name]);
-        
-        sprintf(name,"det%i_A%02i_%s_Tof",d,a,actinide[index].c_str());
-        hTof[index] = (TH1F*)(m_raw_hist[name]);
-        
-        sprintf(name,"det%i_A%02i_%s_Tqmax_Tcfd",d,a,actinide[index].c_str());
-        hDT[index] = (TH1F*)(m_raw_hist[name]);
-    }
-  }
-
+  std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
+  std::vector<string> actinide = m_detector->GetActinideMaterial();
 
   int FC_mult = m_RawData->GetFCMult();
   double Qmax[nDets]; 
@@ -230,7 +125,7 @@ void EpicSpectra::FillRaw() {
     int det = m_RawData->GetDetNbr(i);
     int anode = m_RawData->GetAnodeNbr(i);
     double qmax = m_RawData->GetQmax(i); 
-    hAid[det-1]->Fill(anode);
+    m_hAid[det-1]->Fill(anode);
     if (qmax > Qmax[det-1]){
         Qmax[det-1] = qmax;
         IndexMax[det-1] = i;
@@ -241,7 +136,7 @@ void EpicSpectra::FillRaw() {
   for(int d = 0 ; d < nDets ; d++){
     if(Qmax[d] > 0 && IndexMax[d] >= 0){
         int det = m_RawData->GetDetNbr(IndexMax[d]);
-        if(det != (d+1)) cout << "ERROR: didn't recover Qmax data to fill raw spectra" << endl;
+        if(det != (d+1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
         int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
         int index = m_detector->GetIndex(det,anode);
         double qm = m_RawData->GetQmax(IndexMax[d]);
@@ -252,58 +147,44 @@ void EpicSpectra::FillRaw() {
         double t_hf = m_RawData->GetTimeHF();
         double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
         double t_cfd  = m_RawData->GetTimeCfd(IndexMax[d]);
-        hAid_ifQmax[d]->Fill(anode) ;
-        hQ1vAid[d]->Fill(anode,q1);
-        hQ2vQ1[index]->Fill(q1,q2);
-        hQmvQ1[index]->Fill(q1,qm);
-        hQ1[index]->Fill(q1);
-        hQ2[index]->Fill(q2);
-        hQ3[index]->Fill(q3);
-        hQm[index]->Fill(qm);
-        hTof[index]->Fill(t_fc-t_hf);
-        hDT[index]->Fill(t_qmax-t_cfd);
-        if(q3>0) hQ2Q3vQ1[index]->Fill(q1,q2/q3);
+        m_hAid_ifQmax[d]->Fill(anode) ;
+        m_hQ1vAid[d]->Fill(anode,q1);
+        m_hQ2vQ1[index]->Fill(q1,q2);
+        m_hQmvQ1[index]->Fill(q1,qm);
+        m_hQ1[index]->Fill(q1);
+        m_hQ2[index]->Fill(q2);
+        m_hQ3[index]->Fill(q3);
+        m_hQm[index]->Fill(qm);
+        m_hTof[index]->Fill(t_fc-t_hf);
+        m_hDT[index]->Fill(t_qmax-t_cfd);
+        if(q3>0) m_hQ2Q3vQ1[index]->Fill(q1,q2/q3);
     }
 
   }
 
-  //auto g_sampler = (TGraph *)(m_graph_sampler);
-  //int size_sampler = m_RawData->GetFCSampleSize();
-  //int sampler_before_th;
-  //if (size_sampler > 0) {
-  //  sampler_before_th = m_RawData->GetFCSample(0);
-  //}
-  //for (unsigned int i = 1; i < size_sampler; i++) {
-  //  double sample = m_RawData->GetFCSample(i);
-  //  int time_sample = -2 * sampler_before_th + 2 * (i - 1);
-  //  g_sampler->SetPoint(i - 1, time_sample, sample);
-  //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::FillPhy() {
-
-  //int FC_mult = m_Physics->GetMult();
-
-  //TH1F *hinTof = (TH1F *)(m_phy_hist["inToF"]);
-  //TH1F *hinEnergy = (TH1F *)(m_phy_hist["inEnergy"]);
-  //TH2F *hTofvsID = (TH2F *)(m_phy_hist["ToFvsID"]);
-  //TH2F *hinEvsID = (TH2F *)(m_phy_hist["inEvsID"]);
-  //if (FC_mult == 1 && !m_Physics->FakeFission[0]) {
-  //  double inTOF = m_Physics->inToF[0];
-  //  double inE = m_Physics->inEnergy[0];
-  //  double ID = m_Physics->Anode_ID[0];
-
-  //  hinTof->Fill(m_Physics->inToF[0]);
-  //  hinEnergy->Fill(m_Physics->inEnergy[0]);
-
-  //  hTofvsID->Fill(ID, inTOF);
-  //  hinEvsID->Fill(ID, inE);
-  //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::Clear() {
-  for (auto h : m_raw_hist)
-    h.second->Reset();
-  for (auto h : m_phy_hist)
-    h.second->Reset();
+
+  // === raw histograms
+  // --- 1D histograms (indexed by anode)
+  for(auto* h : m_hQm)        if(h) h->Reset();
+  for(auto* h : m_hQ1)        if(h) h->Reset();
+  for(auto* h : m_hQ2)        if(h) h->Reset();
+  for(auto* h : m_hQ3)        if(h) h->Reset();
+  for(auto* h : m_hTof)       if(h) h->Reset();
+  for(auto* h : m_hDT)        if(h) h->Reset();
+  // --- 2D histograms (indexed by anode)
+  for(auto* h : m_hQ2vQ1)     if(h) h->Reset();
+  for(auto* h : m_hQmvQ1)     if(h) h->Reset();
+  for(auto* h : m_hQ2Q3vQ1)   if(h) h->Reset();
+  // --- detector histograms
+  for(auto* h : m_hAid)            if(h) h->Reset();
+  for(auto* h : m_hAid_ifQmax)     if(h) h->Reset();
+  for(auto* h : m_hQ1vAid)         if(h) h->Reset();
+
 }
+

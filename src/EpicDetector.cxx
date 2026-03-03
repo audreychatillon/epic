@@ -178,6 +178,8 @@ void EpicDetector::PrintConfig(){
             cout << left << setw(colWidth) << oss.str();
         }
         cout << endl;
+    
+        offset += m_nAnodes[d];
     }
 }
 

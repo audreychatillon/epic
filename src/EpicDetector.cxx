@@ -49,13 +49,12 @@ EpicDetector::EpicDetector() {
   m_RawData = new ::EpicData();
   m_Physics = new ::EpicPhysics();
 
-  m_nFC = 0;
+  m_nDets = 0;
 
   m_Cal.InitCalibration();
 
   m_total_raw_event = 0;
   m_good_raw_event = 0;
-  m_event_to_recovered = 0;
   m_TimeHF_prev = 0.;
   m_TimeHF_current = 0.;
 
@@ -113,7 +112,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
       exit(1);
     }
     nAtot += nA;
-    m_nFC++;
+    m_nDets++;
     m_nAnodes.push_back(nA);
     AddEpic(Pos, nA, zOff, dz);
   }
@@ -138,9 +137,9 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 void EpicDetector::PrintConfig(){
     constexpr int colWidth = 20;
     cout << "//// EpicDetector::PringConversion Config" << endl;
-    cout << "     Number of EPIC fission chamber found : " << m_nFC << endl;
+    cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
     size_t offset = 0 ;
-    for(int d = 0 ; d < m_nFC ; d++){
+    for(int d = 0 ; d < m_nDets ; d++){
         cout << "     ==== EPIC fission chamber # " << d+1 << endl;
         cout << "          number of anodes : " << m_nAnodes[d] << endl;
         // actinide material
@@ -238,7 +237,10 @@ void EpicDetector::ReadConversionConfig() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::AddEpic(vector<double> pos, int nA, double zOff, vector<double> dz) {
+void EpicDetector::AddEpic(vector<double>& pos, int nA, double zOff, vector<double>& dz) {
+  
+  TVector3 DetectorPos(pos[0], pos[1], pos[2]);
+  m_posD.push_back(DetectorPos);
 
   // zOff = origin of the z position compared to the center of the chamber
   double Zpos = zOff; // position of anode 1 (i=0)
@@ -247,8 +249,6 @@ void EpicDetector::AddEpic(vector<double> pos, int nA, double zOff, vector<doubl
     TVector3 AnodePos(pos[0], pos[1], pos[2] + Zpos);
     m_posA.push_back(AnodePos);
   }
-  
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -575,9 +575,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               ///////////////////// END MACRO
             }// end if Qi>0
       } // If FC_Triggered && FC_Threshold && T_cfd
-      else {
-        if (Qmax > 350)  m_event_to_recovered++;
-      }
     } // end FC sampler
   } // end if SAMPLER data
   else {
@@ -616,9 +613,9 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
 }
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
-unsigned int EpicDetector::GetIndex(int det, int anode){
-    if(det==0 || det > m_nFC || anode==0 || anode > m_nAnodes[det-1]) 
-        cout << "EpicDetector::GetIndex(" << det << ", " << anode << "): but m_nFC=" << m_nFC << " and m_nAnodes[" << det-1 << "]=" << m_nAnodes[det-1] << endl;
+unsigned int EpicDetector::GetIndex(int det, int anode) const{
+    if(det==0 || det > m_nDets || anode==0 || anode > m_nAnodes[det-1]) 
+        cout << "EpicDetector::GetIndex(" << det << ", " << anode << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det-1 << "]=" << m_nAnodes[det-1] << endl;
     int index = 0 ;
     for(int i = 0 ; i < (det-1); i++){ 
         index += m_nAnodes[i];

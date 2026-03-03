@@ -129,14 +129,36 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q3_gate_start.resize(nAtot, 10.);
   m_Q3_gate_stop.resize(nAtot, 40.);
   m_TofRaw_max.resize(nAtot, -1.); // ns 
+
   ReadConversionConfig();
+  PrintConfig();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void EpicDetector::PrintConfig(){
+    cout << "//// EpicDetector::PringConversion Config" << endl;
+    cout << "     Number of EPIC fission chamber found : " << m_nFC << endl;
+    size_t offset = 0 ;
+    for(int d = 0 ; d < m_nFC ; d++){
+        cout << "     ==== EPIC fission chamber # " << d+1 << endl;
+        cout << "          number of anodes : " << m_nAnodes[d] << endl;
+        cout << "          sample material  : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << m_actinide[offset+a] << "  "; cout << endl;
+        cout << "          CFD (frac, dly, thrs)  : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "("<< m_cfd_fract[offset+a] << "," << m_cfd_delay[offset+a] << "," << m_cfd_thres[offset+a] << ")  "; cout << endl;
+        cout << "          Q1 gate  : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q1_gate_start[offset+a]*-1. << ":" << m_Q1_gate_stop[offset+a] << "]  "; cout << endl;
+        cout << "          Q2 gate  : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q2_gate_start[offset+a]*-1. << ":" << m_Q2_gate_stop[offset+a] << "]  "; cout << endl;
+        cout << "          Q3 gate  : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << "["<< m_Q3_gate_start[offset+a] << ":" << m_Q3_gate_stop[offset+a] << "]  "; cout << endl;
+        offset += m_nAnodes[d];
+    }
+}
+
 void EpicDetector::ReadConversionConfig() {
 
   cout << "//// EpicDetector::ReadConversionConfig" << endl;
-  cout << "     Number of EPIC fission chamber found : " << m_nFC << endl;
   std::ifstream ifs("./config_files/ConfigEPIC.dat");
   if (ifs.is_open()) {
 
@@ -151,7 +173,7 @@ void EpicDetector::ReadConversionConfig() {
       if (index>= m_cfd_fract.size()) 
         cout << " ///// ERROR : index of the input is " << index << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
       else{
-        cout << "//// found FCblock: det = " << det << ", anode = " << anode << ", index " << index << endl;
+        cout << "//// found EPIC block: det = " << det << ", anode = " << anode << ", index " << index << endl;
       }
       if (block->HasTokenList(info_sample)) {
         m_Get_Sampler_Qmax = block->GetInt("get_sampler_qmax",1);
@@ -166,18 +188,19 @@ void EpicDetector::ReadConversionConfig() {
       m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
       m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
       m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
-      cout << "actinide: " << m_actinide[index] << endl; 
-      cout << "     CFD: frac = " << m_cfd_fract[index] << " , delay = " << m_cfd_delay[index] << endl; 
-      cout << "     Q1 [-" << m_Q1_gate_start[index] << " ; " << m_Q1_gate_stop[index] << "]" << endl; 
-      cout << "     Q2 [-" << m_Q2_gate_start[index] << " ; " << m_Q2_gate_stop[index] << "]" << endl; 
-      cout << "     Q3 [" << m_Q3_gate_start[index] << " ; " << m_Q3_gate_stop[index] << "]" << endl; 
-      if (m_TofRaw_max[index] > 0 )
-        cout << "     all events with a non physical tof_raw > " << m_TofRaw_max[index] << " are rejected (alpha decay between macro-pulse) " << endl;
-      else
-        cout << "     no filtered on incoming neutron RawTof: keep all events (source or sf run)" << endl;
+      //cout << "actinide: " << m_actinide[index] << endl; 
+      //cout << "     CFD: frac = " << m_cfd_fract[index] << " , delay = " << m_cfd_delay[index] << endl; 
+      //cout << "     Q1 [-" << m_Q1_gate_start[index] << " ; " << m_Q1_gate_stop[index] << "]" << endl; 
+      //cout << "     Q2 [-" << m_Q2_gate_start[index] << " ; " << m_Q2_gate_stop[index] << "]" << endl; 
+      //cout << "     Q3 [" << m_Q3_gate_start[index] << " ; " << m_Q3_gate_stop[index] << "]" << endl; 
+      //if (m_TofRaw_max[index] > 0 )
+      //  cout << "     all events with a non physical tof_raw > " << m_TofRaw_max[index] << " are rejected (alpha decay between macro-pulse) " << endl;
+      //else
+      //  cout << "     no filtered on incoming neutron RawTof: keep all events (source or sf run)" << endl;
     }
   } 
-  else cout << "//// No FC conversion file found, using default parameters" << endl;
+  else cout << "//// No EPIC conversion file found, using default parameters" << endl;
+
 }
 
 

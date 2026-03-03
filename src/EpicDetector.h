@@ -37,6 +37,7 @@ public: // inherrited from nptool::VDetector
   //  using Token
   void ReadConfiguration(nptool::InputParser);
   void ReadConversionConfig();
+  void PrintConfig();
 
   //  Add Parameter to the CalibrationManger
   void AddParameterToCalibrationManager() {};

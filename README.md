@@ -1,6 +1,6 @@
-#Epic Plugin for NPTool V4
+###Epic Plugin for NPTool V4
 
-**Epic** is a plugin for **NPTool V4**, inspired by the fission chamber plugin but introducing flexible features.  
+**epic** is a plugin for **NPTool V4**, inspired by the fission chamber plugin but introducing flexible features.  
 
 ## Features
 

@@ -77,6 +77,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   int            nAtot=0;
   double         zOff;
   vector<double> dz;
+  vector<string> material;
 
   for (auto block : blocks) {
     // read position of the EPIC fission chamber
@@ -90,8 +91,15 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     if (block->HasTokenList(nAnodes)) {
       nA = block->GetInt("nANODES");
       if(block->HasTokenList(DZprevA)){
-        if(nA==1) dz.push_back(0.);
+        if(nA==1) dz.push_back(block->GetDouble("DZ_prevA","mm"));
         else      dz = block->GetVectorDouble("DZ_prevA","mm");
+      }
+      if(block->HasTokenList(actinide)){
+        if(nA==1) m_actinide.push_back(block->GetString("actinide"));
+        else{
+            material = block->GetVectorString("actinide");
+            m_actinide.insert(m_actinide.end(),material.begin(), material.end());
+        }
       }
     } else {
       cout << "ERROR: could not find nAnodes, check your input file formatting "<< endl;
@@ -111,7 +119,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   }
 
   // initialization prior to the ReadConversionConfiguration
-  m_actinide.resize(nAtot,"EMPTY");
   m_cfd_fract.resize(nAtot, 0.25);
   m_cfd_delay.resize(nAtot, 4.);
   m_cfd_thres.resize(nAtot, 50.);
@@ -149,7 +156,6 @@ void EpicDetector::ReadConversionConfig() {
       if (block->HasTokenList(info_sample)) {
         m_Get_Sampler_Qmax = block->GetInt("get_sampler_qmax",1);
       }
-      m_actinide[index] = block->GetString("actinide",1);
       m_cfd_fract[index] = 1. / (double)block->GetInt("cfd_frac", 1);
       m_cfd_delay[index] = (double)block->GetInt("cfd_delay", 1);
       m_cfd_thres[index] = (double)block->GetInt("cfd_thres", 1);

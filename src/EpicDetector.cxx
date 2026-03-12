@@ -616,6 +616,25 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
   }
 }
 ////////////////////////////////////////////////////////////////////////////////
+unsigned int EpicDetector::Label2index(const std::string &label) {
+  // generic to handle FC_det_anode or FC_anode
+  int id ;
+  string number;
+  size_t pos1 = label.find("_");
+  size_t pos2 = label.find("_", pos1 + 1);
+  if (pos2 == string::npos) { // format: FC_anode => only one FC
+    number = label.substr(pos1 + 1);
+    id = stoi(number) - 1;
+  } else { // format: FC_det_anode
+    number = label.substr(pos1 + 1, pos2 - pos1 - 1);
+    int det = stoi(number);
+    number = label.substr(pos2 + 1);
+    int anode = stoi(number);
+    id = GetIndex(det,anode);
+  }
+  return id;
+}
+////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
 unsigned int EpicDetector::GetIndex(int det, int anode) const{
     if(det==0 || det > m_nDets || anode==0 || anode > m_nAnodes[det-1]) 

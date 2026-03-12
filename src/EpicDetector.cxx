@@ -117,8 +117,9 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     AddEpic(Pos, nA, zOff, dz);
 
     for(int a=0; a<nA; a++){
-      m_Cal_GammaPeak.push_back(m_Cal.GetValue("EPIC_"+to_string(m_nDets)+"_ANODE_"+to_string(a+1)+"_GAMMA_PEAK",0));
-      cout << "EPIC_"+to_string(m_nDets)+"_ANODE_"+to_string(a+1)+"_GAMMA_PEAK"<<endl;
+      double gammapeak = m_Cal.GetValue("EPIC_"+to_string(m_nDets)+"_ANODE_"+to_string(a+1)+"_GAMMA_PEAK",0);
+      m_Cal_GammaPeak.push_back(gammapeak) ;
+      cout << "EPIC_"+to_string(m_nDets)+"_ANODE_"+to_string(a+1)+"_GAMMA_PEAK  " << gammapeak <<endl;
     
     }
   }

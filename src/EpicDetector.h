@@ -57,7 +57,9 @@ private:
   vector<double> m_Q3_gate_stop;
   vector<double> m_TofRaw_max;
 
-  
+  // calibration parameter
+  vector<double> m_Cal_GammaPeak;
+ 
   void AddEpic(vector<double>& Pos, int nA, double zOff, vector<double>& dz);
 
 public:
@@ -80,7 +82,7 @@ public:
   unsigned int Label2index(const std::string &label);
   unsigned int GetIndex(int det, int anode) const; // det is 1-based, anode is 1-based
 
-  double CalculateNeutronEnergy(double &flightTime, double &distance);
+  double TofRaw2Ene(int det, int anode, double tof_raw, double &tof_cal);
 
 
   // === inherrited from nptool::VPlugin

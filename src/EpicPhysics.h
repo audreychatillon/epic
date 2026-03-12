@@ -19,6 +19,8 @@ class EpicPhysics {
         vector<bool>   fFC_trigPulser;
         vector<double> fFC_time;        // time of the anode [ns]
         vector<double> fFC_tof_raw;      // TofRaw
+        vector<double> fFC_tof_cal;      // TofCal
+        vector<double> fFC_e;            // energy [MeV]
         vector<double> fFC_time_cfd;     // cfd time [ns]
         vector<double> fFC_time_qm;    // time of the maxiumum of the signal
         vector<double> fFC_qm;        // maximum amplitude of the signal
@@ -52,6 +54,8 @@ class EpicPhysics {
         fFC_trigPulser.clear();
         fFC_time.clear();
         fFC_tof_raw.clear();
+        fFC_tof_cal.clear();
+        fFC_e.clear();
         fFC_time_cfd.clear();
         fFC_time_qm.clear();
         fFC_qm.clear();
@@ -76,6 +80,8 @@ class EpicPhysics {
         const bool&   trigPulser,
         const double& t_raw_ns,
         const double& t_tofraw_ns,
+        const double& t_tofcal_ns,
+        const double& e_MeV,
         const double& t_cfd_ns,
         const double& t_qmax_ns,
         const double& qmax,
@@ -87,6 +93,8 @@ class EpicPhysics {
             fFC_trigPulser.push_back(trigPulser);
             fFC_time.push_back(t_raw_ns);
             fFC_tof_raw.push_back(t_tofraw_ns);
+            fFC_tof_cal.push_back(t_tofcal_ns);
+            fFC_e.push_back(e_MeV);
             fFC_time_cfd.push_back(t_cfd_ns);
             fFC_time_qm.push_back(t_qmax_ns);
             fFC_qm.push_back(qmax);

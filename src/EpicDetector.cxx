@@ -115,6 +115,10 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     m_nDets++;
     m_nAnodes.push_back(nA);
     AddEpic(Pos, nA, zOff, dz);
+
+    for(int a=0; a<nA; a++){
+      m_Cal_GammaPeak.push_back(m_Cal.GetValue("EPIC_"+nptool::itoa(m_nDets)+"_ANODE_"+nptool::itoa(a+1)+"_GAMMA_PEAK",0));
+    }
   }
 
   // initialization prior to the ReadConversionConfiguration
@@ -136,6 +140,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::PrintConfig(){
     constexpr int colWidth = 20;
+    cout << "CHECK CHECK CHEK nptool::c_light = " << nptool::c_light << endl;
     cout << "//// EpicDetector::PringConversion Config" << endl;
     cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
     size_t offset = 0 ;
@@ -180,7 +185,10 @@ void EpicDetector::PrintConfig(){
         // TofRaw max
         cout << "          TofRawMax (*)          : " ;
         for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << left << setw(colWidth) << m_TofRaw_max[offset+a] ; cout << endl;
-    
+        cout << endl;
+        // Gamma Peak
+        cout << "          Gamma Peak [ch]        : " ;
+        for (size_t a = 0 ; a < m_nAnodes[d]; a++) cout << left << setw(colWidth) << m_Cal_GammaPeak[offset+a] ; cout << endl;
         offset += m_nAnodes[d];
     }
     cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > TofRawMax are rejected " << endl;
@@ -220,18 +228,10 @@ void EpicDetector::ReadConversionConfig() {
       m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
       m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
       m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
-      //cout << "actinide: " << m_actinide[index] << endl; 
-      //cout << "     CFD: frac = " << m_cfd_fract[index] << " , delay = " << m_cfd_delay[index] << endl; 
-      //cout << "     Q1 [-" << m_Q1_gate_start[index] << " ; " << m_Q1_gate_stop[index] << "]" << endl; 
-      //cout << "     Q2 [-" << m_Q2_gate_start[index] << " ; " << m_Q2_gate_stop[index] << "]" << endl; 
-      //cout << "     Q3 [" << m_Q3_gate_start[index] << " ; " << m_Q3_gate_stop[index] << "]" << endl; 
-      //if (m_TofRaw_max[index] > 0 )
-      //  cout << "     all events with a non physical tof_raw > " << m_TofRaw_max[index] << " are rejected (alpha decay between macro-pulse) " << endl;
-      //else
-      //  cout << "     no filtered on incoming neutron RawTof: keep all events (source or sf run)" << endl;
     }
   } 
   else cout << "//// No EPIC conversion file found, using default parameters" << endl;
+
 
 }
 
@@ -281,15 +281,15 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 void EpicDetector::BuildPhysicalEvent() {
  
 
-    // Copy RawData in PhysicalTree to be able to run macro at raw level on TTree after npanalysis
-    // difficult to have access to the branches on RawTree after npconversion
-    // TODO handle the Sampler to optimize CFD
+    // 1/ keep RawData in PhysicalTree to be able to run macro at raw level on TTree after npanalysis
+    // 2/ calculate calibrated tof and energy
 
     // FILL FC part
     unsigned int multFC = m_RawData->GetFCMult();
     double q_qmax = 0 ;
     int    i_qmax = -1;
     for (int i = 0; i < multFC; i++) {
+	// raw data
         short   det  = m_RawData->GetDetNbr(i);
         short anode  = m_RawData->GetAnodeNbr(i);
         bool    kFF  = m_RawData->GetPulserTrig(i);
@@ -301,7 +301,11 @@ void EpicDetector::BuildPhysicalEvent() {
         double q1 = m_RawData->GetQ1(i);
         double q2 = m_RawData->GetQ2(i);
         double q3 = m_RawData->GetQ3(i);
-        m_Physics->SetHit_fFC(det, anode, kFF, t_fc, tofraw, t_cfd, t_qm, qm, q1, q2, q3);
+	// calibrated tof and energy
+	double tofcal = 0.;
+        double e = TofRaw2Ene(det, anode, tofraw, tofcal); 
+	// Fill EpicPhysics
+        m_Physics->SetHit_fFC(det, anode, kFF, t_fc, tofraw, tofcal, e, t_cfd, t_qm, qm, q1, q2, q3);
         if (qm > q_qmax){
             q_qmax = qm;
             i_qmax = i ;
@@ -622,27 +626,18 @@ unsigned int EpicDetector::GetIndex(int det, int anode) const{
     }
     index += anode - 1;
     return index;
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int EpicDetector::Label2index(const std::string &label) {
-  // generic to handle FC_det_anode or FC_anode
-  int id ;
-  string number;
-  size_t pos1 = label.find("_");
-  size_t pos2 = label.find("_", pos1 + 1);
-  if (pos2 == string::npos) { // format: FC_anode => only one FC
-    number = label.substr(pos1 + 1);
-    id = stoi(number) - 1;
-  } else { // format: FC_det_anode
-    number = label.substr(pos1 + 1, pos2 - pos1 - 1);
-    int det = stoi(number);
-    number = label.substr(pos2 + 1);
-    int anode = stoi(number);
-    id = GetIndex(det,anode);
-  }
-  return id;
+double EpicDetector::TofRaw2Ene(int det, int anode, double tofraw, double& tofcal) {
+  const double mn_MeV = 939.565; 
+  int index = GetIndex(det,anode);
+  double offset = m_posA[index].Z() / 299.792458 - m_Cal_GammaPeak[index];
+  tofcal        = tofraw + offset;
+  double beta   = (m_posA[index].Z() / tofcal) / 299.792458 ; 
+  double gamma  = 1.0 / sqrt(1.0 - pow(beta,2));  
+  return ((gamma - 1.0) * mn_MeV);
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::InitSimulation(std::string simtype) {

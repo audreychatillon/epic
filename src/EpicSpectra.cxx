@@ -4,10 +4,10 @@
 using namespace epic;
 
 ////////////////////////////////////////////////////////////////////////////////
-TCanvas* EpicSpectra::CreateCanvas(const std::string& name)
+TCanvas* EpicSpectra::CreateCanvas(const std::string& name, int ncol)
 {
   TCanvas* c = new TCanvas(name.c_str(), name.c_str(), 1200, 800);
-  c->Divide(6,2);
+  c->Divide(ncol,2);
   return c;
 }
 
@@ -49,14 +49,15 @@ EpicSpectra::EpicSpectra() {
   for(unsigned int d = 1 ; d <= nDets ; d++){
 
     // create the canvas per detector
+    int ncol = ceil(0.5*nAnodes[d-1]);
     std::string base = "EPIC" + std::to_string(d);
-    m_can[d-1][0] = CreateCanvas(base + "_Q2vQ1");
-    m_can[d-1][1] = CreateCanvas(base + "_QmaxvQ1");
-    m_can[d-1][2] = CreateCanvas(base + "_Q1");
-    m_can[d-1][3] = CreateCanvas(base + "_Qmax");
-    m_can[d-1][4] = CreateCanvas(base + "_Tof");
-    m_can[d-1][5] = CreateCanvas(base + "_Q2Q3vQ1");
-    m_can[d-1][6] = CreateCanvas(base + "_DT_Tqmax_Tcfd");
+    m_can[d-1][0] = CreateCanvas(base + "_Q2vQ1", ncol);
+    m_can[d-1][1] = CreateCanvas(base + "_QmaxvQ1", ncol);
+    m_can[d-1][2] = CreateCanvas(base + "_Q1", ncol);
+    m_can[d-1][3] = CreateCanvas(base + "_Qmax", ncol);
+    m_can[d-1][4] = CreateCanvas(base + "_Tof", ncol);
+    m_can[d-1][5] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
+    m_can[d-1][6] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
 
     // loop over the anodes
     for(unsigned int a = 1 ; a <= nAnodes[d-1] ; a++){

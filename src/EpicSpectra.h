@@ -47,7 +47,7 @@ private:
 
   // === canvas
   std::vector<std::array<TCanvas*,7>> m_can;
-  TCanvas* CreateCanvas(const std::string& name);
+  TCanvas* CreateCanvas(const std::string& name, int ncol);
 
 public:
   void FillRaw();

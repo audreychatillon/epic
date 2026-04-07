@@ -33,6 +33,7 @@ private:
   std::vector<TH2F*> m_hQ2vQ1;
   std::vector<TH2F*> m_hQ2Q3vQ1;
   std::vector<TH2F*> m_hQmvQ1;
+  std::vector<TH2F*> m_hQ1vT;
 
   std::vector<TH1F*> m_hQm;
   std::vector<TH1F*> m_hQ1;

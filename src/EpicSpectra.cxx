@@ -33,6 +33,7 @@ EpicSpectra::EpicSpectra() {
   m_hQ2vQ1.resize(nAnodesTot);
   m_hQ2Q3vQ1.resize(nAnodesTot);
   m_hQmvQ1.resize(nAnodesTot);
+  m_hQ1vT.resize(nAnodesTot);
   m_hQm.resize(nAnodesTot);
   m_hQ1.resize(nAnodesTot);
   m_hQ2.resize(nAnodesTot);
@@ -58,6 +59,7 @@ EpicSpectra::EpicSpectra() {
     m_can[d-1][4] = CreateCanvas(base + "_Tof", ncol);
     m_can[d-1][5] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
     m_can[d-1][6] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
+    m_can[d-1][7] = CreateCanvas(base + "_Q1vT",ncol);
 
     // loop over the anodes
     for(unsigned int a = 1 ; a <= nAnodes[d-1] ; a++){
@@ -71,6 +73,7 @@ EpicSpectra::EpicSpectra() {
         m_hQ2vQ1[i]   = new TH2F((prefix+"_Q2vQ1").c_str(),(prefix+"_Q2vQ1").c_str(),1500,0,300000,500,0,200000); 
         m_hQmvQ1[i]   = new TH2F((prefix+"_QmaxvQ1").c_str(),(prefix+"_QmaxvQ1").c_str(),1000,0,200000,200,0,20000);
         m_hQ2Q3vQ1[i] = new TH2F((prefix+"_Q2Q3vQ1").c_str(),(prefix+"_Q2Q3vQ1").c_str(),1500,0,300000,500,0,10); 
+        m_hQ1vT[i]    = new TH2F((prefix+"_Q1vT").c_str(),(prefix+"_Q1vT").c_str(),1000,0,1.E+14,1500,0,300000); 
 
         m_hQm[i]  = new TH1F((prefix+"_Qmax").c_str(),(prefix+"_Qmax").c_str(),2500,0,25000);
         m_hQ1[i]  = new TH1F((prefix+"_Q1").c_str(),(prefix+"_Q1").c_str(),15000,0,300000);
@@ -89,6 +92,7 @@ EpicSpectra::EpicSpectra() {
         m_can[d-1][4]->cd(a); gPad->SetLogy(); m_hTof[i]->Draw();
         m_can[d-1][5]->cd(a); gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
         m_can[d-1][6]->cd(a); m_hDT[i]->Draw(); 
+        m_can[d-1][7]->cd(a); gPad->SetLogz(); m_hQ1vT[i]->Draw("colz");     
     }// end of loop over nAnodes[d-1]
 
     std::string detPrefix = "det" + std::to_string(d);
@@ -158,6 +162,7 @@ void EpicSpectra::FillRaw() {
         m_hQm[index]->Fill(qm);
         m_hTof[index]->Fill(t_fc-t_hf);
         m_hDT[index]->Fill(t_qmax-t_cfd);
+        m_hQ1vT[index]->Fill(t_fc,q1);
         if(q3>0) m_hQ2Q3vQ1[index]->Fill(q1,q2/q3);
     }
 
@@ -182,6 +187,7 @@ void EpicSpectra::Clear() {
   for(auto* h : m_hQ2vQ1)     if(h) h->Reset();
   for(auto* h : m_hQmvQ1)     if(h) h->Reset();
   for(auto* h : m_hQ2Q3vQ1)   if(h) h->Reset();
+  for(auto* h : m_hQ1vT)      if(h) h->Reset();
   // --- detector histograms
   for(auto* h : m_hAid)            if(h) h->Reset();
   for(auto* h : m_hAid_ifQmax)     if(h) h->Reset();

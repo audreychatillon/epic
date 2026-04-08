@@ -10,10 +10,6 @@ endif()
 #   target_link_libraries(NPEpic PUBLIC physics-essential )
 # endif()
 # for simulation
-if(Geant4_FOUND)
-add_library(NPEpicGeant4 SHARED EpicGeant4.h EpicGeant4.cxx)
-target_link_libraries(NPEpicGeant4 PUBLIC NPEpic NPGeant4 nptool)
-endif()
 install(DIRECTORY ./ DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY} FILES_MATCHING PATTERN "*.h" )
 ROOT_GENERATE_DICTIONARY(EpicDict EpicData.h EpicPhysics.h DEPENDENCIES EpicData.h EpicPhysics.h LINKDEF Epiclinkdef.hh MODULE NPEpic)
 

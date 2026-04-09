@@ -73,12 +73,12 @@ EpicSpectra::EpicSpectra() {
         m_hQ2vQ1[i]   = new TH2F((prefix+"_Q2vQ1").c_str(),(prefix+"_Q2vQ1").c_str(),1500,0,300000,500,0,200000); 
         m_hQmvQ1[i]   = new TH2F((prefix+"_QmaxvQ1").c_str(),(prefix+"_QmaxvQ1").c_str(),1000,0,200000,200,0,20000);
         m_hQ2Q3vQ1[i] = new TH2F((prefix+"_Q2Q3vQ1").c_str(),(prefix+"_Q2Q3vQ1").c_str(),1500,0,300000,500,0,10); 
-        m_hQ1vT[i]    = new TH2F((prefix+"_Q1vT").c_str(),(prefix+"_Q1vT").c_str(),1000,0,1.E+14,1500,0,300000); 
+        m_hQ1vT[i]    = new TH2F((prefix+"_Q1vT").c_str(),(prefix+"_Q1vT").c_str(),1000,0,1.E+14,1000,0,500000); 
 
         m_hQm[i]  = new TH1F((prefix+"_Qmax").c_str(),(prefix+"_Qmax").c_str(),2500,0,25000);
-        m_hQ1[i]  = new TH1F((prefix+"_Q1").c_str(),(prefix+"_Q1").c_str(),15000,0,300000);
-        m_hQ2[i]  = new TH1F((prefix+"_Q2").c_str(),(prefix+"_Q2").c_str(),15000,0,300000); 
-        m_hQ3[i]  = new TH1F((prefix+"_Q3").c_str(),(prefix+"_Q3").c_str(),15000,0,300000);
+        m_hQ1[i]  = new TH1F((prefix+"_Q1").c_str(),(prefix+"_Q1").c_str(),25000,0,500000);
+        m_hQ2[i]  = new TH1F((prefix+"_Q2").c_str(),(prefix+"_Q2").c_str(),25000,0,500000); 
+        m_hQ3[i]  = new TH1F((prefix+"_Q3").c_str(),(prefix+"_Q3").c_str(),25000,0,500000);
         m_hTof[i] = new TH1F((prefix+"_Tof").c_str(),(prefix+"_Tof").c_str(),3000,-200,2800);
         m_hDT[i]  = new TH1F((prefix+"_Tqmax_Tcfd").c_str(),(prefix+"_Tqmax_Tcfd").c_str(),1000,-50,50);
 

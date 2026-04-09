@@ -73,7 +73,7 @@ EpicSpectra::EpicSpectra() {
         m_hQ2vQ1[i]   = new TH2F((prefix+"_Q2vQ1").c_str(),(prefix+"_Q2vQ1").c_str(),1500,0,300000,500,0,200000); 
         m_hQmvQ1[i]   = new TH2F((prefix+"_QmaxvQ1").c_str(),(prefix+"_QmaxvQ1").c_str(),1000,0,200000,200,0,20000);
         m_hQ2Q3vQ1[i] = new TH2F((prefix+"_Q2Q3vQ1").c_str(),(prefix+"_Q2Q3vQ1").c_str(),1500,0,300000,500,0,10); 
-        m_hQ1vT[i]    = new TH2F((prefix+"_Q1vT").c_str(),(prefix+"_Q1vT").c_str(),1000,0,1.E+14,1000,0,500000); 
+        m_hQ1vT[i]    = new TH2F((prefix+"_Q1vT").c_str(),(prefix+"_Q1vT").c_str(),1000,0,60000,1000,0,200000); 
 
         m_hQm[i]  = new TH1F((prefix+"_Qmax").c_str(),(prefix+"_Qmax").c_str(),2500,0,25000);
         m_hQ1[i]  = new TH1F((prefix+"_Q1").c_str(),(prefix+"_Q1").c_str(),25000,0,500000);
@@ -84,6 +84,8 @@ EpicSpectra::EpicSpectra() {
 
         m_hQ2[i]->SetLineColor(8);
         m_hQ3[i]->SetLineColor(kCyan);
+        m_hQ1vT[i]->GetXaxis()->SetTitle("Time [s] : 60s / bin"); 
+        m_hQ1vT[i]->GetYaxis()->SetTitle("Q1"); 
 
         m_can[d-1][0]->cd(a); gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");     
         m_can[d-1][1]->cd(a); gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");     
@@ -162,7 +164,7 @@ void EpicSpectra::FillRaw() {
         m_hQm[index]->Fill(qm);
         m_hTof[index]->Fill(t_fc-t_hf);
         m_hDT[index]->Fill(t_qmax-t_cfd);
-        m_hQ1vT[index]->Fill(t_fc,q1);
+        m_hQ1vT[index]->Fill(t_fc*1.e+9,q1);
         if(q3>0) m_hQ2Q3vQ1[index]->Fill(q1,q2/q3);
     }
 

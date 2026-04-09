@@ -164,7 +164,7 @@ void EpicSpectra::FillRaw() {
         m_hQm[index]->Fill(qm);
         m_hTof[index]->Fill(t_fc-t_hf);
         m_hDT[index]->Fill(t_qmax-t_cfd);
-        m_hQ1vT[index]->Fill(t_fc*1.e+9,q1);
+        m_hQ1vT[index]->Fill(t_fc*1.e-9,q1);
         if(q3>0) m_hQ2Q3vQ1[index]->Fill(q1,q2/q3);
     }
 

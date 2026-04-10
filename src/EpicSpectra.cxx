@@ -129,6 +129,8 @@ void EpicSpectra::FillRaw() {
   std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
   std::vector<string> actinide = m_detector->GetActinideMaterial();
 
+  m_TimeHF->Fill(m_RawData->GetTimeHF()*1.e-09);
+
   int FC_mult = m_RawData->GetFCMult();
   double Qmax[nDets]; 
   int IndexMax[nDets]; 

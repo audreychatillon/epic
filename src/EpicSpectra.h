@@ -36,16 +36,16 @@ private:
 
   // === histograms per fission chambers and per anode
   std::vector<TH2F*> m_hQ2vQ1;            // 3
-  std::vector<TH2F*> m_hQ2Q3vQ1;          // [1]
-  std::vector<TH2F*> m_hQmvQ1;            // [2]
-  std::vector<TH2F*> m_hQ1vT;             // [3]
+  std::vector<TH2F*> m_hQ2Q3vQ1;          // 4 
+  std::vector<TH2F*> m_hQmvQ1;            // 5
+  std::vector<TH2F*> m_hQ1vT;             // 6
 
-  std::vector<TH1F*> m_hQm;               // [5]
-  std::vector<TH1F*> m_hQ1;               // [6]
-  std::vector<TH1F*> m_hQ2;               // [6]
-  std::vector<TH1F*> m_hQ3;               // [6]
-  std::vector<TH1F*> m_hTof;              // [7]
-  std::vector<TH1F*> m_hDT;               // [8]
+  std::vector<TH1F*> m_hQm;               // 7 
+  std::vector<TH1F*> m_hQ1;               // 8
+  std::vector<TH1F*> m_hQ2;               // 8
+  std::vector<TH1F*> m_hQ3;               // 8
+  std::vector<TH1F*> m_hTof;              // 9
+  std::vector<TH1F*> m_hDT;               // 10
 
   // === canvas
   std::vector<std::array<TCanvas*,11>> m_can;

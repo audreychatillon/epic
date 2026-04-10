@@ -34,13 +34,13 @@ EpicSpectra::EpicSpectra() {
   m_canT0->Divide(1,2);
 
   m_TimeHF = new TH1F("TimeHF","TimeHF",86400,0,86400);
-  m_DeltaTimeHF = new TH1F("DT_HF_ifBeamOn","DT_HF_ifBeamOn",10000,0,10);
+  m_DeltaTimeHF = new TH1F("DT_HF_ifBeamOn","DT_HF_ifBeamOn",5000,0,5);
 
   m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
   m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ms] 1us/bin");
 
-  m_canT0->cd(1); m_TimeHF->Draw();
-  m_canT0->cd(2); m_DeltaTimeHF->Draw();
+  m_canT0->cd(1); gPad->SetLogy(); m_TimeHF->Draw();
+  m_canT0->cd(2); gPad->SetLogy(); m_DeltaTimeHF->Draw();
 	
   // Resize histogram containers
   m_hQ2vQ1.resize(nAnodesTot);
@@ -82,7 +82,7 @@ EpicSpectra::EpicSpectra() {
 
     m_hAid_ifQmax[d-1]->SetLineColor(kRed);
 
-    m_can[d-1][0]->cd(); m_hAid[d-1]->Draw(); m_hAid[d-1]->Draw("sames");  
+    m_can[d-1][0]->cd(); m_hAid[d-1]->Draw(); m_hAid_ifQmax[d-1]->Draw("same");  
     m_can[d-1][1]->cd(); m_hQ1vAid[d-1]->Draw("colz");
 
 

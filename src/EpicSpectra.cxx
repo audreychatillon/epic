@@ -60,14 +60,14 @@ EpicSpectra::EpicSpectra() {
     std::string base = "EPIC" + std::to_string(d);
     m_can[d-1][0] = CreateCanvas(base + "_A",ncol);
     m_can[d-1][1] = CreateCanvas(base + "_Q1vA",ncol);
-    m_can[d-1][2] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
-    m_can[d-1][3] = CreateCanvas(base + "_Q2vQ1", ncol);
-    m_can[d-1][4] = CreateCanvas(base + "_QmaxvQ1", ncol);
-    m_can[d-1][5] = CreateCanvas(base + "_Q", ncol);
-    m_can[d-1][6] = CreateCanvas(base + "_Qmax", ncol);
-    m_can[d-1][7] = CreateCanvas(base + "_Tof", ncol);
-    m_can[d-1][8] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
-    m_can[d-1][9] = CreateCanvas(base + "_Q1vT",ncol);
+    m_can[d-1][2] = CreateCanvas(base + "_Q1vT",ncol);
+    m_can[d-1][3] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
+    m_can[d-1][4] = CreateCanvas(base + "_Q2vQ1", ncol);
+    m_can[d-1][5] = CreateCanvas(base + "_QmaxvQ1", ncol);
+    m_can[d-1][6] = CreateCanvas(base + "_Q", ncol);
+    m_can[d-1][7] = CreateCanvas(base + "_Qmax", ncol);
+    m_can[d-1][8] = CreateCanvas(base + "_Tof", ncol);
+    m_can[d-1][9] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
 
     m_hAid[d-1]        = new TH1F((base+"_AnodeID").c_str(),(base+"_AnodeID").c_str(),13,-0.5,12.5);
     m_hAid_ifQmax[d-1] = new TH1F((base+"_AnodeID_ifQmax").c_str(),(base+"_AnodeID_ifQmax").c_str(),13,-0.5,12.5);

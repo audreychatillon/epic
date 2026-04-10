@@ -53,6 +53,7 @@ private:
 
   // === general histograms and canvas
   TH1F * m_TimeHF;
+  TH1F * m_DeltaTimeHF;
   TCanvas * m_canT0;
 
 public:

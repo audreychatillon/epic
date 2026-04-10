@@ -31,9 +31,16 @@ EpicSpectra::EpicSpectra() {
 
   // general histograms
   m_canT0 = new TCanvas("T0","T0",1200,800);
+  m_canT0->Divide(1,2);
+
   m_TimeHF = new TH1F("TimeHF","TimeHF",86400,0,86400);
+  m_DeltaTimeHF = new TH1F("DT_HF_ifBeamOn","DT_HF_ifBeamOn",10000,0,10);
+
   m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
-  m_canT0->cd(); m_TimeHF->Draw();
+  m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ms] 1us/bin");
+
+  m_canT0->cd(1); m_TimeHF->Draw();
+  m_canT0->cd(2); m_DeltaTimeHF->Draw();
 	
   // Resize histogram containers
   m_hQ2vQ1.resize(nAnodesTot);
@@ -130,6 +137,7 @@ void EpicSpectra::FillRaw() {
   std::vector<string> actinide = m_detector->GetActinideMaterial();
 
   m_TimeHF->Fill(m_RawData->GetTimeHF()*1.e-09);
+  m_DeltaTimeHF->Fill((m_RawData->GetTimeHF()-m_RawData->GetTimePrevHF())*1.e-06);
 
   int FC_mult = m_RawData->GetFCMult();
   double Qmax[nDets]; 

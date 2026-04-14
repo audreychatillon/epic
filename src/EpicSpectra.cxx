@@ -56,6 +56,7 @@ EpicSpectra::EpicSpectra() {
   m_hAid.resize(nDets);
   m_hAid_ifQmax.resize(nDets);
   m_hQ1vAid.resize(nDets);
+  m_hMult.resize(nDets);
 
   m_can.resize(nDets);
 
@@ -65,25 +66,28 @@ EpicSpectra::EpicSpectra() {
     // create the canvas per detector
     int ncol = ceil(0.5*nAnodes[d-1]);
     std::string base = "EPIC" + std::to_string(d);
-    m_can[d-1][0] = CreateCanvas(base + "_A",ncol);
-    m_can[d-1][1] = CreateCanvas(base + "_Q1vA",ncol);
-    m_can[d-1][2] = CreateCanvas(base + "_Q1vT",ncol);
-    m_can[d-1][3] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
-    m_can[d-1][4] = CreateCanvas(base + "_Q2vQ1", ncol);
-    m_can[d-1][5] = CreateCanvas(base + "_QmaxvQ1", ncol);
-    m_can[d-1][6] = CreateCanvas(base + "_Q", ncol);
-    m_can[d-1][7] = CreateCanvas(base + "_Qmax", ncol);
-    m_can[d-1][8] = CreateCanvas(base + "_Tof", ncol);
-    m_can[d-1][9] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
+    m_can[d-1][0]  = CreateCanvas(base + "_MULT",ncol);
+    m_can[d-1][1]  = CreateCanvas(base + "_A",ncol);
+    m_can[d-1][2]  = CreateCanvas(base + "_Q1vA",ncol);
+    m_can[d-1][3]  = CreateCanvas(base + "_Q1vT",ncol);
+    m_can[d-1][4]  = CreateCanvas(base + "_Q2Q3vQ1", ncol);
+    m_can[d-1][5]  = CreateCanvas(base + "_Q2vQ1", ncol);
+    m_can[d-1][6]  = CreateCanvas(base + "_QmaxvQ1", ncol);
+    m_can[d-1][7]  = CreateCanvas(base + "_Q", ncol);
+    m_can[d-1][8]  = CreateCanvas(base + "_Qmax", ncol);
+    m_can[d-1][9]  = CreateCanvas(base + "_Tof", ncol);
+    m_can[d-1][10] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
 
+    m_hMult[d-1]       = new TH1F((base+"_Mult").c_str(),(base+"_Mult").c_str(),13,-0.5,12.5);
     m_hAid[d-1]        = new TH1F((base+"_AnodeID").c_str(),(base+"_AnodeID").c_str(),13,-0.5,12.5);
     m_hAid_ifQmax[d-1] = new TH1F((base+"_AnodeID_ifQmax").c_str(),(base+"_AnodeID_ifQmax").c_str(),13,-0.5,12.5);
     m_hQ1vAid[d-1]     = new TH2F((base+"_Q1vAnodeID").c_str(),(base+"_Q1vAnodeID").c_str(),13,-0.5,12.5,1500,0,300000);
 
     m_hAid_ifQmax[d-1]->SetLineColor(kRed);
 
-    m_can[d-1][0]->cd(); m_hAid[d-1]->Draw(); m_hAid_ifQmax[d-1]->Draw("same");  
-    m_can[d-1][1]->cd(); m_hQ1vAid[d-1]->Draw("colz");
+    m_can[d-1][0]->cd(); m_hMult[d-1]->Draw();
+    m_can[d-1][1]->cd(); m_hAid[d-1]->Draw(); m_hAid_ifQmax[d-1]->Draw("same");  
+    m_can[d-1][2]->cd(); m_hQ1vAid[d-1]->Draw("colz");
 
 
     // loop over the anodes
@@ -112,14 +116,14 @@ EpicSpectra::EpicSpectra() {
         m_hQ1vT[i]->GetXaxis()->SetTitle("Time [s] : 60s / bin"); 
         m_hQ1vT[i]->GetYaxis()->SetTitle("Q1"); 
 
-        m_can[d-1][2]->cd(a); gPad->SetLogz(); m_hQ1vT[i]->Draw("colz");     
-        m_can[d-1][3]->cd(a); gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
-        m_can[d-1][4]->cd(a); gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");     
-        m_can[d-1][5]->cd(a); gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");     
-        m_can[d-1][6]->cd(a); gPad->SetLogy(); m_hQ1[i]->Draw(); m_hQ2[i]->Draw("same"); m_hQ3[i]->Draw("same");
-        m_can[d-1][7]->cd(a); gPad->SetLogy(); m_hQm[i]->Draw();
-        m_can[d-1][8]->cd(a); gPad->SetLogy(); m_hTof[i]->Draw();
-        m_can[d-1][9]->cd(a); m_hDT[i]->Draw(); 
+        m_can[d-1][3]->cd(a);  gPad->SetLogz(); m_hQ1vT[i]->Draw("colz");     
+        m_can[d-1][4]->cd(a);  gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
+        m_can[d-1][5]->cd(a);  gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");     
+        m_can[d-1][6]->cd(a);  gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");     
+        m_can[d-1][7]->cd(a);  gPad->SetLogy(); m_hQ1[i]->Draw(); m_hQ2[i]->Draw("same"); m_hQ3[i]->Draw("same");
+        m_can[d-1][8]->cd(a);  gPad->SetLogy(); m_hQm[i]->Draw();
+        m_can[d-1][9]->cd(a);  gPad->SetLogy(); m_hTof[i]->Draw();
+        m_can[d-1][10]->cd(a); m_hDT[i]->Draw(); 
     }// end of loop over nAnodes[d-1]
   }// end of loop over nDets
 
@@ -140,11 +144,13 @@ void EpicSpectra::FillRaw() {
   m_DeltaTimeHF->Fill((m_RawData->GetTimeHF()-m_RawData->GetTimePrevHF())*1.e-06);
 
   int FC_mult = m_RawData->GetFCMult();
-  double Qmax[nDets]; 
+  int multPerFC[nDets];
   int IndexMax[nDets]; 
+  double Qmax[nDets]; 
   for (int d = 0 ; d < nDets ; d++){
-    Qmax[d] = 0.;
+    multPerFC[d] = 0;
     IndexMax[d] = -1;
+    Qmax[d] = 0.;
   }
 
   // loop over the raw data
@@ -154,6 +160,7 @@ void EpicSpectra::FillRaw() {
     int det = m_RawData->GetDetNbr(i);
     int anode = m_RawData->GetAnodeNbr(i);
     double qmax = m_RawData->GetQmax(i); 
+    multPerFC[det-1]++;
     m_hAid[det-1]->Fill(anode);
     if (qmax > Qmax[det-1]){
         Qmax[det-1] = qmax;
@@ -163,6 +170,7 @@ void EpicSpectra::FillRaw() {
 
   // spectra for Qmax only: suppress cross-talk
   for(int d = 0 ; d < nDets ; d++){
+    m_hMult[d]->Fill(multPerFC[d]);
     if(Qmax[d] > 0 && IndexMax[d] >= 0){
         int det = m_RawData->GetDetNbr(IndexMax[d]);
         if(det != (d+1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
@@ -213,6 +221,7 @@ void EpicSpectra::Clear() {
   for(auto* h : m_hQ2Q3vQ1)   if(h) h->Reset();
   for(auto* h : m_hQ1vT)      if(h) h->Reset();
   // --- detector histograms
+  for(auto* h : m_hMult)           if(h) h->Reset();
   for(auto* h : m_hAid)            if(h) h->Reset();
   for(auto* h : m_hAid_ifQmax)     if(h) h->Reset();
   for(auto* h : m_hQ1vAid)         if(h) h->Reset();

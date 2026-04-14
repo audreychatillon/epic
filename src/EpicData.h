@@ -38,12 +38,13 @@ namespace epic {
         vector<double> fFC_Q1;          // Q1 = integration on the full signal
         vector<double> fFC_Q2;          // Q2 = integration on the "rising"-time
         vector<double> fFC_Q3;          // Q3 = integration on the "decay"-time
+        double         fFC_TimeLastHF;  // time of the last HF for ToF calculation       
 
         short          fQmax_Index;    // index of the vector with Qmax starting from 0
         vector<double> fQmax_Sampler;  // sample of the anode with Qmax
         
-        double         fHF_Time;      // time of the current HF
-        double         fHF_TimePrev;  // time of the previous HF
+        double         fHF_Time;      // time of the current HF: fill only for HF data
+        double         fHF_TimePrev;  // time of the previous HF: fill only for HF data
 
     public:
         //////////////////////////////////////////////////////////////
@@ -80,6 +81,7 @@ namespace epic {
         inline void SetQ1(const double& Q1)                 {fFC_Q1.push_back(Q1);}//!
         inline void SetQ2(const double& Q2)                 {fFC_Q2.push_back(Q2);}//!
         inline void SetQ3(const double& Q3)                 {fFC_Q3.push_back(Q3);}//!
+        inline void SetTimeLastHF(const double& t_ns)       {fFC_TimeLastHF = t_ns;}//!
         // sample with Qmax
         inline void SetQmaxIndex(const short i)           {fQmax_Index = i;}//!
         inline void SetSampler(const vector<double> v_q)  {fQmax_Sampler=v_q;}//!
@@ -101,6 +103,7 @@ namespace epic {
         inline double GetQ1(const unsigned int &i) const {return fFC_Q1[i];}//!
         inline double GetQ2(const unsigned int &i) const {return fFC_Q2[i];}//!
         inline double GetQ3(const unsigned int &i) const {return fFC_Q3[i];}//!
+        inline double GetTimeLastHF() const {return fFC_TimeLastHF;}//!
         // sample with Qmax
         inline unsigned short GetQmaxIndex() const {return fQmax_Index;}//!
         inline double GetSample(const unsigned int &i) const {return fQmax_Sampler[i];}//!

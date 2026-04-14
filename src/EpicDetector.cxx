@@ -418,8 +418,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
       m_RawData->SetPulserTrig(true);
-      //m_RawData->SetTimePrevHF(m_TimeHF_prev);
-      //m_RawData->SetTimeHF(m_TimeHF_current);
+      m_RawData->SetTimeLastHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
     }
   } 
@@ -435,8 +434,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
       m_RawData->SetPulserTrig(true);
-      //m_RawData->SetTimePrevHF(m_TimeHF_prev);
-      //m_RawData->SetTimeHF(m_TimeHF_current);
+      m_RawData->SetTimeLastHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
     }
   } 
@@ -528,11 +526,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 m_RawData->SetTimeCfd(T_cfd);
                 m_RawData->SetTimeQmax(T_qmax); 
                 m_RawData->SetPulserTrig(false);
-                //if(m_RawData->GetFCMult()==1){ 
-                //    // no need to overwrite the same data
-                //    m_RawData->SetTimePrevHF(m_TimeHF_prev);
-                //    m_RawData->SetTimeHF(m_TimeHF_current);
-                //}
+                if(m_RawData->GetFCMult()==1){ 
+                    // no need to overwrite the same data
+                    m_RawData->SetTimeLastHF(m_TimeHF_current);
+                }
 
                 // sample for anode with Qmax
                 if (m_Get_Sampler_Qmax == 1) {

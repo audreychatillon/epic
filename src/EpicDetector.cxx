@@ -403,6 +403,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_TimeHF_prev    = m_TimeHF_current;
       m_TimeHF_current = (double)timestamp + (double)(qdc_conv_dt_ns(hf_data.tdc));
       //cout << setprecision(25) << " --> t_hf = " << m_TimeHF_current <<  "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+      m_RawData->SetTimePrevHF(m_TimeHF_prev);
+      m_RawData->SetTimeHF(m_TimeHF_current);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);
@@ -416,8 +418,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
       m_RawData->SetPulserTrig(true);
-      m_RawData->SetTimePrevHF(m_TimeHF_prev);
-      m_RawData->SetTimeHF(m_TimeHF_current);
+      //m_RawData->SetTimePrevHF(m_TimeHF_prev);
+      //m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
     }
   } 
@@ -433,8 +435,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(0);
       m_RawData->SetQmax(0);
       m_RawData->SetPulserTrig(true);
-      m_RawData->SetTimePrevHF(m_TimeHF_prev);
-      m_RawData->SetTimeHF(m_TimeHF_current);
+      //m_RawData->SetTimePrevHF(m_TimeHF_prev);
+      //m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
     }
   } 
@@ -526,11 +528,11 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 m_RawData->SetTimeCfd(T_cfd);
                 m_RawData->SetTimeQmax(T_qmax); 
                 m_RawData->SetPulserTrig(false);
-                if(m_RawData->GetFCMult()==1){ 
-                    // no need to overwrite the same data
-                    m_RawData->SetTimePrevHF(m_TimeHF_prev);
-                    m_RawData->SetTimeHF(m_TimeHF_current);
-                }
+                //if(m_RawData->GetFCMult()==1){ 
+                //    // no need to overwrite the same data
+                //    m_RawData->SetTimePrevHF(m_TimeHF_prev);
+                //    m_RawData->SetTimeHF(m_TimeHF_current);
+                //}
 
                 // sample for anode with Qmax
                 if (m_Get_Sampler_Qmax == 1) {

@@ -184,7 +184,7 @@ void EpicSpectra::FillRaw() {
   int FC_mult = m_RawData->GetFCMult();
   if (FC_mult > 0) {
     if (m_RawData->GetDetNbr(0) == -1) {
-      m_TimeHF->Fill(m_RawData->GetTimeHF * 1.e-09);
+      m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
       m_DeltaTimeHF->Fill(
           (m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
     } else {

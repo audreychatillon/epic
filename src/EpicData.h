@@ -70,21 +70,21 @@ namespace epic {
 
         //////////////////////    SETTERS    ////////////////////////
         // fission chamber
-        inline void SetDetNbr(const unsigned short& dnum)   {fFC_DetNbr.push_back(dnum);}//!
-        inline void SetAnodeNbr(const unsigned short& anum) {fFC_AnodeNbr.push_back(anum);}//!
-        inline void SetPulserTrig(const bool& kPulserTrig)  {fFC_PulserTrig.push_back(kPulserTrig);}//!
-        inline void SetTimeFC(const double& t_ns)           {fFC_Time.push_back(t_ns);}//!
-        inline void SetTofRaw(const double& tof_ns)         {fFC_TofRaw.push_back(tof_ns);}//!
-        inline void SetTimeCfd(const double& t_cfd_ns)      {fFC_TimeCfd.push_back(t_cfd_ns);}//!
-        inline void SetTimeQmax(const double& t_qmax_ns)    {fFC_TimeQmax.push_back(t_qmax_ns);}//!
-        inline void SetQmax(const double& Qmax)             {fFC_Qmax.push_back(Qmax);}//
-        inline void SetQ1(const double& Q1)                 {fFC_Q1.push_back(Q1);}//!
-        inline void SetQ2(const double& Q2)                 {fFC_Q2.push_back(Q2);}//!
-        inline void SetQ3(const double& Q3)                 {fFC_Q3.push_back(Q3);}//!
-        inline void SetTimeLastHF(const double& t_ns)       {fFC_TimeLastHF = t_ns;}//!
+        inline void SetDetNbr(const short& dnum)           {fFC_DetNbr.push_back(dnum);}//!
+        inline void SetAnodeNbr(const short& anum)         {fFC_AnodeNbr.push_back(anum);}//!
+        inline void SetPulserTrig(const bool& kPulserTrig) {fFC_PulserTrig.push_back(kPulserTrig);}//!
+        inline void SetTimeFC(const double& t_ns)          {fFC_Time.push_back(t_ns);}//!
+        inline void SetTofRaw(const double& tof_ns)        {fFC_TofRaw.push_back(tof_ns);}//!
+        inline void SetTimeCfd(const double& t_cfd_ns)     {fFC_TimeCfd.push_back(t_cfd_ns);}//!
+        inline void SetTimeQmax(const double& t_qmax_ns)   {fFC_TimeQmax.push_back(t_qmax_ns);}//!
+        inline void SetQmax(const double& Qmax)            {fFC_Qmax.push_back(Qmax);}//
+        inline void SetQ1(const double& Q1)                {fFC_Q1.push_back(Q1);}//!
+        inline void SetQ2(const double& Q2)                {fFC_Q2.push_back(Q2);}//!
+        inline void SetQ3(const double& Q3)                {fFC_Q3.push_back(Q3);}//!
+        inline void SetTimeLastHF(const double& t_ns)      {fFC_TimeLastHF = t_ns;}//!
         // sample with Qmax
-        inline void SetQmaxIndex(const short i)           {fQmax_Index = i;}//!
-        inline void SetSampler(const vector<double> v_q)  {fQmax_Sampler=v_q;}//!
+        inline void SetQmaxIndex(const short i)          {fQmax_Index = i;}//!
+        inline void SetSampler(const vector<double> v_q) {fQmax_Sampler=v_q;}//!
         // HF
         inline void SetTimeHF(const double& t_ns)     {fHF_Time = t_ns;}//!
         inline void SetTimePrevHF(const double& t_ns) {fHF_TimePrev = t_ns;}//!
@@ -92,8 +92,8 @@ namespace epic {
         //////////////////////    GETTERS    ////////////////////////
         // fission chamber
         inline unsigned short GetFCMult() const {return (unsigned short)fFC_AnodeNbr.size();}//!
-        inline int GetDetNbr(const unsigned int &i) const {return fFC_DetNbr[i];}//!
-        inline int GetAnodeNbr(const unsigned int &i) const {return fFC_AnodeNbr[i];}//!
+        inline short GetDetNbr(const unsigned int &i) const {return fFC_DetNbr[i];}//!
+        inline short GetAnodeNbr(const unsigned int &i) const {return fFC_AnodeNbr[i];}//!
         inline bool GetPulserTrig(const unsigned int &i) const {return fFC_PulserTrig[i];}//!
         inline double GetTimeFC(const unsigned int &i) const {return fFC_Time[i];}//!
         inline double GetTofRaw(const unsigned int &i) const {return fFC_TofRaw[i];}//!

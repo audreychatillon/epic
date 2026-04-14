@@ -182,71 +182,74 @@ void EpicSpectra::FillRaw() {
   std::vector<string> actinide = m_detector->GetActinideMaterial();
 
   int FC_mult = m_RawData->GetFCMult();
-  if (FC_mult > 0) {// if FC data input
-    int multPerFC[nDets];
-    int IndexMax[nDets];
-    double Qmax[nDets];
-    for (int d = 0; d < nDets; d++) {
-      multPerFC[d] = 0;
-      IndexMax[d] = -1;
-      Qmax[d] = 0.;
-    }
-
-    // loop over the raw data
-    // search for qmax per FC
-    for (int i = 0; i < FC_mult; i++) {
-      if (m_RawData->GetPulserTrig(i))
-        continue;
-      int det = m_RawData->GetDetNbr(i);
-      int anode = m_RawData->GetAnodeNbr(i);
-      double qmax = m_RawData->GetQmax(i);
-      multPerFC[det - 1]++;
-      m_hAid[det - 1]->Fill(anode);
-      if (qmax > Qmax[det - 1]) {
-        Qmax[det - 1] = qmax;
-        IndexMax[det - 1] = i;
+  if (FC_mult > 0) {
+    if (m_RawData->GetDetNbr(0) == -1) {
+      m_TimeHF->Fill(m_RawData->GetTimeHF * 1.e-09);
+      m_DeltaTimeHF->Fill(
+          (m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
+    } else {
+      int multPerFC[nDets];
+      int IndexMax[nDets];
+      double Qmax[nDets];
+      for (int d = 0; d < nDets; d++) {
+        multPerFC[d] = 0;
+        IndexMax[d] = -1;
+        Qmax[d] = 0.;
       }
-    } // end of loop over the raw data
 
-    // spectra for Qmax only: suppress cross-talk
-    for (int d = 0; d < nDets; d++) {
-      m_hMult[d]->Fill(multPerFC[d]);
-      if (Qmax[d] > 0 && IndexMax[d] >= 0) {
-        int det = m_RawData->GetDetNbr(IndexMax[d]);
-        if (det != (d + 1))
-          std::cout << "ERROR: didn't recover Qmax data to fill raw spectra"
-                    << std::endl;
-        int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
-        int index = m_detector->GetIndex(det, anode);
-        double qm = m_RawData->GetQmax(IndexMax[d]);
-        double q1 = m_RawData->GetQ1(IndexMax[d]);
-        double q2 = m_RawData->GetQ2(IndexMax[d]);
-        double q3 = m_RawData->GetQ3(IndexMax[d]);
-        double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
-        double t_hf = m_RawData->GetTimeLastHF();
-        double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
-        double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
-        m_hAid_ifQmax[d]->Fill(anode);
-        m_hQ1vAid[d]->Fill(anode, q1);
-        m_hQ2vQ1[index]->Fill(q1, q2);
-        m_hQmvQ1[index]->Fill(q1, qm);
-        m_hQ1[index]->Fill(q1);
-        m_hQ2[index]->Fill(q2);
-        m_hQ3[index]->Fill(q3);
-        m_hQm[index]->Fill(qm);
-        m_hTof[index]->Fill(t_fc - t_hf);
-        m_hDT[index]->Fill(t_qmax - t_cfd);
-        m_hQ1vT[index]->Fill(t_fc * 1.e-9, q1);
-        if (q3 > 0)
-          m_hQ2Q3vQ1[index]->Fill(q1, q2 / q3);
+      // loop over the raw data
+      // search for qmax per FC
+      for (int i = 0; i < FC_mult; i++) {
+        if (m_RawData->GetPulserTrig(i))
+          continue;
+        int det = m_RawData->GetDetNbr(i);
+        if (det < 0)
+          continue;
+        int anode = m_RawData->GetAnodeNbr(i);
+        double qmax = m_RawData->GetQmax(i);
+        multPerFC[det - 1]++;
+        m_hAid[det - 1]->Fill(anode);
+        if (qmax > Qmax[det - 1]) {
+          Qmax[det - 1] = qmax;
+          IndexMax[det - 1] = i;
+        }
+      } // end of loop over the raw data
+
+      // spectra for Qmax only: suppress cross-talk
+      for (int d = 0; d < nDets; d++) {
+        m_hMult[d]->Fill(multPerFC[d]);
+        if (Qmax[d] > 0 && IndexMax[d] >= 0 && multPerFC[d] > 0) {
+          int det = m_RawData->GetDetNbr(IndexMax[d]);
+          if (det != (d + 1))
+            std::cout << "ERROR: didn't recover Qmax data to fill raw spectra"
+                      << std::endl;
+          int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
+          int index = m_detector->GetIndex(det, anode);
+          double qm = m_RawData->GetQmax(IndexMax[d]);
+          double q1 = m_RawData->GetQ1(IndexMax[d]);
+          double q2 = m_RawData->GetQ2(IndexMax[d]);
+          double q3 = m_RawData->GetQ3(IndexMax[d]);
+          double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
+          double t_hf = m_RawData->GetTimeLastHF();
+          double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
+          double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
+          m_hAid_ifQmax[d]->Fill(anode);
+          m_hQ1vAid[d]->Fill(anode, q1);
+          m_hQ2vQ1[index]->Fill(q1, q2);
+          m_hQmvQ1[index]->Fill(q1, qm);
+          m_hQ1[index]->Fill(q1);
+          m_hQ2[index]->Fill(q2);
+          m_hQ3[index]->Fill(q3);
+          m_hQm[index]->Fill(qm);
+          m_hTof[index]->Fill(t_fc - t_hf);
+          m_hDT[index]->Fill(t_qmax - t_cfd);
+          m_hQ1vT[index]->Fill(t_fc * 1.e-9, q1);
+          if (q3 > 0)
+            m_hQ2Q3vQ1[index]->Fill(q1, q2 / q3);
+        }
       }
-    }
-  } // end of FC data (no HF data)
-  else { // if HF data
-    m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
-    m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) *
-                        1.e-06);
-  }
+    } // end of if else Det[0] != -1
+  } // end of if FC_mult > 0 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::FillPhy() {}
@@ -255,22 +258,50 @@ void EpicSpectra::Clear() {
 
   // === raw histograms
   // --- 1D histograms (indexed by anode)
-  for (auto *h : m_hQm)    if (h)      h->Reset();
-  for (auto *h : m_hQ1)    if (h)      h->Reset();
-  for (auto *h : m_hQ2)    if (h)      h->Reset();
-  for (auto *h : m_hQ3)    if (h)      h->Reset();
-  for (auto *h : m_hTof)   if (h)      h->Reset();
-  for (auto *h : m_hDT)    if (h)      h->Reset();
+  for (auto *h : m_hQm)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ1)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ2)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ3)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hTof)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hDT)
+    if (h)
+      h->Reset();
   // --- 2D histograms (indexed by anode)
-  for (auto *h : m_hQ2vQ1)    if (h)      h->Reset();
-  for (auto *h : m_hQmvQ1)    if (h)      h->Reset();
-  for (auto *h : m_hQ2Q3vQ1)  if (h)      h->Reset();
-  for (auto *h : m_hQ1vT)     if (h)      h->Reset();
+  for (auto *h : m_hQ2vQ1)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQmvQ1)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ2Q3vQ1)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ1vT)
+    if (h)
+      h->Reset();
   // --- detector histograms
-  for (auto *h : m_hMult)       if (h)      h->Reset();
-  for (auto *h : m_hAid)        if (h)      h->Reset();
-  for (auto *h : m_hAid_ifQmax) if (h)      h->Reset();
-  for (auto *h : m_hQ1vAid)     if (h)      h->Reset();
+  for (auto *h : m_hMult)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hAid)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hAid_ifQmax)
+    if (h)
+      h->Reset();
+  for (auto *h : m_hQ1vAid)
+    if (h)
+      h->Reset();
   // --- general histograms
   m_TimeHF->Reset();
 }

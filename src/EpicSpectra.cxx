@@ -80,16 +80,10 @@ EpicSpectra::EpicSpectra() {
     m_can[d - 1][9] = CreateCanvas(base + "_Tof", ncol);
     m_can[d - 1][10] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
 
-    m_hMult[d - 1] = new TH1F((base + "_Mult").c_str(),
-                              (base + "_Mult").c_str(), 13, -0.5, 12.5);
-    m_hAid[d - 1] = new TH1F((base + "_AnodeID").c_str(),
-                             (base + "_AnodeID").c_str(), 13, -0.5, 12.5);
-    m_hAid_ifQmax[d - 1] =
-        new TH1F((base + "_AnodeID_ifQmax").c_str(),
-                 (base + "_AnodeID_ifQmax").c_str(), 13, -0.5, 12.5);
-    m_hQ1vAid[d - 1] =
-        new TH2F((base + "_Q1vAnodeID").c_str(), (base + "_Q1vAnodeID").c_str(),
-                 13, -0.5, 12.5, 1500, 0, 300000);
+    m_hMult[d - 1] = new TH1F((base + "_Mult").c_str(),(base + "_Mult").c_str(), 13, -0.5, 12.5);
+    m_hAid[d - 1] = new TH1F((base + "_AnodeID").c_str(),(base + "_AnodeID").c_str(), 13, -0.5, 12.5);
+    m_hAid_ifQmax[d - 1] = new TH1F((base + "_AnodeID_ifQmax").c_str(),(base + "_AnodeID_ifQmax").c_str(), 13, -0.5, 12.5);
+    m_hQ1vAid[d - 1] = new TH2F((base + "_Q1vAnodeID").c_str(), (base + "_Q1vAnodeID").c_str(),13, -0.5, 12.5, 1500, 0, 300000);
 
     m_hAid_ifQmax[d - 1]->SetLineColor(kRed);
 
@@ -107,66 +101,34 @@ EpicSpectra::EpicSpectra() {
       int i = m_detector->GetIndex(d, a);
 
       ostringstream name;
-      name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a
-           << "_" << actinide[i];
+      name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a << "_" << actinide[i];
       string prefix = name.str();
 
-      m_hQ1vT[i] =
-          new TH2F((prefix + "_Q1vT").c_str(), (prefix + "_Q1vT").c_str(), 1440,
-                   0, 86400, 1000, 0, 200000);
-      m_hQ2Q3vQ1[i] =
-          new TH2F((prefix + "_Q2Q3vQ1").c_str(), (prefix + "_Q2Q3vQ1").c_str(),
-                   1500, 0, 300000, 500, 0, 10);
-      m_hQ2vQ1[i] =
-          new TH2F((prefix + "_Q2vQ1").c_str(), (prefix + "_Q2vQ1").c_str(),
-                   1500, 0, 300000, 500, 0, 200000);
-      m_hQmvQ1[i] =
-          new TH2F((prefix + "_QmaxvQ1").c_str(), (prefix + "_QmaxvQ1").c_str(),
-                   1000, 0, 200000, 200, 0, 20000);
+      m_hQ1vT[i] = new TH2F((prefix + "_Q1vT").c_str(), (prefix + "_Q1vT").c_str(), 1440,0, 86400, 1000, 0, 200000);
+      m_hQ2Q3vQ1[i] = new TH2F((prefix + "_Q2Q3vQ1").c_str(), (prefix + "_Q2Q3vQ1").c_str(),1500, 0, 300000, 500, 0, 10);
+      m_hQ2vQ1[i] = new TH2F((prefix + "_Q2vQ1").c_str(), (prefix + "_Q2vQ1").c_str(),1500, 0, 300000, 500, 0, 200000);
+      m_hQmvQ1[i] = new TH2F((prefix + "_QmaxvQ1").c_str(), (prefix + "_QmaxvQ1").c_str(),1000, 0, 200000, 200, 0, 20000);
 
-      m_hQ1[i] = new TH1F((prefix + "_Q1").c_str(), (prefix + "_Q1").c_str(),
-                          25000, 0, 500000);
-      m_hQ2[i] = new TH1F((prefix + "_Q2").c_str(), (prefix + "_Q2").c_str(),
-                          25000, 0, 500000);
-      m_hQ3[i] = new TH1F((prefix + "_Q3").c_str(), (prefix + "_Q3").c_str(),
-                          25000, 0, 500000);
-      m_hQm[i] = new TH1F((prefix + "_Qmax").c_str(),
-                          (prefix + "_Qmax").c_str(), 2500, 0, 25000);
-      m_hTof[i] = new TH1F((prefix + "_Tof").c_str(), (prefix + "_Tof").c_str(),
-                           3000, -200, 2800);
-      m_hDT[i] = new TH1F((prefix + "_Tqmax_Tcfd").c_str(),
-                          (prefix + "_Tqmax_Tcfd").c_str(), 1000, -50, 50);
+      m_hQ1[i]  = new TH1F((prefix + "_Q1").c_str(), (prefix + "_Q1").c_str(),25000, 0, 500000);
+      m_hQ2[i]  = new TH1F((prefix + "_Q2").c_str(), (prefix + "_Q2").c_str(),25000, 0, 500000);
+      m_hQ3[i]  = new TH1F((prefix + "_Q3").c_str(), (prefix + "_Q3").c_str(),25000, 0, 500000);
+      m_hQm[i]  = new TH1F((prefix + "_Qmax").c_str(), (prefix + "_Qmax").c_str(), 2500, 0, 25000);
+      m_hTof[i] = new TH1F((prefix + "_Tof").c_str(), (prefix + "_Tof").c_str(),  3000, -200, 2800);
+      m_hDT[i]  = new TH1F((prefix + "_Tqmax_Tcfd").c_str(),(prefix + "_Tqmax_Tcfd").c_str(), 1000, -50, 50);
 
       m_hQ2[i]->SetLineColor(8);
       m_hQ3[i]->SetLineColor(kCyan);
       m_hQ1vT[i]->GetXaxis()->SetTitle("Time [s] : 60s / bin");
       m_hQ1vT[i]->GetYaxis()->SetTitle("Q1");
 
-      m_can[d - 1][3]->cd(a);
-      gPad->SetLogz();
-      m_hQ1vT[i]->Draw("colz");
-      m_can[d - 1][4]->cd(a);
-      gPad->SetLogz();
-      m_hQ2Q3vQ1[i]->Draw("colz");
-      m_can[d - 1][5]->cd(a);
-      gPad->SetLogz();
-      m_hQ2vQ1[i]->Draw("colz");
-      m_can[d - 1][6]->cd(a);
-      gPad->SetLogz();
-      m_hQmvQ1[i]->Draw("colz");
-      m_can[d - 1][7]->cd(a);
-      gPad->SetLogy();
-      m_hQ1[i]->Draw();
-      m_hQ2[i]->Draw("same");
-      m_hQ3[i]->Draw("same");
-      m_can[d - 1][8]->cd(a);
-      gPad->SetLogy();
-      m_hQm[i]->Draw();
-      m_can[d - 1][9]->cd(a);
-      gPad->SetLogy();
-      m_hTof[i]->Draw();
-      m_can[d - 1][10]->cd(a);
-      m_hDT[i]->Draw();
+      m_can[d - 1][3]->cd(a); gPad->SetLogz(); m_hQ1vT[i]->Draw("colz");
+      m_can[d - 1][4]->cd(a); gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
+      m_can[d - 1][5]->cd(a); gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");
+      m_can[d - 1][6]->cd(a); gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");
+      m_can[d - 1][7]->cd(a); gPad->SetLogy(); m_hQ1[i]->Draw(); m_hQ2[i]->Draw("same"); m_hQ3[i]->Draw("same");
+      m_can[d - 1][8]->cd(a); gPad->SetLogy(); m_hQm[i]->Draw();
+      m_can[d - 1][9]->cd(a); gPad->SetLogy(); m_hTof[i]->Draw();
+      m_can[d - 1][10]->cd(a); m_hDT[i]->Draw();
     } // end of loop over nAnodes[d-1]
   } // end of loop over nDets
 }
@@ -183,10 +145,7 @@ void EpicSpectra::FillRaw() {
 
   int FC_mult = m_RawData->GetFCMult();
   if (FC_mult > 0) {
-    cout << endl << "FC_mult = " << FC_mult << endl;
-    cout << "det [0] = " << m_RawData->GetDetNbr(0) << endl; 
     if (m_RawData->GetDetNbr(0) == -1) {
-      cout << "det [0] = " << m_RawData->GetDetNbr(0) << endl; 
       m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
       m_DeltaTimeHF->Fill(
           (m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
@@ -261,50 +220,22 @@ void EpicSpectra::Clear() {
 
   // === raw histograms
   // --- 1D histograms (indexed by anode)
-  for (auto *h : m_hQm)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ1)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ2)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ3)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hTof)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hDT)
-    if (h)
-      h->Reset();
+  for (auto *h : m_hQm)    if (h)      h->Reset();
+  for (auto *h : m_hQ1)    if (h)      h->Reset();
+  for (auto *h : m_hQ2)    if (h)      h->Reset();
+  for (auto *h : m_hQ3)    if (h)      h->Reset();
+  for (auto *h : m_hTof)   if (h)      h->Reset();
+  for (auto *h : m_hDT)    if (h)      h->Reset();
   // --- 2D histograms (indexed by anode)
-  for (auto *h : m_hQ2vQ1)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQmvQ1)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ2Q3vQ1)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ1vT)
-    if (h)
-      h->Reset();
+  for (auto *h : m_hQ2vQ1)    if (h)      h->Reset();
+  for (auto *h : m_hQmvQ1)    if (h)      h->Reset();
+  for (auto *h : m_hQ2Q3vQ1)  if (h)      h->Reset();
+  for (auto *h : m_hQ1vT)     if (h)      h->Reset();
   // --- detector histograms
-  for (auto *h : m_hMult)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hAid)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hAid_ifQmax)
-    if (h)
-      h->Reset();
-  for (auto *h : m_hQ1vAid)
-    if (h)
-      h->Reset();
+  for (auto *h : m_hMult)    if (h)      h->Reset();
+  for (auto *h : m_hAid)     if (h)      h->Reset();
+  for (auto *h : m_hAid_ifQmax) if (h)      h->Reset();
+  for (auto *h : m_hQ1vAid)    if (h)      h->Reset();
   // --- general histograms
   m_TimeHF->Reset();
 }

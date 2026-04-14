@@ -37,12 +37,8 @@ EpicSpectra::EpicSpectra() {
   m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
   m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ms] 1us/bin");
 
-  m_canT0->cd(1);
-  gPad->SetLogy();
-  m_TimeHF->Draw();
-  m_canT0->cd(2);
-  gPad->SetLogy();
-  m_DeltaTimeHF->Draw();
+  m_canT0->cd(1); m_TimeHF->Draw();
+  m_canT0->cd(2); gPad->SetLogy();  m_DeltaTimeHF->Draw();
 
   // Resize histogram containers
   m_hQ2vQ1.resize(nAnodesTot);

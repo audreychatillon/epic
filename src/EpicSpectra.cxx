@@ -183,7 +183,10 @@ void EpicSpectra::FillRaw() {
 
   int FC_mult = m_RawData->GetFCMult();
   if (FC_mult > 0) {
+    cout << endl << "FC_mult = " << FC_mult << endl;
+    cout << "det [0] = " << m_RawData->GetDetNbr(0) << endl; 
     if (m_RawData->GetDetNbr(0) == -1) {
+      cout << "det [0] = " << m_RawData->GetDetNbr(0) << endl; 
       m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
       m_DeltaTimeHF->Fill(
           (m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);

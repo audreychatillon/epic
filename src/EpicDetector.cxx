@@ -57,7 +57,6 @@ EpicDetector::EpicDetector() {
   m_good_raw_event = 0;
   m_TimeHF_prev = 0.;
   m_TimeHF_current = 0.;
-  m_total_fFC_events = 0;
 
   m_Get_Sampler_Qmax = 0;
 }
@@ -441,6 +440,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
 
   if (alias == QDC_TDC_X1_TYPE_ALIAS) {
     if (label == "HF") {
+      m_RawData->Clear();
       faster_data_load(data, &hf_data);
       m_TimeHF_prev    = m_TimeHF_current;
       m_TimeHF_current = (double)timestamp + (double)(qdc_conv_dt_ns(hf_data.tdc));
@@ -453,6 +453,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ2(-1);
       m_RawData->SetQ3(-1);
       m_RawData->SetQmax(-1);
+      m_RawData->SetQmaxIndex(-1);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);
@@ -565,12 +566,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-            if(m_RawData->GetFCMult() == 0) {
-		cout << endl;
-		cout << "------------------------ " << m_total_fFC_events <<  endl;
-                m_total_fFC_events++;
-	    }
-            cout << "CASE SAMPLER : GetFCMult() = " << m_RawData->GetFCMult() << endl;
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);
             m_RawData->SetQ1(Q1);
@@ -582,7 +577,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetTimeCfd(T_cfd);
             m_RawData->SetTimeQmax(T_qmax);
             m_RawData->SetPulserTrig(false);
-            cout << "      fFC data filled with Qmax = " << Qmax << "  ===> GetFCMult() = " << m_RawData->GetFCMult() << endl;
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);
@@ -593,18 +587,15 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               if (m_RawData->GetFCMult() == 1) {
                 m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
-                cout << "     fQmax data filled (case Mult==1) : GetQMaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
               } else if(m_RawData->GetFCMult()>1) {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                   m_RawData->SetSampler(Signal);
                   m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
-                  cout << "     fQmax data filled (case Mult>1) : GetQMaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
                 }
               }
             } else {
               m_RawData->SetQmaxIndex(-1);
             }
-            cout << "----> GetQmaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
           } // end of rejection or not of events as a function of its tof_raw
           /////// MACRO TO DRAW SIGNALS
           /*if(ID ==1){

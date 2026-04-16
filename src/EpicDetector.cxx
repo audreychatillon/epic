@@ -448,6 +448,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetDetNbr(-1);
       m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetQ1(-1);
+      m_RawData->SetQ2(-1);
+      m_RawData->SetQ3(-1);
+      m_RawData->SetQmax(-1);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);
@@ -557,10 +561,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           Q3 = sample.integrateSignal(2, start, stop);
 
         if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
-          double TimeFC =
-              (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
+          double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
+            cout << endl << "CASE SAMPLER : GetFCMult() = " << m_RawData->GetFCMult() << endl;
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);
             m_RawData->SetQ1(Q1);
@@ -572,6 +576,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetTimeCfd(T_cfd);
             m_RawData->SetTimeQmax(T_qmax);
             m_RawData->SetPulserTrig(false);
+            cout << "      fFC data filled with Qmax = " << Qmax << "  ===> GetFCMult() = " << m_RawData->GetFCMult() << endl;
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);
@@ -582,10 +587,12 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               if (m_RawData->GetFCMult() == 1) {
                 m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
-              } else {
+                cout << "     fQmax data filled (case Mult==1) : GetQMaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
+              } else if(m_RawData->GetFCMult()>1) {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                   m_RawData->SetSampler(Signal);
                   m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
+                  cout << "     fQmax data filled (case Mult>1) : GetQMaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
                 }
               }
             } else {

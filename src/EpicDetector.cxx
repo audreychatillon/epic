@@ -57,6 +57,7 @@ EpicDetector::EpicDetector() {
   m_good_raw_event = 0;
   m_TimeHF_prev = 0.;
   m_TimeHF_current = 0.;
+  m_total_fFC_events = 0;
 
   m_Get_Sampler_Qmax = 0;
 }
@@ -564,7 +565,12 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-            cout << endl << "CASE SAMPLER : GetFCMult() = " << m_RawData->GetFCMult() << endl;
+            if(m_RawData->GetFCMult() == 0) {
+		cout << endl;
+		cout << "------------------------ " << m_total_fFC_events <<  endl;
+                m_total_fFC_events++;
+	    }
+            cout << "CASE SAMPLER : GetFCMult() = " << m_RawData->GetFCMult() << endl;
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);
             m_RawData->SetQ1(Q1);
@@ -598,6 +604,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             } else {
               m_RawData->SetQmaxIndex(-1);
             }
+            cout << "----> GetQmaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
           } // end of rejection or not of events as a function of its tof_raw
           /////// MACRO TO DRAW SIGNALS
           /*if(ID ==1){

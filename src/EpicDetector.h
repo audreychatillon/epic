@@ -36,7 +36,8 @@ private:
   int m_good_raw_event{0};
   double m_TimeHF_prev{0.};
   double m_TimeHF_current{0.};
-  
+  unsigned long long int m_total_fFC_events{0};  
+
   // detector configuration
   unsigned int         m_nDets{0}; 
   vector<unsigned int> m_nAnodes;

@@ -5,7 +5,7 @@ using namespace epic;
 
 ////////////////////////////////////////////////////////////////////////////////
 TCanvas *EpicSpectra::CreateCanvas(const std::string &name, int ncol) {
-  TCanvas *c = new TCanvas(name.c_str(), name.c_str(), 1200, 800);
+  TCanvas *c = new TCanvas(name.c_str(), name.c_str());
   c->Divide(ncol, 2);
   return c;
 }
@@ -40,84 +40,143 @@ EpicSpectra::EpicSpectra() {
   m_canT0->cd(1); m_TimeHF->Draw();
   m_canT0->cd(2); gPad->SetLogy();  m_DeltaTimeHF->Draw();
 
-  // Resize histogram containers
-  m_hQ2vQ1.resize(nAnodesTot);
-  m_hQ2Q3vQ1.resize(nAnodesTot);
-  m_hQmvQ1.resize(nAnodesTot);
-  m_hQ1vT.resize(nAnodesTot);
-  m_hQm.resize(nAnodesTot);
-  m_hQ1.resize(nAnodesTot);
-  m_hQ2.resize(nAnodesTot);
-  m_hQ3.resize(nAnodesTot);
-  m_hTof.resize(nAnodesTot);
-  m_hDT.resize(nAnodesTot);
-  m_hAid.resize(nDets);
-  m_hAid_ifQmax.resize(nDets);
-  m_hQ1vAid.resize(nDets);
-  m_hMult.resize(nDets);
+  //// Resize histogram containers
+  //m_hQ2vQ1.resize(nAnodesTot);
+  //m_hQ2Q3vQ1.resize(nAnodesTot);
+  //m_hQmvQ1.resize(nAnodesTot);
+  //m_hQ1vT.resize(nAnodesTot);
+  //m_hQm.resize(nAnodesTot);
+  //m_hQ1.resize(nAnodesTot);
+  //m_hQ2.resize(nAnodesTot);
+  //m_hQ3.resize(nAnodesTot);
+  //m_hTof.resize(nAnodesTot);
+  //m_hDT.resize(nAnodesTot);
+  //m_hQ1vAid.resize(nDets);
 
-  m_can.resize(nDets);
+  //m_can.resize(nDets);
 
   // loop over nDets
   for (unsigned int d = 1; d <= nDets; d++) {
 
-    // create the canvas per detector
+    // create the canvas and histos per detector
     int ncol = ceil(0.5 * nAnodes[d - 1]);
     std::string base = "EPIC" + std::to_string(d);
-    m_can[d - 1][0] = CreateCanvas(base + "_MULT", ncol);
-    m_can[d - 1][1] = CreateCanvas(base + "_A", ncol);
-    m_can[d - 1][2] = CreateCanvas(base + "_Q1vA", ncol);
-    m_can[d - 1][3] = CreateCanvas(base + "_Q1vT", ncol);
-    m_can[d - 1][4] = CreateCanvas(base + "_Q2Q3vQ1", ncol);
-    m_can[d - 1][5] = CreateCanvas(base + "_Q2vQ1", ncol);
-    m_can[d - 1][6] = CreateCanvas(base + "_QmaxvQ1", ncol);
-    m_can[d - 1][7] = CreateCanvas(base + "_Q", ncol);
-    m_can[d - 1][8] = CreateCanvas(base + "_Qmax", ncol);
-    m_can[d - 1][9] = CreateCanvas(base + "_Tof", ncol);
-    m_can[d - 1][10] = CreateCanvas(base + "_DT_Tqmax_Tcfd", ncol);
+    std::string can_name;
+    std::string his_name;
 
-    m_hMult[d - 1] = new TH1F((base + "_Mult").c_str(),(base + "_Mult").c_str(), 13, -0.5, 12.5);
-    m_hAid[d - 1] = new TH1F((base + "_AnodeID").c_str(),(base + "_AnodeID").c_str(), 13, -0.5, 12.5);
-    m_hAid_ifQmax[d - 1] = new TH1F((base + "_AnodeID_ifQmax").c_str(),(base + "_AnodeID_ifQmax").c_str(), 13, -0.5, 12.5);
-    m_hQ1vAid[d - 1] = new TH2F((base + "_Q1vAnodeID").c_str(), (base + "_Q1vAnodeID").c_str(),13, -0.5, 12.5, 1500, 0, 300000);
+    can_name = base + "_MULT"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    his_name = base + "_Mult"; 
+    m_raw_h1[name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
+    m_raw_can[can_name]->cd(1);
+    m_raw_h1[his_name]->Draw();
 
-    m_hAid_ifQmax[d - 1]->SetLineColor(kRed);
+    can_name = base + "_A"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    his_name = base + "_AnodeID";
+    m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
+    m_raw_can[can_name]->cd(1);
+    m_raw_h1[his_name]->Draw();
+    his_name = base + "_AnodeID_ifQmax";
+    m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
+    m_raw_h1[his_name]->SetLineColor(kRed);
+    m_raw_can[can_name]->cd(1);
+    m_raw_h1[his_name]->Draw("same");
+    
+    can_name = base + "_Q1vA"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    his_name = base + "_Q1vAnodeID"
+    m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),13, -0.5, 12.5, 1500, 0, 300000);
+    m_raw_can[can_name]->cd(1);
+    m_hQ1vAid[his_name]->Draw("colz");
+    
+    can_name = base + "_Q1vT"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Q2Q3vQ1"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Q2vQ1"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_QmaxvQ1"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Q"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Qmax"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Tof"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_DT_Tqmax_Tcfd"';
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
 
-    m_can[d - 1][0]->cd();
-    m_hMult[d - 1]->Draw();
-    m_can[d - 1][1]->cd();
-    m_hAid[d - 1]->Draw();
-    m_hAid_ifQmax[d - 1]->Draw("same");
-    m_can[d - 1][2]->cd();
-    m_hQ1vAid[d - 1]->Draw("colz");
 
-    // loop over the anodes
+    // loop over the anodes and create the histo per anode
     for (unsigned int a = 1; a <= nAnodes[d - 1]; a++) {
 
-      int i = m_detector->GetIndex(d, a);
+      //int i = m_detector->GetIndex(d, a);
 
       ostringstream name;
       name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a << "_" << actinide[i];
       string prefix = name.str();
 
-      m_hQ1vT[i] = new TH2F((prefix + "_Q1vT").c_str(), (prefix + "_Q1vT").c_str(), 1440,0, 86400, 1000, 0, 200000);
-      m_hQ2Q3vQ1[i] = new TH2F((prefix + "_Q2Q3vQ1").c_str(), (prefix + "_Q2Q3vQ1").c_str(),1500, 0, 300000, 500, 0, 10);
-      m_hQ2vQ1[i] = new TH2F((prefix + "_Q2vQ1").c_str(), (prefix + "_Q2vQ1").c_str(),1500, 0, 300000, 500, 0, 200000);
-      m_hQmvQ1[i] = new TH2F((prefix + "_QmaxvQ1").c_str(), (prefix + "_QmaxvQ1").c_str(),1000, 0, 200000, 200, 0, 20000);
+      his_name = prefix + "_Q1vT";
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), (his_name + "_Q1vT").c_str(), 1440,0, 86400, 1000, 0, 200000);
+      m_raw_h2[his_name]->GetXaxis()->SetTitle("Time [s] : 60s / bin");
+      m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
+      can_name = base + "_Q1vT"';
+      m_raw_can[can_name]->cd(a);
+      gPad->SetLogz(); 
+      m_raw_h2[his_name]->Draw("colz");
 
-      m_hQ1[i]  = new TH1F((prefix + "_Q1").c_str(), (prefix + "_Q1").c_str(),25000, 0, 500000);
-      m_hQ2[i]  = new TH1F((prefix + "_Q2").c_str(), (prefix + "_Q2").c_str(),25000, 0, 500000);
-      m_hQ3[i]  = new TH1F((prefix + "_Q3").c_str(), (prefix + "_Q3").c_str(),25000, 0, 500000);
-      m_hQm[i]  = new TH1F((prefix + "_Qmax").c_str(), (prefix + "_Qmax").c_str(), 2500, 0, 25000);
-      m_hTof[i] = new TH1F((prefix + "_Tof").c_str(), (prefix + "_Tof").c_str(),  3000, -200, 2800);
-      m_hDT[i]  = new TH1F((prefix + "_Tqmax_Tcfd").c_str(),(prefix + "_Tqmax_Tcfd").c_str(), 1000, -50, 50);
+      his_name = prefix + "_Q2Q3vQ1";
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 10);
+      can_name = base + "_Q2Q3vQ1"';
+      m_raw_can[can_name]->cd(a);
+      gPad->SetLogz(); 
+      m_raw_h2[his_name]->Draw("colz");
 
+      his_name = prefix + "_Q2vQ1";
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 200000);
+      can_name = base + "_Q2vQ`"';
+      m_raw_can[can_name]->cd(a);
+      gPad->SetLogz(); 
+      m_raw_h2[his_name]->Draw("colz");
+
+      his_name = prefix + "_QmaxvQ1";
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 200000, 200, 0, 20000);
+      can_name = base + "_QmaxcQ1"';
+      m_raw_can[can_name]->cd(a);
+      gPad->SetLogz(); 
+      m_raw_h2[his_name]->Draw("colz");
+
+
+      // TODO TODO
+      his_name = prefix + "_Q1";
+      m_hQ1[i]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
+
+      his_name = prefix + "_Q2";
+      m_hQ2[i]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
       m_hQ2[i]->SetLineColor(8);
-      m_hQ3[i]->SetLineColor(kCyan);
-      m_hQ1vT[i]->GetXaxis()->SetTitle("Time [s] : 60s / bin");
-      m_hQ1vT[i]->GetYaxis()->SetTitle("Q1");
 
-      m_can[d - 1][3]->cd(a); gPad->SetLogz(); m_hQ1vT[i]->Draw("colz");
+      his_name = prefix + "_Q3";
+      m_hQ3[i]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
+      m_hQ3[i]->SetLineColor(kCyan);
+
+      his_name = prefix + "_Qmax";
+      m_hQm[i]  = new TH1F(his_name.c_str(), his_name.c_str(), 2500, 0, 25000);
+
+      his_name = prefix + "_Tof";
+      m_hTof[i] = new TH1F(his_name.c_str(), his_name.c_str(),  3000, -200, 2800);
+
+      his_name = prefix + "_Tqmax_Tcfd";
+      m_hDT[i]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -50, 50);
+
+
       m_can[d - 1][4]->cd(a); gPad->SetLogz(); m_hQ2Q3vQ1[i]->Draw("colz");
       m_can[d - 1][5]->cd(a); gPad->SetLogz(); m_hQ2vQ1[i]->Draw("colz");
       m_can[d - 1][6]->cd(a); gPad->SetLogz(); m_hQmvQ1[i]->Draw("colz");

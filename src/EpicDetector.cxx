@@ -75,11 +75,17 @@ void EpicDetector::BuildEpicChannelMaps(){
             int anode = m_AnodeNumber[offset+a];
             m_anode2index[d][a] = global_index;
             m_index2channel.push_back({d+1, anode});
-            cout << "det = " << d+1 << ", anode = " << anode << ", index = " << global_index << endl;
             global_index++;
         } // end for(a)
         offset += nA;
     }// end for(d)
+
+    cout << "m_nAtot = " << m_nAtot << endl;
+    cout << "m_index2channel.size() = " << m_index2channel.size() << endl;
+    for(int index = 0 ; index < m_nAtot ; index++){
+        epic_channel ch = m_index2channel[index];
+        cout << "index = " << index << ", det = " << ch.det << ", anode = " << ch.anode << endl;
+    } 
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +104,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
   vector<double> Pos;
   int            nA;
-  int            nAtot = 0;
   double         zOff;
   vector<double> dz;
   vector<string> material;
@@ -152,7 +157,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
            << endl;
       exit(1);
     }
-    nAtot += nA;
+    m_nAtot += nA;
     m_nDets++;
     m_nAnodes.push_back(nA);
     AddEpic(Pos, nA, zOff, dz);
@@ -165,17 +170,16 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   }
 
   // initialization prior to the ReadConversionConfiguration
-  m_cfd_fract.resize(nAtot, 0.25);
-  m_cfd_delay.resize(nAtot, 4.);
-  m_cfd_thres.resize(nAtot, 50.);
-  m_Q1_gate_start.resize(nAtot, 6.); // TODO change for negative value
-  m_Q1_gate_stop.resize(nAtot, 40.);
-  m_Q2_gate_start.resize(nAtot, 6.); // TODO change for negative value
-  m_Q2_gate_stop.resize(nAtot, 10.);
-  m_Q3_gate_start.resize(nAtot, 10.);
-  m_Q3_gate_stop.resize(nAtot, 40.);
-  m_TofRaw_max.resize(nAtot, -1.); // ns
-
+  m_cfd_fract.resize(m_nAtot, 0.25);
+  m_cfd_delay.resize(m_nAtot, 4.);
+  m_cfd_thres.resize(m_nAtot, 50.);
+  m_Q1_gate_start.resize(m_nAtot, 6.); // TODO change for negative value
+  m_Q1_gate_stop.resize(m_nAtot, 40.);
+  m_Q2_gate_start.resize(m_nAtot, 6.); // TODO change for negative value
+  m_Q2_gate_stop.resize(m_nAtot, 10.);
+  m_Q3_gate_start.resize(m_nAtot, 10.);
+  m_Q3_gate_stop.resize(m_nAtot, 40.);
+  m_TofRaw_max.resize(m_nAtot, -1.); // ns
 
   BuildEpicChannelMaps();
   ReadConversionConfig();

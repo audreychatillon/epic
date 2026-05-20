@@ -39,6 +39,7 @@ private:
 
   // detector configuration
   unsigned int         m_nDets{0}; 
+  unsigned int         m_nAtot{0}; 
   vector<unsigned int> m_nAnodes;
   vector<string>       m_actinide;
   vector<TVector3>     m_posD; 

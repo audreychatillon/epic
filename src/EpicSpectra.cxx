@@ -240,6 +240,8 @@ void EpicSpectra::FillRaw() {
             if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
             int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
             int index = m_detector->GetIndex(det, anode);
+            name.str("");
+            name.clear();
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
             double qm = m_RawData->GetQmax(IndexMax[d]);
@@ -262,7 +264,7 @@ void EpicSpectra::FillRaw() {
             his_name = baseA + "_Tof";               m_raw_h1[his_name]->Fill(t_fc - t_hf);
             his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
             if (q3 > 0){
-                his_name = baseA + "_Q2iQ3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
+                his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
             }
         }
       }

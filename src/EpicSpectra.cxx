@@ -233,7 +233,7 @@ void EpicSpectra::FillRaw() {
       // spectra for Qmax only: suppress cross-talk
       for (int d = 0; d < nDets; d++) {
          baseD = "EPIC" + to_string(d+1);
-         his_name = baseD + "_MULT";
+         his_name = baseD + "_Mult";
          m_raw_h1[his_name]->Fill(multPerFC[d]);
          if (Qmax[d] > 0 && IndexMax[d] >= 0 && multPerFC[d] > 0) {
             int det = m_RawData->GetDetNbr(IndexMax[d]);
@@ -253,19 +253,19 @@ void EpicSpectra::FillRaw() {
             double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
             double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
             his_name = baseD + "_AnodeID_ifQmax";    m_raw_h1[his_name]->Fill(anode);
-            //his_name = baseD + "_Q1vAnodeID";        m_raw_h2[his_name]->Fill(anode, q1);
-            //his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
-            //his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
-            //his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
-            //his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
-            //his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
-            //his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
-            //his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
-            //his_name = baseA + "_Tof";               m_raw_h1[his_name]->Fill(t_fc - t_hf);
-            //his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
-            //if (q3 > 0){
-            //    his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
-            //}
+            his_name = baseD + "_Q1vAnodeID";        m_raw_h2[his_name]->Fill(anode, q1);
+            his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
+            his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
+            his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
+            his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
+            his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
+            his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
+            his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
+            his_name = baseA + "_Tof";               m_raw_h1[his_name]->Fill(t_fc - t_hf);
+            his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
+            if (q3 > 0){
+                his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
+            }
         }
       }
     } // end of if else Det[0] != -1

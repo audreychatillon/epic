@@ -80,20 +80,20 @@ void EpicDetector::BuildEpicChannelMaps(){
         offset += nA;
     }// end for(d)
 
-    //cout << "m_nAtot = " << m_nAtot << endl;
-    //cout << "m_index2channel.size() = " << m_index2channel.size() << endl;
-    //for(int index = 0 ; index < m_nAtot ; index++){
-    //    epic_channel ch = m_index2channel[index];
-    //    cout << "index = " << index << ", det = " << ch.det << ", anode = " << ch.anode << endl;
-    //} 
-    //offset = 0 ;
-    //for(int d = 0 ; d < m_nDets ; d++){
-    //    for(int a = 0 ; a < m_nAtot ; a++){
-    //        auto it = m_anode2index[d].find(m_AnodeNumber[offset+a]);
-    //        cout << "det = " << d+1 << ", anode = " << m_AnodeNumber[offset+a] << ", index = " << it->second << endl;
-    //    }
-    //    offset += m_nAnodes[d];
-    //}
+    cout << "m_nAtot = " << m_nAtot << endl;
+    cout << "m_index2channel.size() = " << m_index2channel.size() << endl;
+    for(int index = 0 ; index < m_nAtot ; index++){
+        epic_channel ch = m_index2channel[index];
+        cout << "index = " << index << ", det = " << ch.det << ", anode = " << ch.anode << endl;
+    } 
+    offset = 0 ;
+    for(int d = 0 ; d < m_nDets ; d++){
+        for(int a = 0 ; a < m_nAtot ; a++){
+            auto it = m_anode2index[d].find(m_AnodeNumber[offset+a]);
+            cout << "det = " << d+1 << ", anode = " << m_AnodeNumber[offset+a] << ", index = " << it->second << endl;
+        }
+        offset += m_nAnodes[d];
+    }
 
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -169,13 +169,12 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     m_nDets++;
     m_nAnodes.push_back(nA);
     AddEpic(Pos, nA, zOff, dz);
+    for (int a = 0; a < nA; a++) {
+      double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(num[a]) + "_GAMMA_PEAK", 0);
+      m_Cal_GammaPeak.push_back(gammapeak);
+      cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK " << gammapeak << endl;
+    }
 
-    // TODO fix ANODE_
-    //for (int a = 0; a < nA; a++) {
-    //  double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK", 0);
-    //  m_Cal_GammaPeak.push_back(gammapeak);
-    //  cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK " << gammapeak << endl;
-    //}
   }
 
   // initialization prior to the ReadConversionConfiguration
@@ -189,6 +188,8 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q3_gate_start.resize(m_nAtot, 10.);
   m_Q3_gate_stop.resize(m_nAtot, 40.);
   m_TofRaw_max.resize(m_nAtot, -1.); // ns
+  //m_Cal_GammaPeak.resize(m_nAtot, 100.); // ns
+
 
   BuildEpicChannelMaps();
   ReadConversionConfig();
@@ -725,7 +726,7 @@ unsigned int EpicDetector::Label2index(const std::string &label) {
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
 unsigned int EpicDetector::GetIndex(int det, int anode) const {
-  if (det == 0 || det > m_nDets || anode == 0 || anode > m_nAnodes[det - 1])
+  if (det == 0 || det > m_nDets || anode == 0 )
     cout << "EpicDetector::GetIndex(" << det << ", " << anode
          << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1
          << "]=" << m_nAnodes[det - 1] << endl;

@@ -90,7 +90,7 @@ void EpicDetector::BuildEpicChannelMaps(){
     for(int d = 0 ; d < m_nDets ; d++){
         for(int a = 0 ; a < m_nAtot ; a++){
             auto it = m_anode2index[d].find(m_AnodeNumber[offset+a]);
-            cout << "det = " << d+1 << ", anode = " << m_AnodeNumber[offset+a] << ", index = " << it->second;
+            cout << "det = " << d+1 << ", anode = " << m_AnodeNumber[offset+a] << ", index = " << it->second << endl;
         }
         offset += m_nAnodes[d];
     }

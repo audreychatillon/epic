@@ -174,7 +174,7 @@ void EpicDetector::PrintConfig() {
       cout << left << setw(colWidth) << m_actinide[offset + a];
     cout << endl;
     // actinide material
-    cout << "          label        : ";
+    cout << "          label                  : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_AnodeNumber[offset + a];
     cout << endl;
@@ -235,7 +235,8 @@ void EpicDetector::PrintConfig() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::ReadConversionConfig() {
-
+  //TODO : check that ConfigEPIC.dat file and detector.yaml 
+  //       are coherent with the number of anodes per det
   cout << "//// EpicDetector::ReadConversionConfig" << endl;
   std::ifstream ifs("./config_files/ConfigEPIC.dat");
   if (ifs.is_open()) {

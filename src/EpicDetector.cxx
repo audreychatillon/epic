@@ -175,8 +175,11 @@ void EpicDetector::PrintConfig() {
     cout << endl;
     // actinide material
     cout << "          label                  : ";
-    for (size_t a = 0; a < m_nAnodes[d]; a++)
-      cout << left << setw(colWidth) << m_AnodeNumber[offset + a];
+    for (size_t a = 0; a < m_nAnodes[d]; a++){
+      ostringstream oss;
+      oss << "FC_" << d+1 << "_" << m_AnodeNumber[offset + a] ;
+      cout << left << setw(colWidth) << oss.str();
+    }
     cout << endl;
     // CFD parameters
     cout << "          CFD (frac, dly, thrs)  : ";

@@ -144,11 +144,20 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
         }
       }
       if (block->HasTokenList(AnodeNumber)) {
-        if (nA == 1)
+        if (nA == 1){
           m_AnodeNumber.push_back(block->GetInt("AnodeNumber"));
+            double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(block->GetInt("AnodeNumber")) + "_GAMMA_PEAK", 0);
+            m_Cal_GammaPeak.push_back(gammapeak);
+            cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(block->GetInt("AnodeNumber")) + "_GAMMA_PEAK " << gammapeak << endl;
+        }
         else {
           num = block->GetVectorInt("AnodeNumber");
           m_AnodeNumber.insert(m_AnodeNumber.end(), num.begin(), num.end());
+          for (int a = 0; a < nA; a++) {
+            double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(num[a]) + "_GAMMA_PEAK", 0);
+            m_Cal_GammaPeak.push_back(gammapeak);
+            cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(num[a]) + "_GAMMA_PEAK " << gammapeak << endl;
+          }
         }
       }
     } else {
@@ -169,11 +178,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     m_nDets++;
     m_nAnodes.push_back(nA);
     AddEpic(Pos, nA, zOff, dz);
-    for (int a = 0; a < nA; a++) {
-      double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(num[a]) + "_GAMMA_PEAK", 0);
-      m_Cal_GammaPeak.push_back(gammapeak);
-      cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK " << gammapeak << endl;
-    }
 
   }
 

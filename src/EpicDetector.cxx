@@ -61,6 +61,27 @@ EpicDetector::EpicDetector() {
   m_Get_Sampler_Qmax = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void EpicDetector::BuildEpicChannelMaps(){
+    cout << "//// EpicDetector::BuildEpicChannelMaps" << endl;
+
+    m_anode2index.clear();
+    m_index2channel.clear();
+    m_anode2index.resize(m_nDets);
+    int global_index = 0;
+    int offset = 0;
+    for(int d = 0 ; d < m_nDets; d++){
+        int nA = m_nAnodes[d];
+        for(int a = 0 ; a < nA ; a++){
+            int anode = m_AnodeNumber[offset+a];
+            m_anode2index[d][a] = global_index;
+            m_index2channel.push_back({d+1, anode});
+            cout << "det = " << d+1 << ", anode = " << anode << ", index = " << global_index << endl;
+        } // end for(a)
+        offset += nA;
+    }// end for(d)
+
+}
+////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
   cout << "//// EpicDetector::ReadConfiguration" << endl;
@@ -154,6 +175,8 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q3_gate_stop.resize(nAtot, 40.);
   m_TofRaw_max.resize(nAtot, -1.); // ns
 
+
+  BuildEpicChannelMaps();
   ReadConversionConfig();
   PrintConfig();
 }

@@ -82,7 +82,14 @@ public:
   unsigned int Label2anode(const std::string &label);
   unsigned int Label2index(const std::string &label);
   unsigned int GetIndex(int det, int anode) const; // det is 1-based, anode is 1-based
-
+  void         BuildEpicChannelMaps();
+  struct epic_channel{
+    int det;
+    int anode;
+  };
+  vector<unordered_map<int,int>> m_anode2index;
+  vector<epic_channel>           m_index2channel;
+ 
   double TofRaw2Ene(int det, int anode, double tof_raw, double &tof_cal);
 
 

@@ -73,7 +73,7 @@ void EpicDetector::BuildEpicChannelMaps(){
         int nA = m_nAnodes[d];
         for(int a = 0 ; a < nA ; a++){
             int anode = m_AnodeNumber[offset+a];
-            m_anode2index[d][a] = global_index;
+            m_anode2index[d][anode] = global_index;
             m_index2channel.push_back({d+1, anode});
             global_index++;
         } // end for(a)

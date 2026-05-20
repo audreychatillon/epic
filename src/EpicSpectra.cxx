@@ -50,29 +50,29 @@ EpicSpectra::EpicSpectra() {
     string his_name;
 
     can_name = base + "_MULT";
-    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
     his_name = base + "_Mult"; 
     m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
-    m_raw_can[can_name]->cd(1);
+    m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw();
 
     can_name = base + "_A";
-    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
     his_name = base + "_AnodeID";
     m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
-    m_raw_can[can_name]->cd(1);
+    m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw();
     his_name = base + "_AnodeID_ifQmax";
     m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
     m_raw_h1[his_name]->SetLineColor(kRed);
-    m_raw_can[can_name]->cd(1);
+    m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw("same");
     
     can_name = base + "_Q1vA";
-    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
     his_name = base + "_Q1vAnodeID";
     m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),13, -0.5, 12.5, 1500, 0, 300000);
-    m_raw_can[can_name]->cd(1);
+    m_raw_can[can_name]->cd();
     m_raw_h2[his_name]->Draw("colz");
     
     can_name = base + "_Q1vT";

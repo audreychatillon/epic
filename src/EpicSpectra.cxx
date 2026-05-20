@@ -234,7 +234,7 @@ void EpicSpectra::FillRaw() {
       for (int d = 0; d < nDets; d++) {
          baseD = "EPIC" + to_string(d+1);
          his_name = baseD + "_MULT";
-         //m_raw_h1[his_name]->Fill(multPerFC[d]);
+         m_raw_h1[his_name]->Fill(multPerFC[d]);
          if (Qmax[d] > 0 && IndexMax[d] >= 0 && multPerFC[d] > 0) {
             int det = m_RawData->GetDetNbr(IndexMax[d]);
             if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;

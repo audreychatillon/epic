@@ -44,13 +44,8 @@ private:
   std::map<std::string,TCanvas*> m_phys_can;
 
 
-  //std::vector<TH2F*> m_hQ1vAid;           // 3
 
   //// === histograms per fission chambers and per anode
-  //std::vector<TH2F*> m_hQ2vQ1;            // 4
-  //std::vector<TH2F*> m_hQ2Q3vQ1;          // 5 
-  //std::vector<TH2F*> m_hQmvQ1;            // 6
-  //std::vector<TH2F*> m_hQ1vT;             // 7
 
   //std::vector<TH1F*> m_hQm;               // 8 
   //std::vector<TH1F*> m_hQ1;               // 9

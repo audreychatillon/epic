@@ -40,7 +40,7 @@ nptool --update epic
 # This will update the last features of the plugin
 ```
 
-## Create and manage your project with the EPIC plugin
+## Create and manage your project with the epic plugin
 
 To create your project:
 [Project Management](https://nptool.in2p3.fr/manual-v4/project-management/)

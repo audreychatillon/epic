@@ -43,6 +43,7 @@ private:
   vector<string>       m_actinide;
   vector<TVector3>     m_posD; 
   vector<TVector3>     m_posA; 
+  vector<unsigned int> m_AnodeNumber;
 
   // configuration parameters
   int m_Get_Sampler_Qmax{0};

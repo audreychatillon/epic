@@ -65,25 +65,22 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
   cout << "//// EpicDetector::ReadConfiguration" << endl;
   auto blocks = parser.GetAllBlocksWithToken("epic");
-  vector<string> pos = {
-      "POS"}; // x y z of the center of the EPIC fission chamber
-  vector<string> nAnodes = {
-      "nAnodes"}; // number of anodes in the EPIC fission chamber
-  vector<string> zOffsetA1 = {
-      "zOFFSET_A1"}; // Offset position of the origin of the anode compare to
+  vector<string> pos = {"POS"}; // x y z of the center of the EPIC fission chamber
+  vector<string> nAnodes = {"nAnodes"}; // number of anodes in the EPIC fission chamber
+  vector<string> zOffsetA1 = {"zOFFSET_A1"}; // Offset position of the origin of the anode compare to
                      // the center of the chamber
-  vector<string> DZprevA = {
-      "DZ_prevA"}; // Offset position of the origin of the anode compare to the
+  vector<string> DZprevA = {"DZ_prevA"}; // Offset position of the origin of the anode compare to the
                    // center of the chamber
-  vector<string> actinide = {
-      "actinide"}; // isotope of the actinide on the cathode
+  vector<string> actinide = {"actinide"}; // isotope of the actinide on the cathode
+  vector<string> AnodeNumber = {"AnodeNumber"}; // Anode number as labeled in FC_det_AnodeNumber
 
   vector<double> Pos;
-  int nA;
-  int nAtot = 0;
-  double zOff;
+  int            nA;
+  int            nAtot = 0;
+  double         zOff;
   vector<double> dz;
   vector<string> material;
+  vector<int>    num;
 
   for (auto block : blocks) {
     // read position of the EPIC fission chamber
@@ -111,6 +108,14 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
           m_actinide.insert(m_actinide.end(), material.begin(), material.end());
         }
       }
+      if (block->HasTokenList(AnodeNumber)) {
+        if (nA == 1)
+          m_AnodeNumber.push_back(block->GetInt("AnodeNumber"));
+        else {
+          num = block->GetVectorInt("AnodeNumber");
+          m_AnodeNumber.insert(m_AnodeNumber.end(), num.begin(), num.end());
+        }
+      }
     } else {
       cout << "ERROR: could not find nAnodes, check your input file formatting "
            << endl;
@@ -131,14 +136,9 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     AddEpic(Pos, nA, zOff, dz);
 
     for (int a = 0; a < nA; a++) {
-      double gammapeak =
-          m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" +
-                             to_string(a + 1) + "_GAMMA_PEAK",
-                         0);
+      double gammapeak = m_Cal.GetValue("EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK", 0);
       m_Cal_GammaPeak.push_back(gammapeak);
-      cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) +
-                  "_GAMMA_PEAK  "
-           << gammapeak << endl;
+      cout << "EPIC_" + to_string(m_nDets) + "_ANODE_" + to_string(a + 1) + "_GAMMA_PEAK " << gammapeak << endl;
     }
   }
 
@@ -172,6 +172,11 @@ void EpicDetector::PrintConfig() {
     cout << "          sample material        : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_actinide[offset + a];
+    cout << endl;
+    // actinide material
+    cout << "          label        : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++)
+      cout << left << setw(colWidth) << m_AnodeNumber[offset + a];
     cout << endl;
     // CFD parameters
     cout << "          CFD (frac, dly, thrs)  : ";

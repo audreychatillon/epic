@@ -60,9 +60,6 @@ private:
   vector<double> m_Q3_gate_stop;
   vector<double> m_TofRaw_max;
 
-  // calibration parameter
-  vector<double> m_Cal_GammaPeak;
- 
   void AddEpic(vector<double>& Pos, int nA, double zOff, vector<double>& dz);
 
 public:

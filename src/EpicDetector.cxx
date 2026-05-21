@@ -542,13 +542,14 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                            // m_total_raw_event is incremented by 2
 
       // identification of the electronic channel
-      cout << "label = " << label << endl;
-      index = Label2index(label); 
-      cout << "  index = " << index << endl;
+      cout << endl;
+      cout << "LABEL   = " << label << endl;
       anode = Label2anode(label);
-      cout << "   anode = " << anode << endl;
+      cout << "  anode : " << anode << endl;
       det = Label2det(label);
-      cout << "    det = " << det << endl;
+      cout << "    det : " << det << endl;
+      index = GetIndex(det,anode);
+      cout << "  index : " << index << endl;
 
       // sampler_data samp = (sampler_data)faster_data_load_p(data);
       // load sampler data:
@@ -685,25 +686,6 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
     string number = label.substr(pos2 + 1);
     return stoi(number);
   }
-}
-////////////////////////////////////////////////////////////////////////////////
-unsigned int EpicDetector::Label2index(const std::string &label) {
-  // generic to handle FC_det_anode or FC_anode
-  int id;
-  string number;
-  size_t pos1 = label.find("_");
-  size_t pos2 = label.find("_", pos1 + 1);
-  if (pos2 == string::npos) { // format: FC_anode => only one FC
-    number = label.substr(pos1 + 1);
-    id = stoi(number) - 1;
-  } else { // format: FC_det_anode
-    number = label.substr(pos1 + 1, pos2 - pos1 - 1);
-    int det = stoi(number);
-    number = label.substr(pos2 + 1);
-    int anode = stoi(number);
-    id = GetIndex(det, anode);
-  }
-  return id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based

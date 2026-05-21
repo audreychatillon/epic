@@ -567,7 +567,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               if (m_RawData->GetFCMult() == 1) {
                 m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
-              } else if(m_RawData->GetFCMult()>1) {
+              } else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                   m_RawData->SetSampler(Signal);
                   m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);

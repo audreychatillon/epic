@@ -65,10 +65,19 @@ To read FASTER data, configuration files must be provided:
  - `sample.pid`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
  - `detector/detector.yaml`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
  - `ConfigEPIC.dat`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
+To write a TTree in output/conversion folder (see project.yaml) 
 ```bash
-# To write a TTree in output/conversion folder (see project.yaml) 
 npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root
-# for on-line monitoriing in a browser with localhost:8082
-npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,8081
-nponline --input-raw root,localhost:8081 --interface root,8082
+```
+For on-line monitoring of raw histograms only in a browser with localhost:8082
+```bash
+npconversion --input faster,sample.pid,file.fast --output root,8080
+nponline --input-raw root,localhost:8080 --interface root,8082
+```
+
+To convert FASTER data (BuildRawEvent) and build physical event (BuildPhysicalEvent)
+```bash
+npconversion --input faster,sample.pid,file.fast --calibration calibration.txt --output root,8080
+npanalysis --input root,localhost:8080 --output root,8081
+nponline --input-raw root,localhost:8081 --input-phy root,localhost:8081 --interface root,8082
 ```

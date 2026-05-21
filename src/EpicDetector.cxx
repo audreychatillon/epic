@@ -383,9 +383,6 @@ void EpicDetector::InitializeDataOutputPhysics(
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildPhysicalEvent() {
 
-  // 1/ keep RawData in PhysicalTree to be able to run macro at raw level on
-  // TTree after npanalysis 2/ calculate calibrated tof and energy
-
   // FILL FC part
   unsigned int multFC = m_RawData->GetFCMult();
   double q_qmax = 0;
@@ -443,42 +440,6 @@ void EpicDetector::BuildPhysicalEvent() {
     m_Physics->SetHit_fSampler(-1, -1, v_q);
   }
 
-  /*
-  nptool::Particle *neutron = new nptool::Particle("1n");
-
-  for (int i = 0; i < multFC; i++) {
-    short AnodeNumber = m_RawData->GetAnodeNbr(i);
-    bool isFakeFission = false;
-    isFakeFission = m_RawData->GetPulserTrig(i);
-    double Time_FC = m_RawData->GetTimeFC(i);
-    double cfd = m_RawData->GetTimeCfd(i);
-    // TODO offset with det number
-    double FC_offset = m_Cal.GetValue(
-        "Epic_ANODE" + nptool::itoa(AnodeNumber) + "_TIMEOFFSET",
-  0); double incomingToF = Time_FC - Time_HF - FC_offset;
-
-    // Get Anode position, in pulser mode (fakefission) we use the anode 6 by
-    // default
-    TVector3 AnodePos = GetAnodePosition(6);
-    if (AnodeNumber > 0) {
-      TVector3 AnodePos = GetAnodePosition(AnodeNumber);
-    }
-
-    if (incomingToF < 0) {
-      incomingToF += m_Cal.GetValue("Epic_PULSE_TIMEOFFSET", 0);
-    }
-
-    double FlyPath = 21000;
-    double incomingE = 0;
-    neutron->SetBeta((FlyPath / incomingToF) / nptool::c_light);
-    incomingE = neutron->GetEnergy();
-    m_Physics->SetHitFC(AnodeNumber, m_RawData->GetQ1(i),
-                        m_RawData->GetQ2(i), m_RawData->GetQ3(i),
-                        Time_FC,
-                        m_RawData->GetQmax(i), incomingE, incomingToF,
-                        Time_HF, isFakeFission, m_RawData->GetTimeCfd(i));
-  }
-  */
 }
 
 ////////////////////////////////////////////////////////////////////////////////

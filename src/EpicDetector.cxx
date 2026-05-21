@@ -542,9 +542,13 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                            // m_total_raw_event is incremented by 2
 
       // identification of the electronic channel
-      index = Label2index(label);
+      cout << "label = " << label << endl;
+      index = Label2index(label); 
+      cout << "  index = " << index << endl;
       anode = Label2anode(label);
+      cout << "   anode = " << anode << endl;
       det = Label2det(label);
+      cout << "    det = " << det << endl;
 
       // sampler_data samp = (sampler_data)faster_data_load_p(data);
       // load sampler data:

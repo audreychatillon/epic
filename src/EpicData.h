@@ -105,7 +105,7 @@ namespace epic {
         inline double GetQ3(const unsigned int &i) const {return fFC_Q3[i];}//!
         inline double GetTimeLastHF() const {return fFC_TimeLastHF;}//!
         // sample with Qmax
-        inline unsigned short GetQmaxIndex() const {return fQmax_Index;}//!
+        inline short GetQmaxIndex() const {return fQmax_Index;}//!
         inline double GetSample(const unsigned int &i) const {return fQmax_Sampler[i];}//!
         inline vector<double> GetSampler() const {return fQmax_Sampler;}//!   
         inline unsigned short GetSamplerSize() const {return (unsigned short)fQmax_Sampler.size();}//!

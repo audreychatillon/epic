@@ -79,5 +79,5 @@ To convert FASTER data (BuildRawEvent) and build physical event (BuildPhysicalEv
 ```bash
 npconversion --input faster,sample.pid,file.fast --calibration calibration.txt --output root,8080
 npanalysis --input root,localhost:8080 --output root,8081
-nponline --input-raw root,localhost:8081 --input-phy root,localhost:8081 --interface root,8082
+nponline --input-raw root,localhost:8080 --input-phy root,localhost:8081 --interface root,8082
 ```

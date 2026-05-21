@@ -386,6 +386,7 @@ void EpicDetector::BuildPhysicalEvent() {
    cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
   // FILL FC part
   unsigned int multFC = m_RawData->GetFCMult();
+  cout << "multFC = " << multFC << endl;
   double q_qmax = 0;
   int i_qmax = -1;
   for (int i = 0; i < multFC; i++) {
@@ -411,11 +412,13 @@ void EpicDetector::BuildPhysicalEvent() {
       i_qmax = i;
     }
   }
+  cout << "FC part filled" << endl;
 
   // FILL HF part
   double t_hf = m_RawData->GetTimeHF();
   double tprev_hf = m_RawData->GetTimePrevHF();
   m_Physics->SetHit_fHF(t_hf, tprev_hf);
+  cout << "HF part filled" << endl;
 
   // FILL SAMPLER PART
   vector<double> v_q;
@@ -440,6 +443,7 @@ void EpicDetector::BuildPhysicalEvent() {
     v_q.clear();
     m_Physics->SetHit_fSampler(-1, -1, v_q);
   }
+  cout << "SAMPLER part filled" << endl;
 
 }
 

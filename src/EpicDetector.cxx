@@ -382,68 +382,19 @@ void EpicDetector::InitializeDataOutputPhysics(
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildPhysicalEvent() {
 
-
-   cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
-  // FILL FC part
-  unsigned int multFC = m_RawData->GetFCMult();
-  cout << "multFC = " << multFC << endl;
-  double q_qmax = 0;
-  int i_qmax = -1;
-  for (int i = 0; i < multFC; i++) {
-    // raw data
-    short det = m_RawData->GetDetNbr(i);
-    short anode = m_RawData->GetAnodeNbr(i);
-    bool kFF = m_RawData->GetPulserTrig(i);
-    double t_fc = m_RawData->GetTimeFC(i);
-    double tofraw = m_RawData->GetTofRaw(i);
-    double t_cfd = m_RawData->GetTimeCfd(i);
-    double t_qm = m_RawData->GetTimeQmax(i);
-    double qm = m_RawData->GetQmax(i);
-    double q1 = m_RawData->GetQ1(i);
-    double q2 = m_RawData->GetQ2(i);
-    double q3 = m_RawData->GetQ3(i);
-    // calibrated tof and energy if q1 > alpha_cut_1d
-    double tofcal = 0.;
-    double e = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
-    // Fill EpicPhysics
-    m_Physics->SetHit_fFC(det, anode, kFF, t_fc, tofraw, tofcal, e, t_cfd, t_qm,qm, q1, q2, q3);
-    if (qm > q_qmax) {
-      q_qmax = qm;
-      i_qmax = i;
+  cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
+  if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
+    short  imax   = m_RawData->GetQmaxIndex();
+    if(!m_RawData->GetPulserTrig(imax)){
+        short  det    = m_RawData->GetDetNbr(imax);
+        short  anode  = m_RawData->GetAnodeNbr(imax); 
+        double tofraw = m_RawData->GetTofRaw(imax);
+        double q1     = m_RawData->GetQ1(imax);
+        double tofcal = 0.;
+        double e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
+        m_Physics->SetHit_fFC(det, anode, tofcal, e);
     }
   }
-  cout << "FC part filled" << endl;
-
-  // FILL HF part
-  double t_hf = m_RawData->GetTimeHF();
-  double tprev_hf = m_RawData->GetTimePrevHF();
-  m_Physics->SetHit_fHF(t_hf, tprev_hf);
-  cout << "HF part filled" << endl;
-
-  // FILL SAMPLER PART
-  vector<double> v_q;
-  if (m_Get_Sampler_Qmax == 1 && m_RawData->GetSamplerSize() > 0) {
-    short index = m_RawData->GetQmaxIndex();
-    v_q = m_RawData->GetSampler();
-    m_Physics->SetHit_fSampler(m_RawData->GetDetNbr(index),
-                               m_RawData->GetAnodeNbr(index), v_q);
-    if (i_qmax != index) {
-      cout << "index = " << index
-           << " : fSampler_DetNbr = " << m_RawData->GetDetNbr(index)
-           << " : fSampler_AnodeNbr = " << m_RawData->GetAnodeNbr(index)
-           << " : Qmax = " << m_RawData->GetQmax(index) << endl;
-      for (int i = 0; i < multFC; i++) {
-        cout << "i = " << i
-             << "    RAW : fFC_DetNbr = " << m_RawData->GetDetNbr(i)
-             << " : fFC_AnodeNbr = " << m_RawData->GetAnodeNbr(i)
-             << " : Qmax = " << m_RawData->GetQmax(i) << endl;
-      }
-    }
-  } else {
-    v_q.clear();
-    m_Physics->SetHit_fSampler(-1, -1, v_q);
-  }
-  cout << "SAMPLER part filled" << endl;
 
 }
 
@@ -477,6 +428,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetDetNbr(-1);
       m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetQ1(-1);
+      m_RawData->SetQ2(-1);
+      m_RawData->SetQ3(-1);
+      m_RawData->SetQmax(-1);
       m_RawData->SetPulserTrig(false);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
@@ -487,9 +442,9 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetTimeFC(TimeFC);
       m_RawData->SetTofRaw(tof_raw);
       m_RawData->SetQ1(fc_data.q1);
-      m_RawData->SetQ2(0);
-      m_RawData->SetQ3(0);
-      m_RawData->SetQmax(0);
+      m_RawData->SetQ2(-1);
+      m_RawData->SetQ3(-1);
+      m_RawData->SetQmax(-1);
       m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeLastHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);

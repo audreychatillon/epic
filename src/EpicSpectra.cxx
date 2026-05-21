@@ -118,8 +118,8 @@ EpicSpectra::EpicSpectra() {
     // loop over the anodes and create the histo per anode
     for (unsigned int anode = 0; anode < nAnodes[d - 1]; anode++) {
       int a = anodes[anode]; 
-      cout << "          a = " << anode << " / " << nAnodes[d-1] << ": FC_" << d+1 << "_" << a << endl;
-      int i = m_detector->GetIndex(d, anode);
+      cout << "          a = " << anode << " / " << nAnodes[d-1] << ": FC_" << d << "_" << a << endl;
+      int i = m_detector->GetIndex(d, a);
       cout << "index = " << i << endl;
 
       ostringstream name;

@@ -563,19 +563,18 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
 
             // sample for anode with Qmax
-            if (m_Get_Sampler_Qmax == 1) {
-              if (m_RawData->GetFCMult() == 1) {
-                m_RawData->SetSampler(Signal);
+            if (m_RawData->GetFCMult() == 1) {
+                if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
-              } else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
+            } 
+            else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
+                //TODO need to find out how GetQmaxIndex could be <= at this stage !!!!
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
-                  m_RawData->SetSampler(Signal);
-                  m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
+                    if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
+                    m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
                 }
-              }
-            } else {
-              m_RawData->SetQmaxIndex(-1);
             }
+            else m_RawData->SetQmaxIndex(-1);
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0
       } // If FC_Triggered && FC_Threshold && T_cfd

@@ -82,7 +82,6 @@ public:
   // === Label / Index mapping
   unsigned int Label2det(const std::string &label);
   unsigned int Label2anode(const std::string &label);
-  unsigned int Label2index(const std::string &label);
   unsigned int GetIndex(int det, int anode) const; // det is 1-based, anode is 1-based
   void         BuildEpicChannelMaps();
   struct epic_channel{

@@ -41,15 +41,11 @@ EpicSpectra::EpicSpectra() {
   m_canT0->cd(1); m_TimeHF->Draw();
   m_canT0->cd(2); gPad->SetLogy();  m_DeltaTimeHF->Draw();
 
-  cout << " general histograms declared " << endl;
-  cout << " loop over the detector " << endl;
-
   // loop over nDets
-  for (unsigned int d = 1; d <= nDets; d++) {
-    cout << "    . d = " << d << endl;
+  for (unsigned int det = 1; det <= nDets; det++) {
     // create the canvas and histos per detector
-    int ncol = ceil(0.5 * nAnodes[d - 1]);
-    string base = "EPIC" + to_string(d);
+    int ncol = ceil(0.5 * nAnodes[det - 1]);
+    string base = "EPIC" + to_string(det);
     string can_name;
     string his_name;
 
@@ -59,7 +55,6 @@ EpicSpectra::EpicSpectra() {
     m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
     m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw();
-    cout << "      can_name " << can_name << endl;
 
     can_name = base + "_A";
     m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
@@ -72,7 +67,6 @@ EpicSpectra::EpicSpectra() {
     m_raw_h1[his_name]->SetLineColor(kRed);
     m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw("same");
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q1vA";
     m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
@@ -80,50 +74,39 @@ EpicSpectra::EpicSpectra() {
     m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),13, -0.5, 12.5, 1500, 0, 300000);
     m_raw_can[can_name]->cd();
     m_raw_h2[his_name]->Draw("colz");
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q1vT";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q2Q3vQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q2vQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_QmaxvQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Qmax";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Tof";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_DT_Tqmax_Tcfd";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
-    cout << "      can_name " << can_name << endl;
 
 
     // loop over the anodes and create the histo per anode
-    for (unsigned int anode = 0; anode < nAnodes[d - 1]; anode++) {
-      int a = anodes[anode]; 
-      cout << "          a = " << anode << " / " << nAnodes[d-1] << ": FC_" << d << "_" << a << endl;
-      int i = m_detector->GetIndex(d, a);
-      cout << "index = " << i << endl;
+    for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
+      int anode = anodes[a]; 
+      int i = m_detector->GetIndex(det, anode);
 
       ostringstream name;
-      name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a << "_" << actinide[i];
+      name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[i];
       string prefix = name.str();
 
       his_name = prefix + "_Q1vT";
@@ -131,67 +114,67 @@ EpicSpectra::EpicSpectra() {
       m_raw_h2[his_name]->GetXaxis()->SetTitle("Time [s] : 60s / bin");
       m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
       can_name = base + "_Q1vT";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogz(); 
       m_raw_h2[his_name]->Draw("colz");
 
       his_name = prefix + "_Q2Q3vQ1";
       m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 10);
       can_name = base + "_Q2Q3vQ1";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogz(); 
       m_raw_h2[his_name]->Draw("colz");
 
       his_name = prefix + "_Q2vQ1";
       m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 200000);
       can_name = base + "_Q2vQ1";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogz(); 
       m_raw_h2[his_name]->Draw("colz");
 
       his_name = prefix + "_QmaxvQ1";
       m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 200000, 200, 0, 20000);
       can_name = base + "_QmaxvQ1";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogz(); 
       m_raw_h2[his_name]->Draw("colz");
 
       can_name = base + "_Q";
       his_name = prefix + "_Q1";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       m_raw_h1[his_name]->Draw();
 
       his_name = prefix + "_Q2";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
       m_raw_h1[his_name]->SetLineColor(8);
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       m_raw_h1[his_name]->Draw("same");
 
       his_name = prefix + "_Q3";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
       m_raw_h1[his_name]->SetLineColor(kCyan);
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       m_raw_h1[his_name]->Draw("same");
 
       his_name = prefix + "_Qmax";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(), 2500, 0, 25000);
       can_name = base + "_Qmax";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogy();
       m_raw_h1[his_name]->Draw();
 
       his_name = prefix + "_Tof";
       m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  3000, -200, 2800);
       can_name = base + "_Tof";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       gPad->SetLogy();
       m_raw_h1[his_name]->Draw();
 
       his_name = prefix + "_Tqmax_Tcfd";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -50, 50);
       can_name = base + "_DT_Tqmax_Tcfd";
-      m_raw_can[can_name]->cd(a);
+      m_raw_can[can_name]->cd(a+1);
       m_raw_h1[his_name]->Draw();
 
 

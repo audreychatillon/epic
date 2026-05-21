@@ -50,6 +50,7 @@ EpicDetector::EpicDetector() {
   m_Physics = new ::EpicPhysics();
 
   m_nDets = 0;
+  m_nAtot = 0;
 
   m_Cal.InitCalibration();
 
@@ -503,6 +504,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetDetNbr(-1);
       m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetPulserTrig(false);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);

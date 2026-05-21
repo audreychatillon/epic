@@ -16,6 +16,7 @@ class EpicPhysics {
  public:
         short  fFC_det;         // detector number (starting from 1)
         short  fFC_anode;       // anode number (starting from 1)
+        double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
 
@@ -35,6 +36,7 @@ class EpicPhysics {
    void Clear(){
         fFC_det   = -1.; 
         fFC_anode = -1.;
+        fFC_tof_raw = -1.;
         fFC_tof_cal = -1.;
         fFC_e       = -1.;
         //fFC_det.clear();
@@ -55,7 +57,8 @@ class EpicPhysics {
    inline void SetHit_fFC(
         const short&  det, 
         const short&  anode,
-        const double& tof_ns,
+        const double& tof_raw_ns,
+        const double& tof_cal_ns,
         const double& e_MeV){
             //fFC_det.push_back(det);
             //fFC_anode.push_back(anode);
@@ -63,7 +66,8 @@ class EpicPhysics {
             //fFC_e.push_back(e_MeV);
             fFC_det = det;
             fFC_anode = anode;
-            fFC_tof_cal = tof_ns;
+            fFC_tof_raw = tof_raw_ns;
+            fFC_tof_cal = tof_cal_ns;
             fFC_e = e_MeV;
         }; //!
 

@@ -393,7 +393,7 @@ void EpicDetector::BuildPhysicalEvent() {
         double q1     = m_RawData->GetQ1(imax);
         double tofcal = 0.;
         double e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
-        m_Physics->SetHit_fFC(det, anode, tofcal, e);
+        m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e);
     }
   }
 

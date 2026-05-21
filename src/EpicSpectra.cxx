@@ -27,6 +27,11 @@ EpicSpectra::EpicSpectra() {
   std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
   std::vector<std::string> actinide = m_detector->GetActinideMaterial();
 
+  cout << "nDets = " << nDets << endl;
+  cout << "    -> to be compare with nAnodes.size() = " << nAnodes.size() << endl;
+  cout << "nAnodesTot = " << nAnodesTot << endl;
+  cout << "    -> to be compare with actinide.size() = " << actinide.size() << endl;
+
   // general histograms
   m_canT0 = new TCanvas("T0", "T0", 1200, 800);
   m_canT0->Divide(1, 2);
@@ -40,9 +45,12 @@ EpicSpectra::EpicSpectra() {
   m_canT0->cd(1); m_TimeHF->Draw();
   m_canT0->cd(2); gPad->SetLogy();  m_DeltaTimeHF->Draw();
 
+  cout << " general histograms declared " << endl;
+  cout << " loop over the detector " << endl;
+
   // loop over nDets
   for (unsigned int d = 1; d <= nDets; d++) {
-
+    cout << "    . d = " << d << endl;
     // create the canvas and histos per detector
     int ncol = ceil(0.5 * nAnodes[d - 1]);
     string base = "EPIC" + to_string(d);
@@ -55,6 +63,7 @@ EpicSpectra::EpicSpectra() {
     m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
     m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw();
+    cout << "      can_name " << can_name << endl;
 
     can_name = base + "_A";
     m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
@@ -67,6 +76,7 @@ EpicSpectra::EpicSpectra() {
     m_raw_h1[his_name]->SetLineColor(kRed);
     m_raw_can[can_name]->cd();
     m_raw_h1[his_name]->Draw("same");
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q1vA";
     m_raw_can[can_name] = new TCanvas(can_name.c_str(), can_name.c_str());
@@ -74,36 +84,47 @@ EpicSpectra::EpicSpectra() {
     m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),13, -0.5, 12.5, 1500, 0, 300000);
     m_raw_can[can_name]->cd();
     m_raw_h2[his_name]->Draw("colz");
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q1vT";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q2Q3vQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q2vQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_QmaxvQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Q";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Qmax";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_Tof";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
     
     can_name = base + "_DT_Tqmax_Tcfd";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    cout << "      can_name " << can_name << endl;
 
 
     // loop over the anodes and create the histo per anode
     for (unsigned int a = 1; a <= nAnodes[d - 1]; a++) {
 
+      cout << "          a = " << a << " / " << nAnodes[d-1] << endl;
       int i = m_detector->GetIndex(d, a);
+      cout << "index = " << i << endl;
 
       ostringstream name;
       name << "det" << d << "_A" << std::setw(2) << std::setfill('0') << a << "_" << actinide[i];

@@ -69,7 +69,7 @@ public:
   epic::EpicData*             GetRawData() const {return m_RawData;}
   epic::EpicPhysics*          GetPhysics() const {return m_Physics;}
   unsigned int                GetNumberOfDets()      const { return m_nDets; }
-  unsigned int                GetNumberOfAnodesTot() const { return (unsigned int)m_actinide.size(); }
+  unsigned int                GetNumberOfAnodesTot() const { return m_nAtot; }
   const vector<unsigned int>& GetNumberOfAnodes()    const { return m_nAnodes;}
   const vector<string>&       GetActinideMaterial()  const { return m_actinide;}
   TVector3 GetEpicPosition(const unsigned int det)   const { return m_posD[det - 1];}

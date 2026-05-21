@@ -80,6 +80,8 @@ void EpicDetector::BuildEpicChannelMaps(){
         offset += nA;
     }// end for(d)
 
+
+    /*
     cout << "m_nAtot = " << m_nAtot << endl;
     cout << "m_index2channel.size() = " << m_index2channel.size() << endl;
     for(int index = 0 ; index < m_nAtot ; index++){
@@ -94,6 +96,7 @@ void EpicDetector::BuildEpicChannelMaps(){
         }
         offset += m_nAnodes[d];
     }
+    */
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,6 +209,7 @@ void EpicDetector::PrintConfig() {
   cout << "CHECK CHECK CHEK nptool::c_light = " << nptool::c_light << endl;
   cout << "//// EpicDetector::PringConversion Config" << endl;
   cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
+  cout << "                   (Total number of anodes : " << m_nAtot << ")" << endl;
   size_t offset = 0;
   for (int d = 0; d < m_nDets; d++) {
     cout << "     ==== EPIC fission chamber # " << d + 1 << endl;

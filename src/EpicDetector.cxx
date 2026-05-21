@@ -667,6 +667,8 @@ unsigned int EpicDetector::GetIndex(int det, int anode) const {
 ////////////////////////////////////////////////////////////////////////////////
 double EpicDetector::TofRaw2Ene(int det, int anode, double q1, double tofraw, double &tofcal) {
 
+  cout << "EpicDetector::TofRaw2Ene(" << det << ", " << anode << ", " << q1 << ", " << tofraw << ", " << tofcal << ")" << endl;
+  cout << "ALPHA_CUT = " << m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0) << endl;
   // if alpha below alpha cut, keep tofcal=0 and return e=-1
   if (q1 < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0)) return -1;
 

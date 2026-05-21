@@ -209,12 +209,12 @@ void EpicSpectra::FillRaw() {
       // loop over the raw data
       // search for qmax per FC
       for (int i = 0; i < FC_mult; i++) {
-        if (m_RawData->GetPulserTrig(i))
-          continue;
+        cout << "EpicSpectra : m_RawData->GetAnodeNbr(" << i << ") = " << m_RawData->GetAnodeNbr(i) << endl;
+        if (m_RawData->GetPulserTrig(i))           continue;
         int det = m_RawData->GetDetNbr(i);
-        if (det < 0)
-          continue;
+        if (det < 0)          continue;
         int anode = m_RawData->GetAnodeNbr(i);
+        cout << "              m_RawData->GetAnodeNbr(" << i << ") = " << anode << endl;
         double qmax = m_RawData->GetQmax(i);
         multPerFC[det - 1]++;
         his_name = "EPIC" + to_string(det) + "_AnodeID";

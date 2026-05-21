@@ -614,6 +614,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
             m_RawData->SetDetNbr(det);
+            cout << "m_RawData->SetAnodeNbr(anode) for anode = " << anode << endl; 
             m_RawData->SetAnodeNbr(anode);
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);
@@ -644,37 +645,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               m_RawData->SetQmaxIndex(-1);
             }
           } // end of rejection or not of events as a function of its tof_raw
-          /////// MACRO TO DRAW SIGNALS
-          /*if(ID ==1){
-            auto c = new TCanvas();
-            c->Divide(2,1);
-            c->cd(1);
-            signalProcessor.drawRawSignal();
-            auto l = new TLine(startT,-100000,startT,100000);
-            l->SetLineWidth(3);
-            l->SetLineColor(4);
-            l->Draw();
-            auto l2 = new TLine(endT,-100000,endT,100000);
-            l2->SetLineWidth(3);
-            l2->SetLineColor(2);
-            l2->Draw();
-            auto l4 = new TLine(endT2,-100000,endT2,100000);
-            l4->SetLineWidth(3);
-            l4->SetLineColor(kRed-8);
-            l4->Draw();
-            auto l3 = new TLine(T_cfd,-100000,T_cfd,100000);
-            l3->SetLineWidth(3);
-            l3->SetLineColor(6);
-            l3->Draw();
-
-            c->cd(2);
-            sample.drawSignalCFD();
-            l3->Draw();
-            cout << ID << " Tcfd: " << T_cfd << " Q1: " << Qlong << " Q2: " <<
-            Q2
-            << endl; gPad->WaitPrimitive(); c->Close();
-            }*/
-          ///////////////////// END MACRO
         } // end if Qi>0
       } // If FC_Triggered && FC_Threshold && T_cfd
     } // end FC sampler

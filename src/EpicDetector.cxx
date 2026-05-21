@@ -105,13 +105,12 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
   cout << "//// EpicDetector::ReadConfiguration" << endl;
   auto blocks = parser.GetAllBlocksWithToken("epic");
-  vector<string> pos = {"POS"}; // x y z of the center of the EPIC fission chamber
-  vector<string> nAnodes = {"nAnodes"}; // number of anodes in the EPIC fission chamber
-  vector<string> zOffsetA1 = {"zOFFSET_A1"}; // Offset position of the origin of the anode compare to
-                     // the center of the chamber
-  vector<string> DZprevA = {"DZ_prevA"}; // Offset position of the origin of the anode compare to the
-                   // center of the chamber
-  vector<string> actinide = {"actinide"}; // isotope of the actinide on the cathode
+  vector<string> pos = {"POS"};                 // x y z of the center of the EPIC fission chamber
+  vector<string> nAnodes = {"nAnodes"};         // number of anodes in the EPIC fission chamber
+  vector<string> zOffsetA1 = {"zOFFSET_A1"};    // Offset position of the origin of the anode compare to the center of the chamber
+  vector<string> DZprevA = {"DZ_prevA"};        // Offset position of each anode with the previous anode 
+  vector<string> actinide = {"actinide"};       // isotope of the actinide on the cathode
+  vector<string> mass = {"mass_ug"};            // mass of the actinide material per anode
   vector<string> AnodeNumber = {"AnodeNumber"}; // Anode number as labeled in FC_det_AnodeNumber
 
   vector<double> Pos;
@@ -119,6 +118,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   double         zOff;
   vector<double> dz;
   vector<string> material;
+  vector<double> mass_material;
   vector<int>    num;
 
   for (auto block : blocks) {
@@ -145,6 +145,14 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
         else {
           material = block->GetVectorString("actinide");
           m_actinide.insert(m_actinide.end(), material.begin(), material.end());
+        }
+      }
+      if (block->HasTokenList(mass)) {
+        if (nA == 1)
+          m_actinide_mass.push_back(block->GetDouble("mass_ug","ug"));
+        else {
+          mass_material = block->GetVectorDouble("mass_ug","ug");
+          m_actinide_mass.insert(m_actinide_mass.end(), mass_material.begin(), mass_material.end());
         }
       }
       if (block->HasTokenList(AnodeNumber)) {
@@ -395,12 +403,11 @@ void EpicDetector::BuildPhysicalEvent() {
     double q1 = m_RawData->GetQ1(i);
     double q2 = m_RawData->GetQ2(i);
     double q3 = m_RawData->GetQ3(i);
-    // calibrated tof and energy
+    // calibrated tof and energy if q1 > alpha_cut_1d
     double tofcal = 0.;
-    double e = TofRaw2Ene(det, anode, tofraw, tofcal);
+    double e = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
     // Fill EpicPhysics
-    m_Physics->SetHit_fFC(det, anode, kFF, t_fc, tofraw, tofcal, e, t_cfd, t_qm,
-                          qm, q1, q2, q3);
+    m_Physics->SetHit_fFC(det, anode, kFF, t_fc, tofraw, tofcal, e, t_cfd, t_qm,qm, q1, q2, q3);
     if (qm > q_qmax) {
       q_qmax = qm;
       i_qmax = i;
@@ -697,16 +704,16 @@ unsigned int EpicDetector::GetIndex(int det, int anode) const {
   return it->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double EpicDetector::TofRaw2Ene(int det, int anode, double tofraw,
-                                double &tofcal) {
+double EpicDetector::TofRaw2Ene(int det, int anode, double q1, double tofraw, double &tofcal) {
+
+  // if alpha below alpha cut, keep tofcal=0 and return e=-1
+  if (q1 < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0)) return -1;
+
+  // else calibrate tof and return e
   const double mn_MeV = 939.565;
   int index = GetIndex(det, anode);
-  double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" +
-                                        to_string(anode) + "_GAMMA_PEAK",
-                                    0);
-  cout << "det = " << det << " anode = " << anode
-       << " : gammapeak = " << gammapeak << "m_Cal_GammaPeak[" << index
-       << "] = " << m_Cal_GammaPeak[index] << endl;
+  double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0);
+  cout << "det = " << det << " anode = " << anode << " : gammapeak = " << gammapeak << "m_Cal_GammaPeak[" << index << "] = " << m_Cal_GammaPeak[index] << endl;
   double offset = m_posA[index].Z() / 299.792458 - m_Cal_GammaPeak[index];
   tofcal = tofraw + offset;
   double beta = (m_posA[index].Z() / tofcal) / 299.792458;

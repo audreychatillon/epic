@@ -166,6 +166,7 @@ EpicSpectra::EpicSpectra() {
 
       his_name = prefix + "_Tof";
       m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
+      m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
       can_name = base + "_Tof";
       m_raw_can[can_name]->cd(a+1);
       gPad->SetLogy();

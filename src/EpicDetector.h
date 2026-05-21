@@ -42,6 +42,7 @@ private:
   unsigned int         m_nAtot{0}; 
   vector<unsigned int> m_nAnodes;
   vector<string>       m_actinide;
+  vector<double>       m_actinide_mass;
   vector<TVector3>     m_posD; 
   vector<TVector3>     m_posA; 
   vector<unsigned int> m_AnodeNumber;
@@ -91,7 +92,7 @@ public:
   vector<unordered_map<int,int>> m_anode2index;
   vector<epic_channel>           m_index2channel;
  
-  double TofRaw2Ene(int det, int anode, double tof_raw, double &tof_cal);
+  double TofRaw2Ene(int det, int anode, double q1, double tof_raw, double &tof_cal);
 
 
   // === inherrited from nptool::VPlugin

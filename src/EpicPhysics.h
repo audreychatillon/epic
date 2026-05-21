@@ -14,16 +14,16 @@ class EpicPhysics {
  private:
   
  public:
-        vector<short>  fFC_det;      // detector number (starting from 1)
-        vector<short>  fFC_anode;    // anode number (starting from 1)
+        vector<short>  fFC_det;         // detector number (starting from 1)
+        vector<short>  fFC_anode;       // anode number (starting from 1)
         vector<bool>   fFC_trigPulser;
         vector<double> fFC_time;        // time of the anode [ns]
-        vector<double> fFC_tof_raw;      // TofRaw
-        vector<double> fFC_tof_cal;      // TofCal
-        vector<double> fFC_e;            // energy [MeV]
-        vector<double> fFC_time_cfd;     // cfd time [ns]
-        vector<double> fFC_time_qm;    // time of the maxiumum of the signal
-        vector<double> fFC_qm;        // maximum amplitude of the signal
+        vector<double> fFC_tof_raw;     // TofRaw
+        vector<double> fFC_tof_cal;     // TofCal
+        vector<double> fFC_e;           // energy [MeV]
+        vector<double> fFC_time_cfd;    // cfd time [ns]
+        vector<double> fFC_time_qm;     // time of the maxiumum of the signal
+        vector<double> fFC_qm;          // maximum amplitude of the signal
         vector<double> fFC_q1;          // Q1 = integration on the full signal
         vector<double> fFC_q2;          // Q2 = integration on the "rising"-time
         vector<double> fFC_q3;          // Q3 = integration on the "decay"-time

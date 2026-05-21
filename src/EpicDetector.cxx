@@ -614,7 +614,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
             m_RawData->SetDetNbr(det);
-            cout << "m_RawData->SetAnodeNbr(anode) for anode = " << anode << endl; 
             m_RawData->SetAnodeNbr(anode);
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);

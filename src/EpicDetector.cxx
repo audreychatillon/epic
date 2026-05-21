@@ -382,20 +382,20 @@ void EpicDetector::InitializeDataOutputPhysics(
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildPhysicalEvent() {
 
-  //cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
-  //if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
-  //  short  imax   = m_RawData->GetQmaxIndex();
-  //  cout << "imax = " << imax << ", mult = " << m_RawData->GetFCMult() << endl;
-  //  if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-  //      short  det    = m_RawData->GetDetNbr(imax);
-  //      short  anode  = m_RawData->GetAnodeNbr(imax); 
-  //      double tofraw = m_RawData->GetTofRaw(imax);
-  //      double q1     = m_RawData->GetQ1(imax);
-  //      double tofcal = 0.;
-  //      double e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
-  //      m_Physics->SetHit_fFC(det, anode, tofcal, e);
-  //  }
-  //}
+  cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
+  if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
+    short  imax   = m_RawData->GetQmaxIndex();
+    cout << "imax = " << imax << ", mult = " << m_RawData->GetFCMult() << endl;
+    if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
+        short  det    = m_RawData->GetDetNbr(imax);
+        short  anode  = m_RawData->GetAnodeNbr(imax); 
+        double tofraw = m_RawData->GetTofRaw(imax);
+        double q1     = m_RawData->GetQ1(imax);
+        double tofcal = 0.;
+        double e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
+        m_Physics->SetHit_fFC(det, anode, tofcal, e);
+    }
+  }
 
 }
 
@@ -627,8 +627,6 @@ unsigned int EpicDetector::GetIndex(int det, int anode) const {
 ////////////////////////////////////////////////////////////////////////////////
 double EpicDetector::TofRaw2Ene(int det, int anode, double q1, double tofraw, double &tofcal) {
 
-  cout << "EpicDetector::TofRaw2Ene(" << det << ", " << anode << ", " << q1 << ", " << tofraw << ", " << tofcal << ")" << endl;
-  cout << "ALPHA_CUT = " << m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0) << endl;
   // if alpha below alpha cut, keep tofcal=0 and return e=-1
   if (q1 < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0)) return -1;
 
@@ -636,7 +634,6 @@ double EpicDetector::TofRaw2Ene(int det, int anode, double q1, double tofraw, do
   const double mn_MeV = 939.565;
   int index = GetIndex(det, anode);
   double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0);
-  cout << "gammapeak = " << gammapeak << endl;
   double offset = m_posA[index].Z() / 299.792458 - gammapeak;
   tofcal = tofraw + offset;
   double beta = (m_posA[index].Z() / tofcal) / 299.792458;

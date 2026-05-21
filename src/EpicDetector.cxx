@@ -197,10 +197,53 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q3_gate_stop.resize(m_nAtot, 40.);
   m_TofRaw_max.resize(m_nAtot, -1.); // ns
 
-
   BuildEpicChannelMaps();
   ReadConversionConfig();
   PrintConfig();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void EpicDetector::ReadConversionConfig() {
+  //TODO : check that ConfigEPIC.dat file and detector.yaml 
+  //       are coherent with the number of anodes per det
+  cout << "//// EpicDetector::ReadConversionConfig" << endl;
+  std::ifstream ifs("./config_files/ConfigEPIC.dat");
+  if (ifs.is_open()) {
+
+    vector<string> info_sample = {"get_sampler_qmax"};
+    nptool::InputParser parser("./config_files/ConfigEPIC.dat", false);
+
+    auto blocks = parser.GetAllBlocksWithToken("ConfigEPIC");
+    for (auto block : blocks) {
+      int det = block->GetInt("det", 1);
+      int anode = block->GetInt("anode", 1);
+      int index = GetIndex(det, anode);
+      if (index >= m_cfd_fract.size() || anode != m_index2channel[index].anode || det != m_index2channel[index].det){ 
+        cout << "     ERROR OF MAPPING "<< endl;
+        cout << "            - index of the input is " << index << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
+        cout << "            - det from ConfigEPIC.dat : " << det << "!= det from detector.yaml : " << m_index2channel[index].det  << endl;
+        cout << "            - anode from ConfigEPIC.dat : " << anode << "!= anode from detector.yaml : " << m_index2channel[index].anode  << endl;
+      }
+      else         
+        cout << "     Found EPIC block: det = " << det << ", anode = " << anode << ", index " << index << endl;
+     
+      if (block->HasTokenList(info_sample)) {
+        m_Get_Sampler_Qmax = block->GetInt("get_sampler_qmax", 1);
+      }
+      m_cfd_fract[index] = 1. / (double)block->GetInt("cfd_frac", 1);
+      m_cfd_delay[index] = (double)block->GetInt("cfd_delay", 1);
+      m_cfd_thres[index] = (double)block->GetInt("cfd_thres", 1);
+      m_Q1_gate_start[index] = (double)block->GetInt("Q1_gate_start", 1);
+      m_Q1_gate_stop[index] = (double)block->GetInt("Q1_gate_stop", 1);
+      m_Q2_gate_start[index] = (double)block->GetInt("Q2_gate_start", 1);
+      m_Q2_gate_stop[index] = (double)block->GetInt("Q2_gate_stop", 1);
+      m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
+      m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
+      m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
+    }
+  } else
+    cout << "//// No EPIC conversion file found, using default parameters"
+         << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -289,47 +332,6 @@ void EpicDetector::PrintConfig() {
           "TofRawMax are rejected "
        << endl;
   cout << "                if < 0, no alpha rejection" << endl;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::ReadConversionConfig() {
-  //TODO : check that ConfigEPIC.dat file and detector.yaml 
-  //       are coherent with the number of anodes per det
-  cout << "//// EpicDetector::ReadConversionConfig" << endl;
-  std::ifstream ifs("./config_files/ConfigEPIC.dat");
-  if (ifs.is_open()) {
-
-    vector<string> info_sample = {"get_sampler_qmax"};
-    nptool::InputParser parser("./config_files/ConfigEPIC.dat", false);
-
-    auto blocks = parser.GetAllBlocksWithToken("ConfigEPIC");
-    for (auto block : blocks) {
-      int det = block->GetInt("det", 1);
-      int anode = block->GetInt("anode", 1);
-      int index = GetIndex(det, anode);
-      if (index >= m_cfd_fract.size())
-        cout << " ///// ERROR : index of the input is " << index
-             << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
-      else {
-        cout << "//// found EPIC block: det = " << det << ", anode = " << anode << ", index " << index << endl;
-      }
-      if (block->HasTokenList(info_sample)) {
-        m_Get_Sampler_Qmax = block->GetInt("get_sampler_qmax", 1);
-      }
-      m_cfd_fract[index] = 1. / (double)block->GetInt("cfd_frac", 1);
-      m_cfd_delay[index] = (double)block->GetInt("cfd_delay", 1);
-      m_cfd_thres[index] = (double)block->GetInt("cfd_thres", 1);
-      m_Q1_gate_start[index] = (double)block->GetInt("Q1_gate_start", 1);
-      m_Q1_gate_stop[index] = (double)block->GetInt("Q1_gate_stop", 1);
-      m_Q2_gate_start[index] = (double)block->GetInt("Q2_gate_start", 1);
-      m_Q2_gate_stop[index] = (double)block->GetInt("Q2_gate_stop", 1);
-      m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
-      m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
-      m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
-    }
-  } else
-    cout << "//// No EPIC conversion file found, using default parameters"
-         << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -51,7 +51,8 @@ nptool --new-project EPICproject
 # - update the project.list in ~/.local/nptool/default/
 # - create the folder EPICproject in /folder/of/your/nptoolV4/projects/
 ```
-In the EPICproject folder, edit `project.yaml` and uncomment line 10, adding the flag `--disable-mt` 
+In the EPICproject folder, edit `project.yaml` and uncomment line 10, `default flag` adding the flag `--disable-mt` 
+and puting the proper configuration file for the detector following `--detector`
 See an example: [project.yaml](https://github.com/audreychatillon/EPICatGELINA/blob/main/project.yaml)
 
 To compile (after each update of the plugin), in your project folder:
@@ -75,9 +76,10 @@ npconversion --input faster,sample.pid,file.fast --output root,8080
 nponline --input-raw root,localhost:8080 --interface root,8082
 ```
 
-To convert FASTER data (BuildRawEvent) and build physical event (BuildPhysicalEvent)
+To convert FASTER data and build physical event by applying calibration parameters 
+you should add in `project.yaml` in the `default flag` line `--calibration calibration.txt` 
 ```bash
-npconversion --input faster,sample.pid,file.fast --calibration calibration.txt --output root,8080
+npconversion --input faster,sample.pid,file.fast  --output root,8080
 npanalysis --input root,localhost:8080 --output root,8081
 nponline --input-raw root,localhost:8080 --input-phy root,localhost:8081 --interface root,8082
 ```

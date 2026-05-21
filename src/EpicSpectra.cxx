@@ -22,11 +22,11 @@ EpicSpectra::EpicSpectra() {
   m_Physics = m_detector->GetPhysics();
 
   // get some config constants
-  unsigned int nDets = m_detector->GetNumberOfDets();
-  unsigned int nAnodesTot = m_detector->GetNumberOfAnodesTot();
-  vector<unsigned int> nAnodes  = m_detector->GetNumberOfAnodes();
-  vector<string>       actinide = m_detector->GetActinideMaterial();
-  vector<unsigned int> anodes   = m_detector->GetAnodeNumber();
+  nDets = m_detector->GetNumberOfDets();
+  nAnodesTot = m_detector->GetNumberOfAnodesTot();
+  nAnodes  = m_detector->GetNumberOfAnodes();
+  actinide = m_detector->GetActinideMaterial();
+  anodes   = m_detector->GetAnodeNumber();
 
   // general histograms
   m_canT0 = new TCanvas("T0", "T0", 1200, 800);
@@ -189,11 +189,6 @@ void EpicSpectra::FillRaw() {
   string baseD;
   string baseA;
   string his_name;
-
-  unsigned int nAnodesTot = m_detector->GetNumberOfAnodesTot();
-  unsigned int nDets = m_detector->GetNumberOfDets();
-  std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
-  std::vector<string> actinide = m_detector->GetActinideMaterial();
 
   int FC_mult = m_RawData->GetFCMult();
   if (FC_mult > 0) {

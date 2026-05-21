@@ -24,13 +24,9 @@ EpicSpectra::EpicSpectra() {
   // get some config constants
   unsigned int nDets = m_detector->GetNumberOfDets();
   unsigned int nAnodesTot = m_detector->GetNumberOfAnodesTot();
-  std::vector<unsigned int> nAnodes = m_detector->GetNumberOfAnodes();
-  std::vector<std::string> actinide = m_detector->GetActinideMaterial();
-
-  cout << "nDets = " << nDets << endl;
-  cout << "    -> to be compare with nAnodes.size() = " << nAnodes.size() << endl;
-  cout << "nAnodesTot = " << nAnodesTot << endl;
-  cout << "    -> to be compare with actinide.size() = " << actinide.size() << endl;
+  vector<unsigned int> nAnodes  = m_detector->GetNumberOfAnodes();
+  vector<string>       actinide = m_detector->GetActinideMaterial();
+  vector<unsigned int> anodes   = m_detector->GetAnodeNumber();
 
   // general histograms
   m_canT0 = new TCanvas("T0", "T0", 1200, 800);
@@ -120,10 +116,10 @@ EpicSpectra::EpicSpectra() {
 
 
     // loop over the anodes and create the histo per anode
-    for (unsigned int a = 1; a <= nAnodes[d - 1]; a++) {
-
-      cout << "          a = " << a << " / " << nAnodes[d-1] << endl;
-      int i = m_detector->GetIndex(d, a);
+    for (unsigned int anode = 0; anode < nAnodes[d - 1]; anode++) {
+      int a = anodes[anode]; 
+      cout << "          a = " << anode << " / " << nAnodes[d-1] << ": FC_" << d+1 << "_" << a << endl;
+      int i = m_detector->GetIndex(d, anode);
       cout << "index = " << i << endl;
 
       ostringstream name;

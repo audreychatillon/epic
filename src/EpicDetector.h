@@ -72,6 +72,7 @@ public:
   unsigned int                GetNumberOfAnodesTot() const { return m_nAtot; }
   const vector<unsigned int>& GetNumberOfAnodes()    const { return m_nAnodes;}
   const vector<string>&       GetActinideMaterial()  const { return m_actinide;}
+  const vector<unsigned int>& GetAnodeNumber()       const { return m_AnodeNumber;}
   TVector3 GetEpicPosition(const unsigned int det)   const { return m_posD[det - 1];}
   TVector3 GetAnodePosition(const unsigned int det, const unsigned int anode) const {
     int index = GetIndex(det,anode); 

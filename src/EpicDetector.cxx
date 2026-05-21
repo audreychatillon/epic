@@ -324,14 +324,12 @@ void EpicDetector::PrintConfig() {
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_ALPHA",0);
     cout << endl;
-    cout << "     ---- ===================================================== ----" << endl; 
+    cout << "     ==== ===================================================== ====" << endl; 
     cout << endl;
     offset += m_nAnodes[d];
   }
-  cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > "
-          "TofRawMax are rejected "
-       << endl;
-  cout << "                if < 0, no alpha rejection" << endl;
+  cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > TofRawMax are rejected " << endl;
+  cout << "                if < 0, no filter on TofRaw" << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -384,6 +382,8 @@ void EpicDetector::InitializeDataOutputPhysics(
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildPhysicalEvent() {
 
+
+   cout << "Enter EpicDetector::BuildPhysicalEvent() " << endl;
   // FILL FC part
   unsigned int multFC = m_RawData->GetFCMult();
   double q_qmax = 0;

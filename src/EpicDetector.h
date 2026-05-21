@@ -86,8 +86,8 @@ public:
     int det;
     int anode;
   };
-  vector<unordered_map<int,int>> m_anode2index;
-  vector<epic_channel>           m_index2channel;
+  vector<unordered_map<int,int>> m_anode2index; //!
+  vector<epic_channel>           m_index2channel; //!
  
   double TofRaw2Ene(int det, int anode, double q1, double tof_raw, double &tof_cal);
 

@@ -206,12 +206,12 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::PrintConfig() {
   constexpr int colWidth = 20;
-  cout << "CHECK CHECK CHEK nptool::c_light = " << nptool::c_light << endl;
   cout << "//// EpicDetector::PringConversion Config" << endl;
   cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
   cout << "                   (Total number of anodes : " << m_nAtot << ")" << endl;
   size_t offset = 0;
   for (int d = 0; d < m_nDets; d++) {
+    cout << "     ==== ===================================================== ====" << endl; 
     cout << "     ==== EPIC fission chamber # " << d + 1 << endl;
     cout << "          number of anodes : " << m_nAnodes[d] << endl;
     // actinide material
@@ -263,16 +263,25 @@ void EpicDetector::PrintConfig() {
       cout << left << setw(colWidth) << oss.str();
     }
     cout << endl;
+    cout << "     ---- ----------------------------------------------------- ----" << endl; 
+    cout << "      calibration parameters " << endl;
+    cout << "     ---- ----------------------------------------------------- ----" << endl; 
     // TofRaw max
     cout << "          TofRawMax (*)          : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_TofRaw_max[offset + a];
     cout << endl;
-    cout << endl;
     // Gamma Peak
     cout << "          Gamma Peak [ch]        : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK",0);
+    cout << endl;
+    // Alpha cut
+    cout << "          Alpha Cut [ch]         : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++)
+      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_ALPHA",0);
+    cout << endl;
+    cout << "     ---- ===================================================== ----" << endl; 
     cout << endl;
     offset += m_nAnodes[d];
   }
@@ -302,8 +311,7 @@ void EpicDetector::ReadConversionConfig() {
         cout << " ///// ERROR : index of the input is " << index
              << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
       else {
-        cout << "//// found EPIC block: det = " << det << ", anode = " << anode
-             << ", index " << index << endl;
+        cout << "//// found EPIC block: det = " << det << ", anode = " << anode << ", index " << index << endl;
       }
       if (block->HasTokenList(info_sample)) {
         m_Get_Sampler_Qmax = block->GetInt("get_sampler_qmax", 1);

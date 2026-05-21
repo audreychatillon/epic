@@ -501,6 +501,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       //cout << setprecision(25) << " --> t_hf = " << m_TimeHF_current << "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
       m_RawData->SetTimePrevHF(m_TimeHF_prev);
       m_RawData->SetTimeHF(m_TimeHF_current);
+      m_RawData->SetDetNbr(-1);
+      m_RawData->SetAnodeNbr(-1);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);

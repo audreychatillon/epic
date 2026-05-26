@@ -105,7 +105,8 @@ EpicSpectra::EpicSpectra() {
 
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
-            int anode = anodes[a]; 
+            int anode = anodes[a];
+            cout << "constructeur EpicSpectra : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;

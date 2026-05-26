@@ -321,7 +321,7 @@ void EpicSpectra::FillPhy() {
     ostringstream name;
     string baseA;
     string his_name;
-    if(m_Physics->GetTofCal()>0){
+    if(!m_Physics->GetIsAlpha()){
         int    det    = m_Physics->GetDetNbr();
         int    anode  = m_Physics->GetAnodeNbr();
         int    index  = m_detector->GetIndex(det, anode);

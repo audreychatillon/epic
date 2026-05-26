@@ -19,6 +19,7 @@ class EpicPhysics {
         double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
+        bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)
 
    //////////////////////////////////////////////////////////////
    // Constructor and destructor
@@ -39,6 +40,7 @@ class EpicPhysics {
         fFC_tof_raw = -1.;
         fFC_tof_cal = -1.;
         fFC_e       = -1.;
+        fFC_isAlpha = true;
         //fFC_det.clear();
         //fFC_anode.clear();
         //fFC_tof_cal.clear();
@@ -59,25 +61,24 @@ class EpicPhysics {
         const short&  anode,
         const double& tof_raw_ns,
         const double& tof_cal_ns,
-        const double& e_MeV){
-            //fFC_det.push_back(det);
-            //fFC_anode.push_back(anode);
-            //fFC_tof_cal.push_back(tof_ns);
-            //fFC_e.push_back(e_MeV);
+        const double& e_MeV,
+        const bool&   alpha){
             fFC_det = det;
             fFC_anode = anode;
             fFC_tof_raw = tof_raw_ns;
             fFC_tof_cal = tof_cal_ns;
             fFC_e = e_MeV;
+            fFC_isAlpha = alpha;
         }; //!
 
 
     //////////////////////    GETTERS    ////////////////////////
-    inline short GetDetNbr()   const { return fFC_det ; };
-    inline short GetAnodeNbr() const { return fFC_anode ; };
-    inline short GetTofRaw()   const { return fFC_tof_raw ; };
-    inline short GetTofCal()   const { return fFC_tof_cal ; };
-    inline short GetE()        const { return fFC_e ; };
+    inline short  GetDetNbr()   const { return fFC_det ; };
+    inline short  GetAnodeNbr() const { return fFC_anode ; };
+    inline double GetTofRaw()   const { return fFC_tof_raw ; };
+    inline double GetTofCal()   const { return fFC_tof_cal ; };
+    inline double GetE()        const { return fFC_e ; };
+    inline bool   GetIsAlpha()  const { return fFC_isAlpha ; };
 
    //////////////////////////////////////////////////////////////
    // Required for ROOT dictionnary

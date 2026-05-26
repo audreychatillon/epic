@@ -31,15 +31,6 @@ EpicSpectra::EpicSpectra() {
     nAnodes  = m_detector->GetNumberOfAnodes();
     actinide = m_detector->GetActinideMaterial();
     anodes   = m_detector->GetAnodeNumber();
-    cout << "nDets = " << nDets << endl;
-    cout << "nAnodesTot = " << nAnodesTot << endl;
-    cout << "details of vector<unsigned int> nAnodes :" << endl;
-    cout << "    size of nAnodes = " << nAnodes.size() << endl; 
-    cout << "details of vector<unsigned int> anodes : " << endl;
-    cout << "    size of anodes : " << anodes.size() << endl;
-    for(size_t i = 0 ; i < anodes.size() ; i++){
-        cout << "#" << i << ", anodes[" << i << "] = " << anodes[i] << endl;
-    }
 
     // general histograms
     m_canT0 = new TCanvas("T0", "T0", 1200, 800);
@@ -124,7 +115,6 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[offset + a];
-            cout << "call GetIndex(" << det << ", " << anode << ") in constructeur [raw]" << endl; 
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;

@@ -268,110 +268,114 @@ EpicSpectra::EpicSpectra() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::FillRaw() {
+    if(m_app->HasFlag("--input-raw")){
 
-  ostringstream name;
-  string baseD;
-  string baseA;
-  string his_name;
+        ostringstream name;
+        string baseD;
+        string baseA;
+        string his_name;
 
-  int FC_mult = m_RawData->GetFCMult();
-  if (FC_mult > 0) {
-    if (m_RawData->GetDetNbr(0) == -1) {
-      m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
-      m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
-    } 
-    else {
-      int multPerFC[nDets];
-      int IndexMax[nDets];
-      double Qmax[nDets];
-      for (int d = 0; d < nDets; d++) {
-        multPerFC[d] = 0;
-        IndexMax[d] = -1;
-        Qmax[d] = 0.;
-      }
+        int FC_mult = m_RawData->GetFCMult();
+        if (FC_mult > 0) {
+          if (m_RawData->GetDetNbr(0) == -1) {
+            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
+            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
+          } 
+          else {
+            int multPerFC[nDets];
+            int IndexMax[nDets];
+            double Qmax[nDets];
+            for (int d = 0; d < nDets; d++) {
+              multPerFC[d] = 0;
+              IndexMax[d] = -1;
+              Qmax[d] = 0.;
+            }
 
-      // loop over the raw data
-      // search for qmax per FC
-      for (int i = 0; i < FC_mult; i++) {
-        if (m_RawData->GetPulserTrig(i))           continue;
-        int det = m_RawData->GetDetNbr(i);
-        if (det < 0)          continue;
-        int anode = m_RawData->GetAnodeNbr(i);
-        double qmax = m_RawData->GetQmax(i);
-        multPerFC[det - 1]++;
-        his_name = "EPIC" + to_string(det) + "_AnodeID";
-        m_raw_h1[his_name]->Fill(anode);
-        if (qmax > Qmax[det - 1]) {
-          Qmax[det - 1] = qmax;
-          IndexMax[det - 1] = i;
-        }
-      } // end of loop over the raw data
+            // loop over the raw data
+            // search for qmax per FC
+            for (int i = 0; i < FC_mult; i++) {
+              if (m_RawData->GetPulserTrig(i))           continue;
+              int det = m_RawData->GetDetNbr(i);
+              if (det < 0)          continue;
+              int anode = m_RawData->GetAnodeNbr(i);
+              double qmax = m_RawData->GetQmax(i);
+              multPerFC[det - 1]++;
+              his_name = "EPIC" + to_string(det) + "_AnodeID";
+              m_raw_h1[his_name]->Fill(anode);
+              if (qmax > Qmax[det - 1]) {
+                Qmax[det - 1] = qmax;
+                IndexMax[det - 1] = i;
+              }
+            } // end of loop over the raw data
 
-      // spectra for Qmax only: suppress cross-talk
-      for (int d = 0; d < nDets; d++) {
-         baseD = "EPIC" + to_string(d+1);
-         his_name = baseD + "_Mult";
-         m_raw_h1[his_name]->Fill(multPerFC[d]);
-         if (Qmax[d] > 0 && IndexMax[d] >= 0 && multPerFC[d] > 0) {
-            int det = m_RawData->GetDetNbr(IndexMax[d]);
-            if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
-            int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
-            cout << "EpicSpectra::FillRaw : IndexMax = " << IndexMax[d] << ", call GetIndex with  det = " << det << ", anode = " << anode << endl;
-            int index = m_detector->GetIndex(det, anode);
+            // spectra for Qmax only: suppress cross-talk
+            for (int d = 0; d < nDets; d++) {
+               baseD = "EPIC" + to_string(d+1);
+               his_name = baseD + "_Mult";
+               m_raw_h1[his_name]->Fill(multPerFC[d]);
+               if (Qmax[d] > 0 && IndexMax[d] >= 0 && multPerFC[d] > 0) {
+                  int det = m_RawData->GetDetNbr(IndexMax[d]);
+                  if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
+                  int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
+                  cout << "EpicSpectra::FillRaw : IndexMax = " << IndexMax[d] << ", call GetIndex with  det = " << det << ", anode = " << anode << endl;
+                  int index = m_detector->GetIndex(det, anode);
+                  name.str("");
+                  name.clear();
+                  name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+                  baseA = name.str();
+                  double qm = m_RawData->GetQmax(IndexMax[d]);
+                  double q1 = m_RawData->GetQ1(IndexMax[d]);
+                  double q2 = m_RawData->GetQ2(IndexMax[d]);
+                  double q3 = m_RawData->GetQ3(IndexMax[d]);
+                  double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
+                  //double t_hf = m_RawData->GetTimeLastHF();
+                  double tofraw = m_RawData->GetTofRaw(IndexMax[d]);
+                  double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
+                  double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
+                  his_name = baseD + "_AnodeID_ifQmax";    m_raw_h1[his_name]->Fill(anode);
+                  his_name = baseD + "_Q1vAnodeID";        m_raw_h2[his_name]->Fill(anode, q1);
+                  his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
+                  his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
+                  his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
+                  his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
+                  his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
+                  his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
+                  his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
+                  his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(tofraw);
+                  his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
+                  his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
+                  if (q3 > 0){
+                      his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
+                  }
+              }
+            }
+          } // end of if else Det[0] != -1
+        } // end of if FC_mult > 0
+    }// end of if --input-raw
+}
+////////////////////////////////////////////////////////////////////////////////
+void EpicSpectra::FillPhy() {
+    if(m_app->HasFlag("--input-phy")){
+        ostringstream name;
+        string baseA;
+        string his_name;
+        if(!m_Physics->GetIsAlpha()){
+            short  det    = m_Physics->GetDetNbr();
+            short  anode  = m_Physics->GetAnodeNbr();
+            cout << "EpicSpectra::FillPhy() call GetIndex(" << det << ", " << anode << ")" << endl;
+            int    index  = m_detector->GetIndex(det, anode);
+            double tofraw = m_Physics->GetTofRaw();
+            double tofcal = m_Physics->GetTofCal();
+            double e      = m_Physics->GetE();
             name.str("");
             name.clear();
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
-            double qm = m_RawData->GetQmax(IndexMax[d]);
-            double q1 = m_RawData->GetQ1(IndexMax[d]);
-            double q2 = m_RawData->GetQ2(IndexMax[d]);
-            double q3 = m_RawData->GetQ3(IndexMax[d]);
-            double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
-            //double t_hf = m_RawData->GetTimeLastHF();
-            double tofraw = m_RawData->GetTofRaw(IndexMax[d]);
-            double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
-            double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
-            his_name = baseD + "_AnodeID_ifQmax";    m_raw_h1[his_name]->Fill(anode);
-            his_name = baseD + "_Q1vAnodeID";        m_raw_h2[his_name]->Fill(anode, q1);
-            his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
-            his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
-            his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
-            his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
-            his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
-            his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
-            his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
-            his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(tofraw);
-            his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
-            his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
-            if (q3 > 0){
-                his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
-            }
-        }
-      }
-    } // end of if else Det[0] != -1
-  } // end of if FC_mult > 0 
-}
-////////////////////////////////////////////////////////////////////////////////
-void EpicSpectra::FillPhy() {
-    ostringstream name;
-    string baseA;
-    string his_name;
-    if(!m_Physics->GetIsAlpha()){
-        short  det    = m_Physics->GetDetNbr();
-        short  anode  = m_Physics->GetAnodeNbr();
-        cout << "EpicSpectra::FillPhy() call GetIndex(" << det << ", " << anode << ")" << endl;
-        int    index  = m_detector->GetIndex(det, anode);
-        double tofraw = m_Physics->GetTofRaw();
-        double tofcal = m_Physics->GetTofCal();
-        double e      = m_Physics->GetE();
-        name.str("");
-        name.clear();
-        name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
-        baseA = name.str();
-        his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
-        his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
-        his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e);
-    }
+            his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
+            his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
+            his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e);
+        }// end of if FF
+    }// end of if --input-phy
 
 }
 ////////////////////////////////////////////////////////////////////////////////

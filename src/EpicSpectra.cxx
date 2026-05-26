@@ -57,6 +57,7 @@ EpicSpectra::EpicSpectra() {
     // loop over nDets for raw histos
     if(m_app->HasFlag("--input-raw")){
         dir_raw->cd();
+        size_t offset = 0;
         for (unsigned int det = 1; det <= nDets; det++) {
           // create the canvas and histos per detector
           int ncol = ceil(0.5 * nAnodes[det - 1]);
@@ -122,7 +123,7 @@ EpicSpectra::EpicSpectra() {
 
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
-            int anode = anodes[a];
+            int anode = anodes[offset + a];
             cout << "call GetIndex(" << det << ", " << anode << ") in constructeur [raw]" << endl; 
             int i = m_detector->GetIndex(det, anode);
 
@@ -219,7 +220,8 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_DT_Tqmax_Tcfd";
             m_raw_can[can_name]->cd(a+1);
             m_raw_h1[his_name]->Draw();
-          } // end of loop over nAnodes[d-1]
+          } // end of loop over nAnodes[det-1]
+          offset += nAnodes[det-1];
         } // end of loop over nDets
 
     }// end of if --input raw
@@ -228,7 +230,7 @@ EpicSpectra::EpicSpectra() {
     if(m_app->HasFlag("--input-phy")){
 
         dir_phy->cd();
-
+        size_t offset = 0;
         for (unsigned int det = 1; det <= nDets; det++) {
           // create the canvas and histos per detector
           int ncol = ceil(0.5 * nAnodes[det - 1]);
@@ -251,7 +253,7 @@ EpicSpectra::EpicSpectra() {
 
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
-            int anode = anodes[a]; 
+            int anode = anodes[offset+a]; 
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -290,8 +292,8 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogz(); 
             m_phy_h2[his_name]->Draw("colz");
 
-
           } // end of loop over nAnodes[d-1]
+          offset += nAnodes[det-1];
         } // end of loop over nDets
     }// end of if --input-phy
 }

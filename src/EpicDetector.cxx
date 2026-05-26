@@ -384,21 +384,22 @@ void EpicDetector::BuildPhysicalEvent() {
     double e      = -1;
     bool   alpha  = true;
 
-  if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
-    short  imax   = m_RawData->GetQmaxIndex();
-    if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-        double q1 = m_RawData->GetQ1(imax);
-        det    = m_RawData->GetDetNbr(imax);
-        anode  = m_RawData->GetAnodeNbr(imax); 
-        tofraw = m_RawData->GetTofRaw(imax);
-        if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
-            alpha = false;
-        if (!alpha) 
-            e  = TofRaw2Ene(det, anode, tofraw, tofcal);
+    if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
+      short  imax   = m_RawData->GetQmaxIndex();
+      if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
+          double q1 = m_RawData->GetQ1(imax);
+          det    = m_RawData->GetDetNbr(imax);
+          anode  = m_RawData->GetAnodeNbr(imax); 
+          tofraw = m_RawData->GetTofRaw(imax);
+          if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
+              alpha = false;
+          if (!alpha) 
+              e  = TofRaw2Ene(det, anode, tofraw, tofcal);
+      }
     }
-  }
-  
-  m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e, alpha);
+    
+    cout << "m_Physics->SetHit_fFC(" << det << ", " << anode << ", " << tofraw << ", " << tofcal << ", " << e << ", " << alpha << ");" << endl;
+    m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e, alpha);
 
 }
 

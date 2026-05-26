@@ -78,6 +78,9 @@ EpicSpectra::EpicSpectra() {
     can_name = base + "_Q1vT";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
     
+    can_name = base + "_Q1vTofRaw";
+    m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
     can_name = base + "_Q2Q3vQ1";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
     
@@ -119,7 +122,7 @@ EpicSpectra::EpicSpectra() {
       string prefix = name.str();
 
       his_name = prefix + "_Q1vT";
-      m_raw_h2[his_name] = new TH2F(his_name.c_str(), (his_name + "_Q1vT").c_str(), 1440,0, 86400, 1000, 0, 200000);
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 1440,0, 86400, 1000, 0, 200000);
       m_raw_h2[his_name]->GetXaxis()->SetTitle("Time [s] : 60s / bin");
       m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
       can_name = base + "_Q1vT";
@@ -184,6 +187,15 @@ EpicSpectra::EpicSpectra() {
       m_phys_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
       m_phys_h1[his_name]->SetLineColor(8);
       m_phys_h1[his_name]->Draw("same");
+
+      his_name = prefix + "_Q1vTofRaw";
+      m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 2600, 0, 2590000, 1000, 0, 200000);
+      m_raw_h2[his_name]->GetXaxis()->SetTitle("TofRaw [ns]");
+      m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
+      can_name = base + "_Q1vTofRaw";
+      m_raw_can[can_name]->cd(a+1);
+      gPad->SetLogz(); 
+      m_raw_h2[his_name]->Draw("colz");
 
       his_name = prefix + "_Tqmax_Tcfd";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -50, 50);
@@ -293,6 +305,7 @@ void EpicSpectra::FillRaw() {
             his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
             his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
             his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(t_fc - t_hf);
+            his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(t_fc - t_hf, q1);
             his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
             if (q3 > 0){
                 his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);

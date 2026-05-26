@@ -2,9 +2,11 @@
 #define EpicSpectra_h
 
 #include "EpicDetector.h"
+#include "NPCalibrationManager.h"
 
 // root
 #include "TCanvas.h"
+#include "TCutG.h"
 #include "TGraph.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -29,6 +31,7 @@ private:
   std::shared_ptr<epic::EpicDetector> m_detector;
   EpicData*    m_RawData;
   EpicPhysics* m_Physics;
+  nptool::CalibrationManager m_Cal;
 
 
   // === general histograms and canvas
@@ -44,6 +47,7 @@ private:
   std::map<std::string,TCanvas*> m_raw_can;
   std::map<std::string,TCanvas*> m_phy_can;
   std::shared_ptr<nptool::Application> m_app;
+  std::map<std::string,TCutG*> m_tcutg;
 
   unsigned int nDets ;
   unsigned int nAnodesTot ;
@@ -51,9 +55,8 @@ private:
   vector<string>       actinide ;
   vector<unsigned int> anodes ;
 
-  // === canvas
-  //std::vector<std::array<TCanvas*,11>> m_can;
   TCanvas* CreateCanvas(const std::string& name, int ncol);
+
 
 public:
   void FillRaw();

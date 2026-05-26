@@ -23,6 +23,8 @@ EpicSpectra::EpicSpectra() {
     TDirectory* dir_raw = gROOT->mkdir("raw");
     TDirectory* dir_phy = gROOT->mkdir("phy");
 
+    m_Cal.InitCalibration();
+
     // get some config constants
     nDets = m_detector->GetNumberOfDets();
     nAnodesTot = m_detector->GetNumberOfAnodesTot();
@@ -130,6 +132,16 @@ EpicSpectra::EpicSpectra() {
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
+
+            double x[4];
+            double y[4];
+            his_name = prefix + "_TCutG_discri";
+            for(int pts = 0 ; pts < 4 ; pts++){
+                x[pts] =  m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_X",pts);
+                y[pts] =  m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_Y",pts);
+            }
+            m_tcutg[his_name] = new TCutG(his_name.c_str(),4,x,y);
+            m_tcutg[his_name]->Draw("same");
 
             his_name = prefix + "_Q2vQ1";
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 200000);

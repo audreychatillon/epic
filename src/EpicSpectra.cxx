@@ -314,7 +314,7 @@ void EpicSpectra::FillRaw() {
             int det = m_RawData->GetDetNbr(IndexMax[d]);
             if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
             int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
-            cout << "Fill Raw : IndexMax = " << IndexMax[d] << ", det = " << det << ", anode = " << anode << endl;
+            cout << "EpicSpectra::FillRaw : IndexMax = " << IndexMax[d] << ", call GetIndex with  det = " << det << ", anode = " << anode << endl;
             int index = m_detector->GetIndex(det, anode);
             name.str("");
             name.clear();

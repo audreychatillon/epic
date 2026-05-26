@@ -382,18 +382,25 @@ void EpicDetector::InitializeDataOutputPhysics(
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildPhysicalEvent() {
 
+    short  det    = -1;
+    short  anode  = -1;
+    double tofraw = -1;
+    double tofcal = -1;
+    double e      = -1;
+
   if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
     short  imax   = m_RawData->GetQmaxIndex();
     if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-        short  det    = m_RawData->GetDetNbr(imax);
-        short  anode  = m_RawData->GetAnodeNbr(imax); 
-        double tofraw = m_RawData->GetTofRaw(imax);
-        double q1     = m_RawData->GetQ1(imax);
-        double tofcal = 0.;
-        double e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
-        m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e);
+        double q1 = m_RawData->GetQ1(imax);
+        det    = m_RawData->GetDetNbr(imax);
+        anode  = m_RawData->GetAnodeNbr(imax); 
+        tofraw = m_RawData->GetTofRaw(imax);
+        tofcal = 0.;
+        e      = TofRaw2Ene(det, anode, q1, tofraw, tofcal);
     }
   }
+  
+  m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e);
 
 }
 

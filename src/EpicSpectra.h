@@ -8,6 +8,7 @@
 #include "TGraph.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TROOT.h"
 
 // std
 #include <map>
@@ -38,10 +39,11 @@ private:
   // === raw and phys histograms and canvas per FC and/or anode
   std::map<std::string,TH1*> m_raw_h1;
   std::map<std::string,TH2*> m_raw_h2;
-  std::map<std::string,TH1*> m_phys_h1;
-  std::map<std::string,TH2*> m_phys_h2;
+  std::map<std::string,TH1*> m_phy_h1;
+  std::map<std::string,TH2*> m_phy_h2;
   std::map<std::string,TCanvas*> m_raw_can;
-  std::map<std::string,TCanvas*> m_phys_can;
+  std::map<std::string,TCanvas*> m_phy_can;
+  std::shared_ptr<nptool::Application> m_app;
 
   unsigned int nDets ;
   unsigned int nAnodesTot ;

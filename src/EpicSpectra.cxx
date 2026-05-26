@@ -87,6 +87,9 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_Q2Q3vQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
+          can_name = base + "_Waveform";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
           can_name = base + "_Q2vQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
@@ -137,6 +140,13 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_TCutG_discri";
             m_tcutg[his_name] = new TCutG(his_name.c_str(),x.size(),x.data(),y.data());
             m_tcutg[his_name]->Draw("same");
+
+            his_name = prefix + "_WaveForm";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),70, 0, 140, 1300, -1000, 12000);
+            can_name = base + "_Waveform";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
+            m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2vQ1";
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 200000);
@@ -354,7 +364,13 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
                   his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
                   if (q3 > 0){
-                      his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
+                      his_name = baseA + "_Q2Q3vQ1";       m_raw_h2[his_name]->Fill(q1, q2 / q3);
+                      his_name = baseA + "_TCutG_discri";
+                      if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
+                        vector<double> signal = m_RawData->GetSampler();
+                        his_name = baseA + "_WaveForm";    
+                        for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
+                      }
                   }
               }
             }

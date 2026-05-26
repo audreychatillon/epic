@@ -93,11 +93,20 @@ EpicSpectra::EpicSpectra() {
     can_name = base + "_Qmax";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
     
-    can_name = base + "_Tof";
+    can_name = base + "_TofRaw";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
     
     can_name = base + "_DT_Tqmax_Tcfd";
     m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_TofCal";
+    m_phys_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_E";
+    m_phys_can[can_name] = CreateCanvas(can_name, ncol);
+    
+    can_name = base + "_Q1vE";
+    m_phys_can[can_name] = CreateCanvas(can_name, ncol);
 
 
     // loop over the anodes and create the histo per anode
@@ -164,19 +173,47 @@ EpicSpectra::EpicSpectra() {
       gPad->SetLogy();
       m_raw_h1[his_name]->Draw();
 
-      his_name = prefix + "_Tof";
+      his_name = prefix + "_TofRaw";
       m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
       m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
-      can_name = base + "_Tof";
+      can_name = base + "_TofRaw";
       m_raw_can[can_name]->cd(a+1);
       gPad->SetLogy();
       m_raw_h1[his_name]->Draw();
+      his_name = prefix + "_TofRaw_ifFF";
+      m_phys_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
+      m_phys_h1[his_name]->SetLineColor(8);
+      m_phys_h1[his_name]->Draw("same");
 
       his_name = prefix + "_Tqmax_Tcfd";
       m_raw_h1[his_name]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -50, 50);
       can_name = base + "_DT_Tqmax_Tcfd";
       m_raw_can[can_name]->cd(a+1);
       m_raw_h1[his_name]->Draw();
+
+      his_name = prefix + "_TofCal";
+      m_phys_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
+      m_phys_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
+      can_name = base + "_TofCal";
+      m_phys_can[can_name]->cd(a+1);
+      gPad->SetLogy();
+      m_phys_h1[his_name]->Draw();
+
+      his_name = prefix + "_E";
+      m_phys_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
+      m_phys_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
+      can_name = base + "_E";
+      m_phys_can[can_name]->cd(a+1);
+      m_phys_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
+      gPad->SetLogy();
+      m_phys_h1[his_name]->Draw();
+
+      his_name = prefix + "_Q1vE";
+      m_phys_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),500,0,25,1500, 0, 300000);
+      can_name = base + "_Q1vE";
+      m_phys_can[can_name]->cd(a+1);
+      gPad->SetLogz(); 
+      m_phys_h2[his_name]->Draw("colz");
 
 
     } // end of loop over nAnodes[d-1]
@@ -255,7 +292,7 @@ void EpicSpectra::FillRaw() {
             his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
             his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
             his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
-            his_name = baseA + "_Tof";               m_raw_h1[his_name]->Fill(t_fc - t_hf);
+            his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(t_fc - t_hf);
             his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
             if (q3 > 0){
                 his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);
@@ -266,7 +303,27 @@ void EpicSpectra::FillRaw() {
   } // end of if FC_mult > 0 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EpicSpectra::FillPhy() {}
+void EpicSpectra::FillPhy() {
+    ostringstream name;
+    string baseA;
+    string his_name;
+    if(m_Physics->GetTofCal()>0){
+        int    det    = m_Physics->GetDetNbr();
+        int    anode  = m_Physics->GetAnodeNbr();
+        int    index  = m_detector->GetIndex(det, anode);
+        double tofraw = m_Physics->GetTofRaw();
+        double tofcal = m_Physics->GetTofCal();
+        double e      = m_Physics->GetE();
+        name.str("");
+        name.clear();
+        name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+        baseA = name.str();
+        his_name = baseA + "_TofRaw_ifFF";       m_phys_h1[his_name]->Fill(tofraw);
+        his_name = baseA + "_TofCal";            m_phys_h1[his_name]->Fill(tofcal);
+        his_name = baseA + "_E";                 m_phys_h1[his_name]->Fill(e);
+    }
+
+}
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::Clear() {
 

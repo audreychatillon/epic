@@ -72,8 +72,12 @@ class EpicPhysics {
         }; //!
 
 
-   //////////////////////    GETTERS    ////////////////////////
-
+    //////////////////////    GETTERS    ////////////////////////
+    inline short GetDetNbr()   const { return fFC_det ; };
+    inline short GetAnodeNbr() const { return fFC_anode ; };
+    inline short GetTofRaw()   const { return fFC_tof_raw ; };
+    inline short GetTofCal()   const { return fFC_tof_cal ; };
+    inline short GetE()        const { return fFC_e ; };
 
    //////////////////////////////////////////////////////////////
    // Required for ROOT dictionnary

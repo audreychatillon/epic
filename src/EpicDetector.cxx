@@ -349,8 +349,7 @@ void EpicDetector::AddEpic(vector<double> &pos, int nA, double zOff,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::InitializeDataInputConversion(
-    std::shared_ptr<nptool::VDataInput> input) {
+void EpicDetector::InitializeDataInputConversion(std::shared_ptr<nptool::VDataInput> input) {
   input->Attach("FC_", "", this);
   input->Attach("HF", "", this);
   input->Attach("PULSER", "", this);
@@ -358,24 +357,20 @@ void EpicDetector::InitializeDataInputConversion(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::InitializeDataInputRaw(
-    std::shared_ptr<nptool::VDataInput> input) {
+void EpicDetector::InitializeDataInputRaw(std::shared_ptr<nptool::VDataInput> input) {
   input->Attach("epic", "epic::EpicData", &m_RawData);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::InitializeDataOutputRaw(
-    std::shared_ptr<nptool::VDataOutput> output) {
+void EpicDetector::InitializeDataOutputRaw(std::shared_ptr<nptool::VDataOutput> output) {
   output->Attach("epic", "epic::EpicData", &m_RawData);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::InitializeDataInputPhysics(
-    std::shared_ptr<nptool::VDataInput> input) {
+void EpicDetector::InitializeDataInputPhysics(std::shared_ptr<nptool::VDataInput> input) {
   input->Attach("epic", "epic::EpicPhysics", &m_Physics);
 };
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::InitializeDataOutputPhysics(
-    std::shared_ptr<nptool::VDataOutput> output) {
+void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutput> output) {
   output->Attach("epic", "epic::EpicPhysics", &m_Physics);
 };
 
@@ -624,14 +619,12 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
 unsigned int EpicDetector::GetIndex(int det, int anode) const {
-  cout << "ENTER IN : EpicDetector::GetIndex(" << det << ", " << anode << ")" << endl;
   if (det == 0 || det > m_nDets || anode == 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
          << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1
          << "]=" << m_nAnodes[det - 1] << endl;
   }
   auto it = m_anode2index[det-1].find(anode);
-  cout << "           index is : " << it->second << endl;
   return it->second;
 }
 ////////////////////////////////////////////////////////////////////////////////

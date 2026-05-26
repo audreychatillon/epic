@@ -357,8 +357,8 @@ void EpicSpectra::FillPhy() {
     string baseA;
     string his_name;
     if(!m_Physics->GetIsAlpha()){
-        int    det    = m_Physics->GetDetNbr();
-        int    anode  = m_Physics->GetAnodeNbr();
+        short  det    = m_Physics->GetDetNbr();
+        short  anode  = m_Physics->GetAnodeNbr();
         cout << "EpicSpectra::FillPhy() call GetIndex(" << det << ", " << anode << ")" << endl;
         int    index  = m_detector->GetIndex(det, anode);
         double tofraw = m_Physics->GetTofRaw();

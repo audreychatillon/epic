@@ -106,7 +106,7 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[a];
-            cout << "constructeur EpicSpectra : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
+            cout << "constructeur EpicSpectra [raw] : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -221,6 +221,7 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[a]; 
+            cout << "constructeur EpicSpectra [phy] : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -358,6 +359,7 @@ void EpicSpectra::FillPhy() {
     if(!m_Physics->GetIsAlpha()){
         int    det    = m_Physics->GetDetNbr();
         int    anode  = m_Physics->GetAnodeNbr();
+        cout << "EpicSpectra::FillPhy() call GetIndex(" << det << ", " << anode << ")" << endl;
         int    index  = m_detector->GetIndex(det, anode);
         double tofraw = m_Physics->GetTofRaw();
         double tofcal = m_Physics->GetTofCal();

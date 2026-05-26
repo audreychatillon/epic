@@ -624,6 +624,7 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
 unsigned int EpicDetector::GetIndex(int det, int anode) const {
+  cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode << ")" << endl;
   if (det == 0 || det > m_nDets || anode == 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
          << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1

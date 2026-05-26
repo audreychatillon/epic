@@ -293,6 +293,7 @@ void EpicSpectra::FillRaw() {
             double q3 = m_RawData->GetQ3(IndexMax[d]);
             double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
             double t_hf = m_RawData->GetTimeLastHF();
+            double tofraw = m_RawData->GetTofRaw(IndexMax[d]);
             double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
             double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
             his_name = baseD + "_AnodeID_ifQmax";    m_raw_h1[his_name]->Fill(anode);
@@ -305,7 +306,7 @@ void EpicSpectra::FillRaw() {
             his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
             his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
             his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(t_fc - t_hf);
-            his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(t_fc - t_hf, q1);
+            his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
             his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
             if (q3 > 0){
                 his_name = baseA + "_Q2Q3vQ1";      m_raw_h2[his_name]->Fill(q1, q2 / q3);

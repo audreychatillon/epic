@@ -249,7 +249,7 @@ void EpicDetector::ReadConversionConfig() {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::PrintConfig() {
   constexpr int colWidth = 20;
-  cout << "//// EpicDetector::PringConversion Config" << endl;
+  cout << "//// EpicDetector::PrintConversion Config" << endl;
   cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
   cout << "                   (Total number of anodes : " << m_nAtot << ")" << endl;
   size_t offset = 0;

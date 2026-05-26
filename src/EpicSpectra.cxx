@@ -114,6 +114,7 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[a];
+            cout << "call GetIndex(" << det << ", " << anode << ") in constructeur [raw]" << endl; 
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -337,6 +338,7 @@ void EpicSpectra::FillRaw() {
                   int det = m_RawData->GetDetNbr(IndexMax[d]);
                   if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
                   int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
+            cout << "call GetIndex(" << det << ", " << anode << ") in FillRaw " << endl; 
                   int index = m_detector->GetIndex(det, anode);
                   name.str("");
                   name.clear();

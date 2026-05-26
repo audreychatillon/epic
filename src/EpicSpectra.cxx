@@ -20,6 +20,8 @@ EpicSpectra::EpicSpectra() {
     m_detector = std::dynamic_pointer_cast<EpicDetector>(nptool::Application::GetApplication()->GetDetector("epic"));
     m_RawData = m_detector->GetRawData();
     m_Physics = m_detector->GetPhysics();
+    TDirectory* dir_raw = gROOT->mkdir("raw");
+    TDirectory* dir_phy = gROOT->mkdir("phy");
 
     // get some config constants
     nDets = m_detector->GetNumberOfDets();
@@ -43,6 +45,7 @@ EpicSpectra::EpicSpectra() {
 
     // loop over nDets for raw histos
     if(m_app->HasFlag("--input-raw")){
+        dir_raw->cd();
         for (unsigned int det = 1; det <= nDets; det++) {
           // create the canvas and histos per detector
           int ncol = ceil(0.5 * nAnodes[det - 1]);
@@ -106,7 +109,6 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[a];
-            cout << "constructeur EpicSpectra [raw] : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -198,6 +200,8 @@ EpicSpectra::EpicSpectra() {
     // loop over nDets for phy histos
     if(m_app->HasFlag("--input-phy")){
 
+        dir_phy->cd();
+
         for (unsigned int det = 1; det <= nDets; det++) {
           // create the canvas and histos per detector
           int ncol = ceil(0.5 * nAnodes[det - 1]);
@@ -221,7 +225,6 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[a]; 
-            cout << "constructeur EpicSpectra [phy] : det = " << det << ", anode = " << anode << ", call GetIndex" << endl;
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -317,7 +320,6 @@ void EpicSpectra::FillRaw() {
                   int det = m_RawData->GetDetNbr(IndexMax[d]);
                   if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
                   int anode = m_RawData->GetAnodeNbr(IndexMax[d]);
-                  cout << "EpicSpectra::FillRaw : IndexMax = " << IndexMax[d] << ", call GetIndex with  det = " << det << ", anode = " << anode << endl;
                   int index = m_detector->GetIndex(det, anode);
                   name.str("");
                   name.clear();
@@ -362,7 +364,6 @@ void EpicSpectra::FillPhy() {
         if(!m_Physics->GetIsAlpha()){
             short  det    = m_Physics->GetDetNbr();
             short  anode  = m_Physics->GetAnodeNbr();
-            cout << "EpicSpectra::FillPhy() call GetIndex(" << det << ", " << anode << ")" << endl;
             int    index  = m_detector->GetIndex(det, anode);
             double tofraw = m_Physics->GetTofRaw();
             double tofcal = m_Physics->GetTofCal();

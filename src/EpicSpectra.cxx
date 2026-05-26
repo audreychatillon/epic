@@ -132,17 +132,10 @@ EpicSpectra::EpicSpectra() {
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
-
-            double x[4];
-            double y[4];
+            vector<double> x = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_X");
+            vector<double> y = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_Y");
             his_name = prefix + "_TCutG_discri";
-            cout << his_name << endl;
-            for(int pts = 0 ; pts < 4 ; pts++){
-                x[pts] =  m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_X",pts);
-                y[pts] =  m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_Y",pts);
-                cout << "x = " << x[pts] << " , y = " << y[pts] << endl;
-            }
-            m_tcutg[his_name] = new TCutG(his_name.c_str(),4,x,y);
+            m_tcutg[his_name] = new TCutG(his_name.c_str(),x.size(),x.data(),y.data());
             m_tcutg[his_name]->Draw("same");
 
             his_name = prefix + "_Q2vQ1";

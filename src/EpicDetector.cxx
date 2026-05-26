@@ -620,13 +620,14 @@ unsigned int EpicDetector::Label2anode(const std::string &label) {
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
 unsigned int EpicDetector::GetIndex(int det, int anode) const {
-    cout << "ENTER IN EpicDetector::GetIndex(" << det << ", " << anode << ")" << endl;
+  cout << "ENTER IN EpicDetector::GetIndex(" << det << ", " << anode << ")" << endl;
   if (det == 0 || det > m_nDets || anode == 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
          << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1
          << "]=" << m_nAnodes[det - 1] << endl;
   }
   auto it = m_anode2index[det-1].find(anode);
+  cout << "         index is : " << it->second << endl;
   return it->second;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -63,9 +63,9 @@ make -C build/ install
 ```
 
 To read FASTER data, configuration files must be provided:
- - `sample.pid`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
- - `detector/detector.yaml`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
- - `ConfigEPIC.dat`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
+ - `sample.pid`[example with one fission chamber](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICatGELINA.pid), [example with two fission chambers](https://github.com/audreychatillon/EPIC_WNR_90L/blob/main/pid_files/sample_EPICproto_run24.pid)
+ - `detector/detector.yaml`[example with one fission chamber](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml),[example with two fission chambers](https://github.com/audreychatillon/EPIC_WNR_90L/blob/main/detector/detector_run24.yaml)
+ - `ConfigEPIC.dat`[example with one fission chamber](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat),[example with two fission chambers](https://github.com/audreychatillon/EPIC_WNR_90L/blob/main/config_files/ConfigFC_run24.dat)
 The command `npconversion` is processing the function `EpicDetector::BuildRawEvent()` to fill data at raw level as defined in `EpicData`
 To write a TTree in output/conversion folder (see project.yaml) 
 ```bash

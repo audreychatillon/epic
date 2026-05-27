@@ -66,18 +66,21 @@ To read FASTER data, configuration files must be provided:
  - `sample.pid`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/pid_files/sample_EPICproto_run24.pid)
  - `detector/detector.yaml`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/detector/detector.yaml)
  - `ConfigEPIC.dat`[example](https://github.com/audreychatillon/EPICatGELINA/blob/main/config_files/ConfigEPIC.dat)
+The command `npconversion` is processing the function `EpicDetector::BuildRawEvent()` to fill data at raw level as defined in `EpicData`
 To write a TTree in output/conversion folder (see project.yaml) 
 ```bash
-npconversion --input faster,sample.pid,/path/to/FASTER/data/name_faster_file_num.fast --output root,RawTree,raw_num.root
-```
-For on-line monitoring of raw histograms only in a browser with localhost:8082
-```bash
-npconversion --input faster,sample.pid,file.fast --output root,8080
-nponline --input-raw root,localhost:8080 --interface root,8082
+npconversion --input faster,sample.pid,/path/to/faster_file_num.fast --output root,EpicRawTree,raw_num.root
 ```
 
-To convert FASTER data and build physical event by applying calibration parameters 
-you should add in `project.yaml` in the `default flag` line `--calibration calibration.txt` 
+For on-line monitoring of raw histograms only in a browser with localhost:8082
+```bash
+npconversion --input faster,sample.pid,/path/to/faster_file_num.fast --output root,8080
+nponline --input-raw root,localhost:8080 --interface root,8082
+```
+To convert FASTER data and build physical event by applying calibration parameters, 
+you should add in `project.yaml` in the `default flag` line `--calibration calibration.txt` which gives the path of all calibration files.
+Then run the command `npanalysis` to process the function `EpicDetector::BuildPhysicalEvent()` to fill data at calibration level as defined in `EpicPhysics`.
+To monitore the calibrated spectra use the flag `--input-phy`
 ```bash
 npconversion --input faster,sample.pid,file.fast  --output root,8080
 npanalysis --input root,localhost:8080 --output root,8081

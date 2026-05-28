@@ -188,7 +188,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),200, 0, 20000,500,-50000,50000);
             m_raw_h2[his_name]->GetXaxis()->SetTitle("Qmax");
             m_raw_h2[his_name]->GetYaxis()->SetTitle("Q4");
-            can_name = base + "_Q4Qmax";
+            can_name = base + "_Q4vQmax";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");

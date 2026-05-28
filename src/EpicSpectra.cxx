@@ -218,7 +218,7 @@ EpicSpectra::EpicSpectra() {
 
             his_name = prefix + "_Q4";
             m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),10000, -100000, 100000);
-            m_raw_h1[his_name]->SetLineColor(kCyan);
+            can_name = base + "_Q4";
             m_raw_can[can_name]->cd(a+1);
             m_raw_h1[his_name]->Draw();
 

@@ -100,11 +100,11 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_QmaxvQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
-          //can_name = base + "_QmaxvQ4";
-          //m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          can_name = base + "_Q4vQmax";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
-          //can_name = base + "_Q4vQ1";
-          //m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          can_name = base + "_Q4vQ1";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_Q";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
@@ -143,7 +143,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, -0.5, 9.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 9.5);
             can_name = base + "_Q2Q3vQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
@@ -162,7 +162,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1Q4";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 500000, 500, 0, 10);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 500, -0.5, 9.5);
             m_raw_h2[his_name]->GetXaxis()->SetTitle("Q1+Q4");
             m_raw_h2[his_name]->GetYaxis()->SetTitle("Q2/Q3");
             can_name = base + "_Q2Q3vQ1Q4";
@@ -171,32 +171,36 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1500, 0, 300000, 500, 0, 200000);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 500, 0, 200000);
             can_name = base + "_Q2vQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_QmaxvQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 200000, 200, 0, 20000);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 200, 0, 20000);
             can_name = base + "_QmaxvQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
-            //his_name = prefix + "_QmaxvQ4";
-            //m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, -100000, 100000, 200, 0, 20000);
-            //can_name = base + "_QmaxvQ4";
-            //m_raw_can[can_name]->cd(a+1);
-            //gPad->SetLogz(); 
-            //m_raw_h2[his_name]->Draw("colz");
+            his_name = prefix + "_Q4vQmax";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),200, 0, 20000,500,-50000,50000);
+            m_raw_h2[his_name]->GetXaxis()->SetTitle("Qmax");
+            m_raw_h2[his_name]->GetYaxis()->SetTitle("Q4");
+            can_name = base + "_Q4Qmax";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
+            m_raw_h2[his_name]->Draw("colz");
 
-            //his_name = prefix + "_Q4vQ1";
-            //m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 200000, 1000, -100000, 100000);
-            //can_name = base + "_Q4vQ1";
-            //m_raw_can[can_name]->cd(a+1);
-            //gPad->SetLogz(); 
-            //m_raw_h2[his_name]->Draw("colz");
+            his_name = prefix + "_Q4vQ1";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 500, -50000, 50000);
+            m_raw_h2[his_name]->GetXaxis()->SetTitle("Q1");
+            m_raw_h2[his_name]->GetYaxis()->SetTitle("Q4");
+            can_name = base + "_Q4vQ1";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
+            m_raw_h2[his_name]->Draw("colz");
 
             can_name = base + "_Q";
             his_name = prefix + "_Q1";
@@ -400,8 +404,8 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
                   his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
                   his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
-                  //his_name = baseA + "_QmaxvQ4";           m_raw_h2[his_name]->Fill(q4, qm);
-                  //his_name = baseA + "_Q4vQ1";             m_raw_h2[his_name]->Fill(q1, q4);
+                  his_name = baseA + "_Q4vQmax";           m_raw_h2[his_name]->Fill(q4, qm);
+                  his_name = baseA + "_Q4vQ1";             m_raw_h2[his_name]->Fill(q1, q4);
                   his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
                   his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
                   his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);

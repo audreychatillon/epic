@@ -123,6 +123,9 @@ EpicSpectra::EpicSpectra() {
           
           can_name = base + "_DT_Tqmax_Tcfd";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
+          can_name = base + "_DTvQ1";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
 
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
@@ -255,6 +258,12 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_DT_Tqmax_Tcfd";
             m_raw_can[can_name]->cd(a+1);
             m_raw_h1[his_name]->Draw();
+
+            his_name = prefix + "_DTvQ1";
+            m_raw_h2[his_name]  = new TH2F(his_name.c_str(),his_name.c_str(),1000,0,400000, 1000, -50, 50);
+            can_name = base + "_DTvQ1";
+            m_raw_can[can_name]->cd(a+1);
+            m_raw_h2[his_name]->Draw("colz");
           } // end of loop over nAnodes[det-1]
           offset += nAnodes[det-1];
         } // end of loop over nDets
@@ -414,6 +423,7 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(tofraw);
                   his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
                   his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
+                  his_name = baseA + "_DTvQ1";             m_raw_h2[his_name]->Fill(q1,t_qmax - t_cfd);
                   if (q3 > 0){
                       his_name = baseA + "_Q2Q3vQ1";       m_raw_h2[his_name]->Fill(q1, q2 / q3);
                       his_name = baseA + "_TCutG_discri";

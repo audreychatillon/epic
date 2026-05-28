@@ -307,6 +307,7 @@ void EpicDetector::PrintConfig() {
           << m_Q3_gate_stop[offset + a] << "]";
       cout << left << setw(colWidth) << oss.str();
     }
+    cout << endl;
     // Q4 gate
     cout << "          Q4 gate                : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++) {

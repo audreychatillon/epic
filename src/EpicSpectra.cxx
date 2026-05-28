@@ -254,13 +254,13 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Tqmax_Tcfd";
-            m_raw_h1[his_name]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -50, 50);
+            m_raw_h1[his_name]  = new TH1F(his_name.c_str(),his_name.c_str(), 1000, -10, 90);
             can_name = base + "_DT_Tqmax_Tcfd";
             m_raw_can[can_name]->cd(a+1);
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_DTvQ1";
-            m_raw_h2[his_name]  = new TH2F(his_name.c_str(),his_name.c_str(),1000,0,400000, 1000, -50, 50);
+            m_raw_h2[his_name]  = new TH2F(his_name.c_str(),his_name.c_str(),1000,0,400000, 1000, -10, 90);
             can_name = base + "_DTvQ1";
             m_raw_can[can_name]->cd(a+1);
             m_raw_h2[his_name]->Draw("colz");

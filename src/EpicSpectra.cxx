@@ -88,7 +88,7 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_Q2Q3vQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
-          can_name = base + "_Q2Q3vQ1Q4";
+          can_name = base + "_Q4QmaxvQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_Waveform";
@@ -161,11 +161,11 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
-            his_name = prefix + "_Q2Q3vQ1Q4";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 500, -0.5, 9.5);
-            m_raw_h2[his_name]->GetXaxis()->SetTitle("Q1+Q4");
-            m_raw_h2[his_name]->GetYaxis()->SetTitle("Q2/Q3");
-            can_name = base + "_Q2Q3vQ1Q4";
+            his_name = prefix + "_Q4QmaxvQ1";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 500, -5, 5);
+            m_raw_h2[his_name]->GetXaxis()->SetTitle("Q1");
+            m_raw_h2[his_name]->GetYaxis()->SetTitle("Q4/Qmax");
+            can_name = base + "_Q4QmaxvQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
@@ -404,7 +404,7 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
                   his_name = baseA + "_Q2vQ1";             m_raw_h2[his_name]->Fill(q1, q2);
                   his_name = baseA + "_QmaxvQ1";           m_raw_h2[his_name]->Fill(q1, qm);
-                  his_name = baseA + "_Q4vQmax";           m_raw_h2[his_name]->Fill(q4, qm);
+                  his_name = baseA + "_Q4vQmax";           m_raw_h2[his_name]->Fill(qm, q4);
                   his_name = baseA + "_Q4vQ1";             m_raw_h2[his_name]->Fill(q1, q4);
                   his_name = baseA + "_Q1";                m_raw_h1[his_name]->Fill(q1);
                   his_name = baseA + "_Q2";                m_raw_h1[his_name]->Fill(q2);
@@ -422,7 +422,7 @@ void EpicSpectra::FillRaw() {
                         his_name = baseA + "_WaveForm";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
-                      his_name = baseA + "_Q2Q3vQ1Q4";       m_raw_h2[his_name]->Fill(q1 + q4, q2 / q3);
+                      his_name = baseA + "_Q4QmaxvQ1";       m_raw_h2[his_name]->Fill(q1, q4 / qm);
                   }
               }
             }

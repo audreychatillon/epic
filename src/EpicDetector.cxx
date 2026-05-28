@@ -195,6 +195,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q2_gate_stop.resize(m_nAtot, 10.);
   m_Q3_gate_start.resize(m_nAtot, 10.);
   m_Q3_gate_stop.resize(m_nAtot, 40.);
+  m_Q4_gate_stop.resize(m_nAtot, 80.);
   m_TofRaw_max.resize(m_nAtot, -1.); // ns
 
   BuildEpicChannelMaps();
@@ -239,6 +240,7 @@ void EpicDetector::ReadConversionConfig() {
       m_Q2_gate_stop[index] = (double)block->GetInt("Q2_gate_stop", 1);
       m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
       m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
+      m_Q4_gate_stop[index] = (double)block->GetInt("Q4_gate_stop", 1);
       m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
     }
   } else
@@ -303,6 +305,14 @@ void EpicDetector::PrintConfig() {
       ostringstream oss;
       oss << "[" << m_Q3_gate_start[offset + a] << ":"
           << m_Q3_gate_stop[offset + a] << "]";
+      cout << left << setw(colWidth) << oss.str();
+    }
+    // Q4 gate
+    cout << "          Q4 gate                : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++) {
+      ostringstream oss;
+      oss << "[" << m_Q1_gate_stop[offset + a] << ":"
+          << m_Q4_gate_stop[offset + a] << "]";
       cout << left << setw(colWidth) << oss.str();
     }
     cout << endl;
@@ -436,6 +446,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ1(-1);
       m_RawData->SetQ2(-1);
       m_RawData->SetQ3(-1);
+      m_RawData->SetQ4(-1);
       m_RawData->SetQmax(-1);
       m_RawData->SetPulserTrig(false);
     }
@@ -449,6 +460,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ1(fc_data.q1);
       m_RawData->SetQ2(-1);
       m_RawData->SetQ3(-1);
+      m_RawData->SetQ4(-1);
       m_RawData->SetQmax(-1);
       m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeLastHF(m_TimeHF_current);
@@ -464,6 +476,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ1(fc_data.q1);
       m_RawData->SetQ2(fc_data.q2);
       m_RawData->SetQ3(0);
+      m_RawData->SetQ4(0);
       m_RawData->SetQmax(0);
       m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeLastHF(m_TimeHF_current);
@@ -517,6 +530,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       double Q1 = -1;
       double Q2 = -1;
       double Q3 = -1;
+      double Q4 = -1;
       if (FC_Triggered && FC_Threshold && T_cfd != -10000) {
         m_good_raw_event++;
         double signal_size = Signal.size();
@@ -526,25 +540,21 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         /////
         double start, stop;
         // Q1 - long gate
-        start = max(0., T_cfd - m_Q1_gate_start[index]); // -: before Tcfd
-        stop = min(T_cfd + m_Q1_gate_stop[index],
-                   signal_size * 2); // +: after Tcfd
-        if (start < stop)
-          Q1 = sample.integrateSignal(
-              2, start, stop); // TODO check bounding of integration
+        start = max(0., T_cfd - m_Q1_gate_start[index]);            // -: before Tcfd
+        stop  = min(T_cfd + m_Q1_gate_stop[index],signal_size * 2); // +: after Tcfd
+        if (start < stop) Q1 = sample.integrateSignal(2, start, stop);
         // Q2 - gate around the rising time
-        start = max(0., T_cfd - m_Q2_gate_start[index]); // -: before Tcfd
-        stop = min(T_cfd + m_Q2_gate_stop[index],
-                   signal_size * 2); // +: after Tcfd
-        if (start < stop)
-          Q2 = sample.integrateSignal(2, start, stop);
+        start = max(0., T_cfd - m_Q2_gate_start[index]);           // -: before Tcfd
+        stop  = min(T_cfd + m_Q2_gate_stop[index],signal_size * 2); // +: after Tcfd
+        if (start < stop) Q2 = sample.integrateSignal(2, start, stop);
         // Q3 - gate around the falling time
-        start = min(signal_size * 2,
-                    T_cfd + m_Q3_gate_start[index]); // +: after Tcfd
-        stop = min(signal_size * 2,
-                   T_cfd + m_Q3_gate_stop[index]); // +: after Tcfd
-        if (start < stop)
-          Q3 = sample.integrateSignal(2, start, stop);
+        start = min(signal_size * 2, T_cfd + m_Q3_gate_start[index]); // +: after Tcfd
+        stop  = min(signal_size * 2, T_cfd + m_Q3_gate_stop[index]);  // +: after Tcfd
+        if (start < stop) Q3 = sample.integrateSignal(2, start, stop);
+        // Q4 - gate after Q1
+        start = min(signal_size * 2, T_cfd + m_Q1_gate_stop[index]);  // +: after Tcfd
+        stop  = min(signal_size * 2, T_cfd + m_Q4_gate_stop[index]);  // +: after Tcfd
+        if (start < stop) Q4 = sample.integrateSignal(2, start, stop);
 
         if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
@@ -555,6 +565,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);
             m_RawData->SetQ3(Q3);
+            m_RawData->SetQ4(Q4);
             m_RawData->SetQmax(Qmax);
             m_RawData->SetTofRaw(tof_raw);
             m_RawData->SetTimeFC(TimeFC);

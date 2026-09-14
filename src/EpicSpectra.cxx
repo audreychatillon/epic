@@ -97,7 +97,10 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_Q4QmaxvQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
-          can_name = base + "_Waveform";
+          can_name = base + "_WaveformA";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
+          can_name = base + "_WaveformF";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_Q2vQ1";
@@ -154,15 +157,27 @@ EpicSpectra::EpicSpectra() {
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
-            vector<double> x = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_X");
-            vector<double> y = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_Y");
-            his_name = prefix + "_TCutG_discri";
-            m_tcutg[his_name] = new TCutG(his_name.c_str(),x.size(),x.data(),y.data());
+            vector<double> xA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_A_X");
+            vector<double> yA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_A_Y");
+            his_name = prefix + "_TCutG_discriA";
+            m_tcutg[his_name] = new TCutG(his_name.c_str(),xA.size(),xA.data(),yA.data());
+            m_tcutg[his_name]->Draw("same");
+            vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
+            vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
+            his_name = prefix + "_TCutG_discriF";
+            m_tcutg[his_name] = new TCutG(his_name.c_str(),xF.size(),xF.data(),yF.data());
             m_tcutg[his_name]->Draw("same");
 
-            his_name = prefix + "_WaveForm";
+            his_name = prefix + "_WaveFormA";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 700, -1000, 6000);
+            can_name = base + "_WaveformA";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
+            m_raw_h2[his_name]->Draw("colz");
+
+            his_name = prefix + "_WaveFormF";
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 1300, -1000, 12000);
-            can_name = base + "_Waveform";
+            can_name = base + "_WaveformF";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
@@ -440,10 +455,16 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_DTvQ1";             m_raw_h2[his_name]->Fill(q1,t_qmax - t_cfd);
                   if (q3 > 0){
                       his_name = baseA + "_Q2Q3vQ1";       m_raw_h2[his_name]->Fill(q1, q2 / q3);
-                      his_name = baseA + "_TCutG_discri";
+                      his_name = baseA + "_TCutG_discriA";
                       if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
-                        his_name = baseA + "_WaveForm";    
+                        his_name = baseA + "_WaveFormA";    
+                        for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
+                      }
+                      his_name = baseA + "_TCutG_discriF";
+                      if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
+                        vector<double> signal = m_RawData->GetSampler();
+                        his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
                       his_name = baseA + "_Q4QmaxvQ1";       m_raw_h2[his_name]->Fill(q1, q4 / qm);

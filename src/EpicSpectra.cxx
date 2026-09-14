@@ -169,7 +169,7 @@ EpicSpectra::EpicSpectra() {
             m_tcutg[his_name]->Draw("same");
 
             his_name = prefix + "_WaveFormA";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 700, -1000, 6000);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 400, -1000, 3000);
             can_name = base + "_WaveformA";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 

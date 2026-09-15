@@ -161,7 +161,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 450, -0.1, 4.4);
             can_name = base + "_Q2Q3vQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
@@ -303,21 +303,21 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 110, -0.1, 1.1);
             can_name = base + "_Q2Q3vQ1_mult1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult2_upstr";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 110, -0.1, 1.1);
             can_name = base + "_Q2Q3vQ1_mult2_upstr";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult2_downstr";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 110, -0.1, 1.1);
             can_name = base + "_Q2Q3vQ1_mult2_downstr";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 

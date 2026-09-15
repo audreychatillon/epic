@@ -132,6 +132,9 @@ EpicSpectra::EpicSpectra() {
           
           can_name = base + "_DTvQ1";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
+          can_name = base + "_Q2Q3vQ1_mult1";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
 
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
@@ -152,7 +155,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 9.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
             can_name = base + "_Q2Q3vQ1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
@@ -291,6 +294,13 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->GetYaxis()->SetTitle("DT = Tqmax - Tcfd");
             can_name = base + "_DTvQ1";
             m_raw_can[can_name]->cd(a+1);
+            m_raw_h2[his_name]->Draw("colz");
+
+            his_name = prefix + "_Q2Q3vQ1_mult1";
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
+            can_name = base + "_Q2Q3vQ1_mult1";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
           } // end of loop over nAnodes[det-1]
           offset += nAnodes[det-1];
@@ -467,7 +477,8 @@ void EpicSpectra::FillRaw() {
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
-                      his_name = baseA + "_Q4QmaxvQ1";       m_raw_h2[his_name]->Fill(q1, q4 / qm);
+                      his_name = baseA + "_Q4QmaxvQ1";          m_raw_h2[his_name]->Fill(q1, q4 / qm);
+                      if(multPerFC[d]==1) his_name = baseA + "_Q2Q3vQ1_mult1"; m_raw_h2[his_name]->Fill(q1, q2 / q3);
                   }
               }
             }

@@ -303,21 +303,21 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
             can_name = base + "_Q2Q3vQ1_mult1";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult2_upstr";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
             can_name = base + "_Q2Q3vQ1_mult2_upstr";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1_mult2_downstr";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 500, -0.5, 4.5);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.5, 2.0);
             can_name = base + "_Q2Q3vQ1_mult2_downstr";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
@@ -505,11 +505,11 @@ void EpicSpectra::FillRaw() {
                       if(multPerFC[d]==2) {
 			 int index_m2 = 1 - IndexMax[d] ; // multFC==2 -> IndexMax = 0 or = 1
                          int anode_m2 = m_RawData->GetAnodeNbr(index_m2);
-			 if ((anode_m2 - anode) == -1) { 
+			 if ((anode - anode_m2) == 1) { 
 				his_name = baseA + "_Q2Q3vQ1_mult2_upstr"; 
 				m_raw_h2[his_name]->Fill(q1, q2 / q3);
 			 }
-			 if ((anode_m2 - anode) ==  1) { 
+			 else if ((anode_m2 - anode) == 1) { 
 				his_name = baseA + "_Q2Q3vQ1_mult2_downstr"; 
 				m_raw_h2[his_name]->Fill(q1, q2 / q3);
 			 }

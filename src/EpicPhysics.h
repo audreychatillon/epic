@@ -19,6 +19,7 @@ class EpicPhysics {
         double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
+        double fFC_q1;           // energy [MeV]
         bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)
 
    //////////////////////////////////////////////////////////////
@@ -40,6 +41,7 @@ class EpicPhysics {
         fFC_tof_raw = -1.;
         fFC_tof_cal = -1.;
         fFC_e       = -1.;
+        fFC_q1      = -1.;
         fFC_isAlpha = true;
         //fFC_det.clear();
         //fFC_anode.clear();
@@ -62,12 +64,14 @@ class EpicPhysics {
         const double& tof_raw_ns,
         const double& tof_cal_ns,
         const double& e_MeV,
+        const double& q1,
         const bool&   alpha){
             fFC_det = det;
             fFC_anode = anode;
             fFC_tof_raw = tof_raw_ns;
             fFC_tof_cal = tof_cal_ns;
             fFC_e = e_MeV;
+            fFC_q1 = q1;
             fFC_isAlpha = alpha;
         }; //!
 
@@ -78,6 +82,7 @@ class EpicPhysics {
     inline double GetTofRaw()   const { return fFC_tof_raw ; };
     inline double GetTofCal()   const { return fFC_tof_cal ; };
     inline double GetE()        const { return fFC_e ; };
+    inline double GetQ1()       const { return fFC_q1 ; };
     inline bool   GetIsAlpha()  const { return fFC_isAlpha ; };
 
    //////////////////////////////////////////////////////////////

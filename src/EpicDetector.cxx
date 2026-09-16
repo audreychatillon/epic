@@ -394,6 +394,7 @@ void EpicDetector::BuildPhysicalEvent() {
     double tofraw = -1;
     double tofcal = -1;
     double e      = -1;
+    double q1     = -1;
     bool   alpha  = true;
 
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
@@ -410,7 +411,7 @@ void EpicDetector::BuildPhysicalEvent() {
       }
     }
     
-    m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e, alpha);
+    m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e, q1, alpha);
 
 }
 

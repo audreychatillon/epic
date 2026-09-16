@@ -494,8 +494,8 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q1vTofRaw";         m_raw_h2[his_name]->Fill(tofraw, q1);
                   his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
                   his_name = baseA + "_DTvQ1";             m_raw_h2[his_name]->Fill(q1,t_qmax - t_cfd);
-		  if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
-                  	his_name = baseA + "_TofRaw_woA";  m_raw_h1[his_name]->Fill(tofraw);
+		  //if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
+                  //	his_name = baseA + "_TofRaw_woA";  m_raw_h1[his_name]->Fill(tofraw);
                   if (q3 > 0){
                       his_name = baseA + "_Q2Q3vQ1";       m_raw_h2[his_name]->Fill(q1, q2 / q3);
                       his_name = baseA + "_TCutG_discriA";

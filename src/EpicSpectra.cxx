@@ -124,6 +124,9 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_TofRaw";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
+          can_name = base + "_TofRaw_cutF";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
           can_name = base + "_Q1vTofRaw";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
@@ -271,22 +274,20 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw";
-            //m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 2350000, 2550000);
-            //m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ns / bin ");
-            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
             can_name = base + "_TofRaw";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
-            //his_name = prefix + "_TofRaw_cutF";
-            //m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 20000 , 2350000, 2550000);
-            //m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100 ps / bin ");
-            //can_name = base + "_TofRaw_cutF";
-            //m_raw_can[can_name]->cd(a+1);
-            //gPad->SetLogy();
-            //m_raw_h1[his_name]->Draw();
+            his_name = prefix + "_TofRaw_cutF";
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  10000, 2450000, 2550000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
+            can_name = base + "_TofRaw_cutF";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogy();
+            m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q1vTofRaw";
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 2600, 0, 2590000, 1000, 0, 200000);
@@ -506,7 +507,7 @@ void EpicSpectra::FillRaw() {
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                        //his_name = baseA + "_TofRaw_cutF";     m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF";     m_raw_h1[his_name]->Fill(tofraw);
                       }
                       his_name = baseA + "_Q4QmaxvQ1";          m_raw_h2[his_name]->Fill(q1, q4 / qm);
                       if(multPerFC[d]==1) {

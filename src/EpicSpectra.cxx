@@ -390,16 +390,15 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_E";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  26000, -10000, 2590000);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  40, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 500 keV / bin ");
             can_name = base + "_E";
             m_phy_can[can_name]->cd(a+1);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] ");
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_Q1vE";
-            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),500,0,25,1500, 0, 300000);
+            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),20,0,20,1500, 0, 300000);
             can_name = base + "_Q1vE";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 

@@ -279,8 +279,8 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw_cutF";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  260000, 0, 2600000);
-            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 10ns / bin ");
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 20000 , 2350000, 2550000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100 ps / bin ");
             can_name = base + "_TofRaw_cutF";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogy();

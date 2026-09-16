@@ -290,7 +290,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q1vTofRaw_cutF";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 2600, 0, 2590000, 1000, 0, 200000);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 500, 2450000, 2550000, 1000, 0, 200000);
             m_raw_h2[his_name]->GetXaxis()->SetTitle("TofRaw [ns]");
             m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
             can_name = base + "_Q1vTofRaw";

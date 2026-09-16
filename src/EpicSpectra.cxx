@@ -505,7 +505,7 @@ void EpicSpectra::FillRaw() {
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                        his_name = baseA + "_TofRawi_cutF";      m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF";      m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_Q1vTofRaw_cutF";    m_raw_h2[his_name]->Fill(tofraw, q1);
                         his_name = baseA + "_TofRaw_cutF_zoom";  m_raw_h1[his_name]->Fill(tofraw);
                       }

@@ -13,7 +13,7 @@ class EpicPhysics {
  private:
         short  fFC_det;         // detector number (starting from 1)
         short  fFC_anode;       // anode number (starting from 1)
-        double fFC_time_hf;     // Time of the last HF at the phys level
+        double fFC_time_hf;     // Time of the last HF at the phys level to avoid event repeart in nponline bug
         double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]

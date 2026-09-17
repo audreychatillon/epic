@@ -31,6 +31,8 @@ EpicSpectra::EpicSpectra() {
     nAnodes  = m_detector->GetNumberOfAnodes();
     actinide = m_detector->GetActinideMaterial();
     anodes   = m_detector->GetAnodeNumber();
+    time_ref_raw = 0;
+    time_ref_phy = 0;
 
     // general histograms
     m_canT0 = new TCanvas("T0", "T0", 1200, 800);
@@ -426,8 +428,11 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           if (m_RawData->GetDetNbr(0) == -1) {
-            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
+	    double t_hf = m_RawData->GetTimeHF(); 
+            m_TimeHF->Fill(t_hf * 1.e-09);
             m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
+ 	    if( t_hf - time_ref_raw < 0 ) return;
+ 	    else time_ref_raw = t_hf;
           } 
           else {
             int multPerFC[nDets];

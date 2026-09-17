@@ -8,12 +8,7 @@ using namespace std;
 #include "TVector3.h"
 namespace epic {
 class EpicPhysics {
-  //////////////////////////////////////////////////////////////
-  // data members are held into vectors in order
-  // to allow multiplicity treatment
- private:
-  
- public:
+ peivate:
         short  fFC_det;         // detector number (starting from 1)
         short  fFC_anode;       // anode number (starting from 1)
         double fFC_tof_raw;     // TofCal
@@ -21,9 +16,6 @@ class EpicPhysics {
         double fFC_e;           // energy [MeV]
         double fFC_q1;          // Total charge
         bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)
-
-   //////////////////////////////////////////////////////////////
-   // Constructor and destructor
 
    //////////////////////////////////////////////////////////////
    // Constructor and destructor

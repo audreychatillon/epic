@@ -428,13 +428,20 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           if (m_RawData->GetDetNbr(0) == -1) {
-	    double t_hf = m_RawData->GetTimeHF(); 
-            m_TimeHF->Fill(t_hf * 1.e-09);
+            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
             m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
+	    // to by-pass nponline bug 
+	    double t_hf = m_RawData->GetTimeHF(); 
  	    if( t_hf - time_ref_raw < 0 ) return;
  	    else time_ref_raw = t_hf;
           } 
           else {
+	    // to by-pass nponline bug 
+	    double t_hf = m_RawData->GetTimeLastHF(); 
+ 	    if( t_hf - time_ref_raw < 0 ) return;
+ 	    else time_ref_raw = t_hf;
+
+            // init
             int multPerFC[nDets];
             int IndexMax[nDets];
             double Qmax[nDets];
@@ -544,10 +551,16 @@ void EpicSpectra::FillRaw() {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::FillPhy() {
     if(m_app->HasFlag("--input-phy")){
+
         ostringstream name;
         string baseA;
         string his_name;
         if(!m_Physics->GetIsAlpha()){
+	    // to by-pass nponline bug 
+	    double t_hf = m_Physics->GetTimeHF(); 
+ 	    if( t_hf - time_ref_phy < 0 ) return;
+ 	    else time_ref_phy = t_hf;
+            // init
             short  det    = m_Physics->GetDetNbr();
             short  anode  = m_Physics->GetAnodeNbr();
             int    index  = m_detector->GetIndex(det, anode);
@@ -559,6 +572,7 @@ void EpicSpectra::FillPhy() {
             name.clear();
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
+            // fill spectra
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
             his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e);

@@ -414,7 +414,7 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_Q1vE";
-            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),20,0,20,1500, 0, 300000);
+            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),200,0,20,1500, 0, 300000);
             can_name = base + "_Q1vE";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 

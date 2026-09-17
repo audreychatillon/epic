@@ -545,7 +545,7 @@ void EpicSpectra::FillPhy() {
             double tofraw = m_Physics->GetTofRaw();
             double tofcal = m_Physics->GetTofCal();
             double e      = m_Physics->GetE();
-            //double q1     = m_Physics->GetQ1();
+            double q1     = m_Physics->GetQ1();
             name.str("");
             name.clear();
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];

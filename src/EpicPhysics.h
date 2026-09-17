@@ -7,6 +7,7 @@
 using namespace std;
 // ROOT
 #include "TObject.h"
+#include "TVector3.h"
 namespace epic {
 class EpicPhysics {
  private:

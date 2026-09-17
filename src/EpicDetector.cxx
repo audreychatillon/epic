@@ -599,6 +599,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   } // end if SAMPLER data
   else {
     nptool::message("yellow", "epic", "Epic::BuildRawEvent",
+                    "Warning: unexpected data type " + alias);
+    nptool::message("yellow", "epic", "Epic::BuildRawEvent",
                     "Warning: unexpected data type on label " + label);
     return;
   }

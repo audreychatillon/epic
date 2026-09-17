@@ -400,10 +400,10 @@ void EpicDetector::BuildPhysicalEvent() {
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
       short  imax   = m_RawData->GetQmaxIndex();
       if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-          double q1 = m_RawData->GetQ1(imax);
           det    = m_RawData->GetDetNbr(imax);
           anode  = m_RawData->GetAnodeNbr(imax); 
           tofraw = m_RawData->GetTofRaw(imax);
+          q1     = m_RawData->GetQ1(imax);
           if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
               alpha = false;
           if (!alpha) 

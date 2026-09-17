@@ -19,7 +19,7 @@ class EpicPhysics {
         double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
-        double fFC_q1;           // energy [MeV]
+        double fFC_q1;          // Total charge
         bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)
 
    //////////////////////////////////////////////////////////////

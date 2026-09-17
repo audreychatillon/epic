@@ -545,6 +545,7 @@ void EpicSpectra::FillPhy() {
             double tofraw = m_Physics->GetTofRaw();
             double tofcal = m_Physics->GetTofCal();
             double e      = m_Physics->GetE();
+            double q1     = m_Physics->GetQ1();
             name.str("");
             name.clear();
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
@@ -552,7 +553,7 @@ void EpicSpectra::FillPhy() {
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
             his_name = baseA + "_E_ifFF";            m_phy_h1[his_name]->Fill(e);
-            his_name = baseA + "_Q1vE_ifFF";         m_phy_h1[his_name]->Fill(e,m_Physics->GetQ1());
+            his_name = baseA + "_Q1vE_ifFF";         m_phy_h2[his_name]->Fill(e,q1);
         }// end of if FF
     }// end of if --input-phy
 

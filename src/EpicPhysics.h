@@ -3,12 +3,13 @@
 
 // STL
 #include <vector>
+#include <iostream>
 using namespace std;
 // ROOT
-#include "TVector3.h"
+#include "TObject.h"
 namespace epic {
 class EpicPhysics {
- peivate:
+ private:
         short  fFC_det;         // detector number (starting from 1)
         short  fFC_anode;       // anode number (starting from 1)
         double fFC_tof_raw;     // TofCal
@@ -17,10 +18,10 @@ class EpicPhysics {
         double fFC_q1;          // Total charge
         bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)
 
-   //////////////////////////////////////////////////////////////
-   // Constructor and destructor
 
  public:
+   //////////////////////////////////////////////////////////////
+   // Constructor and destructor
    EpicPhysics(){};
    ~EpicPhysics(){};
 
@@ -41,12 +42,12 @@ class EpicPhysics {
         //fFC_e.clear();
    };//!
 
+ public:
    //////////////////////////////////////////////////////////////
    // Getters and Setters
    // Prefer inline declaration to avoid unnecessary called of
    // frequently used methods
    // add //! to avoid ROOT creating dictionnary for the methods
- public:
 
    //////////////////////    SETTERS    ////////////////////////
    

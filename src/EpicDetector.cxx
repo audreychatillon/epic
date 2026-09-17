@@ -391,6 +391,7 @@ void EpicDetector::BuildPhysicalEvent() {
 
     short  det    = -1;
     short  anode  = -1;
+    double t_hf   = -1;
     double tofraw = -1;
     double tofcal = -1;
     double e      = -1;
@@ -402,8 +403,10 @@ void EpicDetector::BuildPhysicalEvent() {
       if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
           det    = m_RawData->GetDetNbr(imax);
           anode  = m_RawData->GetAnodeNbr(imax); 
+          t_hf   = m_RawData->GetTimeLastHF();
           tofraw = m_RawData->GetTofRaw(imax);
           q1     = m_RawData->GetQ1(imax);
+          t_hf   = m_RawData->GetTimeLastHF();
           if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
               alpha = false;
           if (!alpha) 
@@ -411,7 +414,7 @@ void EpicDetector::BuildPhysicalEvent() {
       }
     }
     
-    m_Physics->SetHit_fFC(det, anode, tofraw, tofcal, e, q1, alpha);
+    m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, alpha);
 
 }
 

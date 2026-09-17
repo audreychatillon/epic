@@ -574,9 +574,9 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
-//TODO CALIBRATION PARAMETER BEAM_PERIOD_NS
+	  //TODO CALIBRATION PARAMETER BEAM_PERIOD_NS and TOFRAW_OFFSET ~ 970
           double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev) ;
+          if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - 970.) ;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);

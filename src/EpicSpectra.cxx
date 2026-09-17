@@ -553,7 +553,7 @@ void EpicSpectra::FillPhy() {
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
             his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e);
-            //his_name = baseA + "_Q1vE";              m_phy_h2[his_name]->Fill(e,q1);
+            his_name = baseA + "_Q1vE";              m_phy_h2[his_name]->Fill(e,q1);
         }// end of if FF
     }// end of if --input-phy
 

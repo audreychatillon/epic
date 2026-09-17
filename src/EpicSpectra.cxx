@@ -39,10 +39,10 @@ EpicSpectra::EpicSpectra() {
     m_canT0->Divide(1, 2);
 
     m_TimeHF = new TH1F("TimeHF", "TimeHF", 86400, 0, 86400);
-    m_DeltaTimeHF = new TH1F("DT_HF_ifBeamOn", "DT_HF_ifBeamOn", 3000, 2.49913, 2.49916);
+    m_DeltaTimeHF = new TH1F("DT_HF_ifBeamOn", "DT_HF_ifBeamOn", 3000, 2499130, 2499160);
 
     m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
-    m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ms] 10ps/bin");
+    m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
 
     m_canT0->cd(1); m_TimeHF->Draw();
     m_canT0->cd(2); gPad->SetLogy();  m_DeltaTimeHF->Draw();
@@ -428,8 +428,8 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           if (m_RawData->GetDetNbr(0) == -1) {
-            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09);
-            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) * 1.e-06);
+            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
+            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
 	    // to by-pass nponline bug 
 	    double t_hf = m_RawData->GetTimeHF(); 
  	    if( t_hf - time_ref_raw < 0 ) return;

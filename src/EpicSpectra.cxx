@@ -288,7 +288,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw_cutF_zoom";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  10000, 2450000, 2550000);
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 2498000, 2500000);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
             can_name = base + "_TofRaw_zoom";
             m_raw_can[can_name]->cd(a+1);

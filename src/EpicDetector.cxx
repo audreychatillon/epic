@@ -396,6 +396,8 @@ void EpicDetector::BuildPhysicalEvent() {
     double tofcal = -1;
     double e      = -1;
     double q1     = -1;
+    double q2     = -1;
+    double q3     = -1;
     bool   alpha  = true;
 
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
@@ -406,9 +408,15 @@ void EpicDetector::BuildPhysicalEvent() {
           t_hf   = m_RawData->GetTimeLastHF();
           tofraw = m_RawData->GetTofRaw(imax);
           q1     = m_RawData->GetQ1(imax);
+          q2     = m_RawData->GetQ2(imax);
+          q3     = m_RawData->GetQ3(imax);
           t_hf   = m_RawData->GetTimeLastHF();
-          if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
-              alpha = false;
+          vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
+          vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
+          TCutG tcutg = TCutG("FF_tcutg",xF.size(),xF.data(),yF.data());
+          if (tcutg.IsInside(q2/q3,q1))  alpha = false;
+          //if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
+          //    alpha = false;
           if (!alpha) 
               e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }

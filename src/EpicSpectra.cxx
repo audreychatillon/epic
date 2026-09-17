@@ -61,6 +61,8 @@ EpicSpectra::EpicSpectra() {
           his_name = base + "_Mult"; 
           m_raw_h1[his_name] = new TH1F(his_name.c_str(),his_name.c_str(), 13, -0.5, 12.5);
           m_raw_can[can_name]->cd();
+          m_raw_can[can_name]->cd();
+          gPad->SetLogy();
           m_raw_h1[his_name]->Draw();
 
           can_name = base + "_A";
@@ -164,9 +166,10 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 450, -0.1, 4.4);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.1, 2.4);
             can_name = base + "_Q2Q3vQ1";
             m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogx(); 
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
             vector<double> xA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_A_X");
@@ -246,6 +249,7 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_Q1";
             m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
             m_raw_can[can_name]->cd(a+1);
+	    gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q2";

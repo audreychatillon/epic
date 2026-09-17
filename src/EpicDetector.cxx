@@ -411,12 +411,14 @@ void EpicDetector::BuildPhysicalEvent() {
           q2     = m_RawData->GetQ2(imax);
           q3     = m_RawData->GetQ3(imax);
           t_hf   = m_RawData->GetTimeLastHF();
-          vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
-          vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
-          TCutG tcutg = TCutG("FF_tcutg",xF.size(),xF.data(),yF.data());
-          if (tcutg.IsInside(q2/q3,q1))  alpha = false;
-          //if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
-          //    alpha = false;
+	  //TODO TCutG instead of 1D cut -> global (see EpicSpectra)
+          //vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
+          //vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
+          //TCutG * tcutg = new TCutG("FF_tcutg",xF.size(),xF.data(),yF.data());
+          //if (tcutg->IsInside(q2/q3,q1))  alpha = false;
+          //delete tcutg;
+          if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
+              alpha = false;
           if (!alpha) 
               e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }
@@ -572,6 +574,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
+          double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 10.;
+          if (tof_raw < gamma_thr) tof_raw += 2.5 * 1.e+06;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);

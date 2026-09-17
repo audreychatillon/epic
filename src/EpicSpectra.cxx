@@ -166,10 +166,10 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q2Q3vQ1";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 400000, 250, -0.1, 2.4);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 500000, 250, -0.1, 2.4);
             can_name = base + "_Q2Q3vQ1";
             m_raw_can[can_name]->cd(a+1);
-            gPad->SetLogx(); 
+            //gPad->SetLogx(); 
             gPad->SetLogz(); 
             m_raw_h2[his_name]->Draw("colz");
             vector<double> xA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_A_X");

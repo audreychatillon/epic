@@ -279,13 +279,23 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
-            his_name = prefix + "_TofRaw_cutF";
+            his_name = prefix + "_TofRaw_offset";
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
+            his_name = prefix + "_TofRaw";
             m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
             can_name = base + "_TofRaw";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
+            his_name = prefix + "_TofRaw_cutF";
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
+            can_name = base + "_TofRaw";
+            m_raw_can[can_name]->cd(a+1);
+            m_raw_h1[his_name]->SetLineColor(kRed+3);
+            m_raw_h1[his_name]->Draw("same");
 
             his_name = prefix + "_TofRaw_cutF_zoom";
             m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 2498000, 2500000);
@@ -357,7 +367,7 @@ EpicSpectra::EpicSpectra() {
           string can_name;
           string his_name;
           
-          can_name = base + "_TofRaw";
+          can_name = base + "_TofRaw_ifFF";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_TofCal";
@@ -382,7 +392,7 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_TofRaw_ifFF";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
-            can_name = base + "_TofRaw";
+            can_name = base + "_TofRaw_ifFF";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
@@ -505,6 +515,8 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q3";                m_raw_h1[his_name]->Fill(q3);
                   his_name = baseA + "_Q4";                m_raw_h1[his_name]->Fill(q4);
                   his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
+                  his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(tofraw);
+                  his_name = baseA + "_TofRaw_offset";     m_raw_h1[his_name]->Fill(tofraw);
                   his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
                   his_name = baseA + "_DTvQ1";             m_raw_h2[his_name]->Fill(q1,t_qmax - t_cfd);
                   his_name = baseA + "_Q1vTofRaw";    m_raw_h2[his_name]->Fill(tofraw, q1);

@@ -420,8 +420,8 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_Elow";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  10000, 0, 1);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [keV] 100 meV / bin ");
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  1000, 0, 1);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [eV] 1 meV / bin ");
             can_name = base + "_Elow";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
@@ -435,8 +435,8 @@ EpicSpectra::EpicSpectra() {
             m_phy_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q1vElow";
-            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000,0,0.1,1500, 0, 300000);
-            m_phy_h2[his_name]->GetXaxis()->SetTitle("Energy [keV]");
+            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000,0,1,1500, 0, 300000);
+            m_phy_h2[his_name]->GetXaxis()->SetTitle("Energy [eV]");
             can_name = base + "_Q1vElow";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
@@ -609,13 +609,13 @@ void EpicSpectra::FillPhy() {
             // fill spectra
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
-	    if (e>=0.001){ //e>=1keV
+	    if (e>1.e-06){ //e>1eV
             	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
             	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
             }
 	    else{
-            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+03); //keV
-            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+03,q1);
+            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
+            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
 	    }
         }// end of if FF
     }// end of if --input-phy

@@ -614,8 +614,8 @@ void EpicSpectra::FillPhy() {
             	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
             }
 	    else{
-            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e-03); //keV
-            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e-03,q1);
+            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+03); //keV
+            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+03,q1);
 	    }
         }// end of if FF
     }// end of if --input-phy

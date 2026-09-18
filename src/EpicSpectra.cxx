@@ -420,8 +420,8 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_Elow";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  1000, 0, 0.1);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 eV / bin ");
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  10000, 0, 0.01);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 1 eV / bin ");
             can_name = base + "_Elow";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
@@ -435,7 +435,7 @@ EpicSpectra::EpicSpectra() {
             m_phy_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q1vElow";
-            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),100,0,0.1,1500, 0, 300000);
+            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),100,0,0.01,1500, 0, 300000);
             can_name = base + "_Q1vElow";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 

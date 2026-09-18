@@ -376,6 +376,9 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_E";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
+          can_name = base + "_Elow";
+          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+          
           can_name = base + "_Q1vE";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
 
@@ -413,6 +416,14 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
+            his_name = prefix + "_Elow";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  100, 0, 0.1);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 1 keV / bin ");
+            can_name = base + "_Elow";
+            m_phy_can[can_name]->cd(a+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
             his_name = prefix + "_Q1vE";
             m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),200,0,20,1500, 0, 300000);
             can_name = base + "_Q1vE";
@@ -438,12 +449,13 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           if (m_RawData->GetDetNbr(0) == -1) {
-            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
-            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
 	    // to by-pass nponline bug 
 	    double t_hf = m_RawData->GetTimeHF(); 
  	    if( t_hf - time_ref_raw < 0 ) return;
  	    else time_ref_raw = t_hf;
+	    // fill spectra
+            m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
+            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
 	    // to by-pass nponline bug 
@@ -498,7 +510,6 @@ void EpicSpectra::FillRaw() {
                   double q3 = m_RawData->GetQ3(IndexMax[d]);
                   double q4 = m_RawData->GetQ4(IndexMax[d]);
                   double t_fc = m_RawData->GetTimeFC(IndexMax[d]);
-                  //double t_hf = m_RawData->GetTimeLastHF();
                   double tofraw = m_RawData->GetTofRaw(IndexMax[d]);
                   double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
                   double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
@@ -587,8 +598,13 @@ void EpicSpectra::FillPhy() {
             // fill spectra
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
-            his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e);
-            his_name = baseA + "_Q1vE";              m_phy_h2[his_name]->Fill(e,q1);
+	    if (e>=0.1){
+            	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e);
+            	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
+            }
+	    else{
+            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e);
+	    }
         }// end of if FF
     }// end of if --input-phy
 

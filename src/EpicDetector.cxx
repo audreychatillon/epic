@@ -596,6 +596,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str(); cout << tcutg_name << endl;
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)) m_RawData->SetIsFission(true);
+            else m_RawData->SetIsFission(false);
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);

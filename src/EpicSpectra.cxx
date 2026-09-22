@@ -524,6 +524,7 @@ void EpicSpectra::FillRaw() {
                   double tofraw = m_RawData->GetTofRaw(IndexMax[d]);
                   double t_qmax = m_RawData->GetTimeQmax(IndexMax[d]);
                   double t_cfd = m_RawData->GetTimeCfd(IndexMax[d]);
+                  bool   b_fission = m_RawData->GetIsFission(IndexMax[d]);
                   his_name = baseD + "_AnodeID_ifQmax";    m_raw_h1[his_name]->Fill(anode);
                   his_name = baseD + "_Q1vAnodeID";        m_raw_h2[his_name]->Fill(anode, q1);
                   his_name = baseA + "_Q1vT";              m_raw_h2[his_name]->Fill(t_fc * 1.e-9, q1);
@@ -551,7 +552,8 @@ void EpicSpectra::FillRaw() {
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
                       his_name = baseA + "_TCutG_discriF";
-                      if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
+                      //if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
+                      if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);

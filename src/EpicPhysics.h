@@ -18,7 +18,7 @@ class EpicPhysics {
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
         double fFC_q1;          // Total charge
-        bool   fFC_isAlpha;     // true if (Q1<q1_ALPHA_1Dcut)  //TODO to be changed for isFission (Q2/Q3 vs Q1) in TCutG
+        bool   fFC_isFission;   // true if (Q2/Q3 vs Q1 is Inside TCutG
 
 
  public:
@@ -31,14 +31,14 @@ class EpicPhysics {
    // Inherited from TObject and overriden to avoid warnings
  public:
    void Clear(){
-        fFC_det     = -1.; 
-        fFC_anode   = -1.;
-        fFC_time_hf = -1.;
-        fFC_tof_raw = -1.;
-        fFC_tof_cal = -1.;
-        fFC_e       = -1.;
-        fFC_q1      = -1.;
-        fFC_isAlpha = true;
+        fFC_det       = -1.; 
+        fFC_anode     = -1.;
+        fFC_time_hf   = -1.;
+        fFC_tof_raw   = -1.;
+        fFC_tof_cal   = -1.;
+        fFC_e         = -1.;
+        fFC_q1        = -1.;
+        fFC_isFission = false;
         //fFC_det.clear();
         //fFC_anode.clear();
         //fFC_tof_cal.clear();
@@ -62,27 +62,27 @@ class EpicPhysics {
         const double& tof_cal_ns,
         const double& e_MeV,
         const double& q1,
-        const bool&   alpha){
-            fFC_det     = det;
-            fFC_anode   = anode;
-	    fFC_time_hf = t_hf;
-            fFC_tof_raw = tof_raw_ns;
-            fFC_tof_cal = tof_cal_ns;
-            fFC_e       = e_MeV;
-            fFC_q1      = q1;
-            fFC_isAlpha = alpha;
+        const bool&   fission){
+            fFC_det       = det;
+            fFC_anode     = anode;
+	        fFC_time_hf   = t_hf;
+            fFC_tof_raw   = tof_raw_ns;
+            fFC_tof_cal   = tof_cal_ns;
+            fFC_e         = e_MeV;
+            fFC_q1        = q1;
+            fFC_isFission = fission;
         }; //!
 
 
     //////////////////////    GETTERS    ////////////////////////
-    inline short  GetDetNbr()   const { return fFC_det ; };
-    inline short  GetAnodeNbr() const { return fFC_anode ; };
-    inline double GetTimeHF()   const { return fFC_time_hf ; };
-    inline double GetTofRaw()   const { return fFC_tof_raw ; };
-    inline double GetTofCal()   const { return fFC_tof_cal ; };
-    inline double GetE()        const { return fFC_e ; };
-    inline double GetQ1()       const { return fFC_q1 ; };
-    inline bool   GetIsAlpha()  const { return fFC_isAlpha ; };
+    inline short  GetDetNbr()     const { return fFC_det ; };
+    inline short  GetAnodeNbr()   const { return fFC_anode ; };
+    inline double GetTimeHF()     const { return fFC_time_hf ; };
+    inline double GetTofRaw()     const { return fFC_tof_raw ; };
+    inline double GetTofCal()     const { return fFC_tof_cal ; };
+    inline double GetE()          const { return fFC_e ; };
+    inline double GetQ1()         const { return fFC_q1 ; };
+    inline bool   GetIsFission()  const { return fFC_isFission ; };
 
    //////////////////////////////////////////////////////////////
    // Required for ROOT dictionnary

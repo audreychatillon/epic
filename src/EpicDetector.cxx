@@ -68,15 +68,24 @@ void EpicDetector::BuildEpicChannelMaps(){
     m_anode2index.clear();
     m_index2channel.clear();
     m_anode2index.resize(m_nDets);
-    int global_index = 0;
+    int global_index = 0 ;
     int offset = 0;
     for(int d = 0 ; d < m_nDets; d++){
         int nA = m_nAnodes[d];
         for(int a = 0 ; a < nA ; a++){
+            // channel maps
             int anode = m_AnodeNumber[offset+a];
             m_anode2index[d][anode] = global_index;
             m_index2channel.push_back({d+1, anode});
             global_index++;
+
+            // TCutG Fission
+            vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
+            vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
+            ostringstream name;
+            name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_TCutG_discriF"; 
+            string tcutg_name = name.str();
+            m_tcutg[tcutg_name] = new TCutG(tcutg_name.c_str(),xF.size(),xF.data(),yF.data());
         } // end for(a)
         offset += nA;
     }// end for(d)
@@ -389,42 +398,30 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
-    short  det    = -1;
-    short  anode  = -1;
-    double t_hf   = -1;
-    double tofraw = -1;
-    double tofcal = -1;
-    double e      = -1;
-    double q1     = -1;
-    double q2     = -1;
-    double q3     = -1;
-    bool   alpha  = true;
+    short  det     = -1;
+    short  anode   = -1;
+    double t_hf    = -1;
+    double tofraw  = -1;
+    double tofcal  = -1;
+    double e       = -1;
+    double q1      = -1;
+    bool   fission = false;
 
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
       short  imax   = m_RawData->GetQmaxIndex();
       if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-          det    = m_RawData->GetDetNbr(imax);
-          anode  = m_RawData->GetAnodeNbr(imax); 
-          t_hf   = m_RawData->GetTimeLastHF();
-          tofraw = m_RawData->GetTofRaw(imax);
-          q1     = m_RawData->GetQ1(imax);
-          q2     = m_RawData->GetQ2(imax);
-          q3     = m_RawData->GetQ3(imax);
-          t_hf   = m_RawData->GetTimeLastHF();
-	  //TODO TCutG instead of 1D cut -> global (see EpicSpectra)
-          //vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
-          //vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
-          //TCutG * tcutg = new TCutG("FF_tcutg",xF.size(),xF.data(),yF.data());
-          //if (tcutg->IsInside(q2/q3,q1))  alpha = false;
-          //delete tcutg;
-          if (q1 > m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_ALPHA",0))
-              alpha = false;
-          if (!alpha) 
-              e  = TofRaw2Ene(det, anode, tofraw, tofcal);
+          det     = m_RawData->GetDetNbr(imax);
+          anode   = m_RawData->GetAnodeNbr(imax); 
+          t_hf    = m_RawData->GetTimeLastHF();
+          tofraw  = m_RawData->GetTofRaw(imax);
+          q1      = m_RawData->GetQ1(imax);
+          fission = m_RawData->GetIsFission(imax);
+          t_hf    = m_RawData->GetTimeLastHF();
+          if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }
     }
     
-    m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, alpha);
+    m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, fission);
 
 }
 
@@ -463,6 +460,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(-1);
       m_RawData->SetQ4(-1);
       m_RawData->SetQmax(-1);
+      m_RawData->SetIsFission(false);
       m_RawData->SetPulserTrig(false);
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
@@ -493,6 +491,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(0);
       m_RawData->SetQ4(0);
       m_RawData->SetQmax(0);
+      m_RawData->SetIsFission(false);
       m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeLastHF(m_TimeHF_current);
       m_RawData->SetTimeCfd(-1);
@@ -574,9 +573,9 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
-	  //TODO CALIBRATION PARAMETER BEAM_PERIOD_NS and TOFRAW_OFFSET ~ 970
+	      //TODO TOFRAW_OFFSET ~ 970
           double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - 970.) ;
+          if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - 970.) ;  // TODO TODO TODO REMOVE hard coding 970 !!!
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
             m_RawData->SetDetNbr(det);
             m_RawData->SetAnodeNbr(anode);
@@ -590,6 +589,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetTimeCfd(T_cfd);
             m_RawData->SetTimeQmax(T_qmax);
             m_RawData->SetPulserTrig(false);
+            ostringstream name;
+            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_TCutG_discriF"; 
+            string tcutg_name = name.str();
+            if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)) m_RawData->SetIsFission(true);
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);

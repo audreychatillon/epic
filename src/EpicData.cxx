@@ -15,6 +15,7 @@ void epic::EpicData::Clear() {
   fFC_Q2.clear();
   fFC_Q3.clear();
   fFC_Q4.clear();
+  fFC_IsFission.clear();
   fQmax_Sampler.clear();
   fFC_TimeLastHF = -1;
   fQmax_Index = -1;

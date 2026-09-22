@@ -589,7 +589,7 @@ void EpicSpectra::FillPhy() {
         ostringstream name;
         string baseA;
         string his_name;
-        if(!m_Physics->GetIsAlpha()){
+        if(!m_Physics->GetIsFission()){
 	    // to by-pass nponline bug 
 	    double t_hf = m_Physics->GetTimeHF(); 
  	    if( t_hf - time_ref_phy < 0 ) return;
@@ -609,14 +609,14 @@ void EpicSpectra::FillPhy() {
             // fill spectra
             his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
-	    if (e>1.e-06){ //e>1eV
+	        if (e>1.e-06){ //e>1eV
             	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
             	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
             }
-	    else{
+	        else{
             	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
             	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
-	    }
+	        }
         }// end of if FF
     }// end of if --input-phy
 

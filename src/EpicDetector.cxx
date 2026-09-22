@@ -81,16 +81,11 @@ void EpicDetector::BuildEpicChannelMaps(){
 
             // TCutG Fission
             vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
-            cout << "xF size : " << xF.size() << endl;
-            for (double xf : xF) std::cout << xf << " "; std::cout << std::endl; // TODO TODO TODO remove after debugging
             vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
-            cout << "yF size : " << yF.size() << endl;
-            for (double yf : yF) std::cout << yf << " "; std::cout << std::endl; // TODO TODO TODO remove after debugging
             ostringstream name;
             name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str();
             m_tcutg[tcutg_name] = new TCutG(tcutg_name.c_str(),xF.size(),xF.data(),yF.data());
-            m_tcutg[tcutg_name]->ls(); //TODO TODO TODO remove after debugging
         } // end for(a)
         offset += nA;
     }// end for(d)
@@ -436,7 +431,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
 
-  cout << "Enter BuildRawEvent" << endl;
+  cout << " --- --- --- Enter BuildRawEvent" << endl;
       cout << "label = " << label << endl;
 
   // Static variable
@@ -585,8 +580,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
           if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - 970.) ;  // TODO TODO TODO REMOVE hard coding 970 !!!
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-            m_RawData->SetDetNbr(det);   cout << "det = " << det << endl;
-            m_RawData->SetAnodeNbr(anode); cout << "anode = " << anode << endl;
+            m_RawData->SetDetNbr(det);   
+            m_RawData->SetAnodeNbr(anode); 
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);
             m_RawData->SetQ3(Q3);
@@ -605,6 +600,9 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);
             }
+cout << "det = " << det <<  "  " << m_RawData->GetDetNbr(m_RawData->GetFCMult()-1) << endl;
+cout << "anode = " << anode <<  "  " << m_RawData->GetAnodeNbr(m_RawData->GetFCMult()-1) << endl;
+cout << "IsFission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
 
             // sample for anode with Qmax
             if (m_RawData->GetFCMult() == 1) {

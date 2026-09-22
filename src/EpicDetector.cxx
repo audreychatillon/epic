@@ -83,9 +83,11 @@ void EpicDetector::BuildEpicChannelMaps(){
             vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
             vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
             ostringstream name;
-            name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_TCutG_discriF"; 
+            name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str();
+            cout << "declare TCutG : " << tcutg_name << endl;
             m_tcutg[tcutg_name] = new TCutG(tcutg_name.c_str(),xF.size(),xF.data(),yF.data());
+            m_tcutg[tcutg_name]->ls();
         } // end for(a)
         offset += nA;
     }// end for(d)
@@ -430,6 +432,8 @@ void EpicDetector::BuildPhysicalEvent() {
 void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
+
+  cout << "Enter BuildRawEvent" << endl;
 
   // Static variable
   static unsigned int index, det, anode;

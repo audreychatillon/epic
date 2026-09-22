@@ -585,8 +585,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
           if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - 970.) ;  // TODO TODO TODO REMOVE hard coding 970 !!!
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-            m_RawData->SetDetNbr(det);
-            m_RawData->SetAnodeNbr(anode);
+            m_RawData->SetDetNbr(det);   cout << "det = " << det << endl;
+            m_RawData->SetAnodeNbr(anode); cout << "anode = " << anode << endl;
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);
             m_RawData->SetQ3(Q3);
@@ -598,8 +598,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetTimeQmax(T_qmax);
             m_RawData->SetPulserTrig(false);
             ostringstream name;
-            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_TCutG_discriF"; 
-            string tcutg_name = name.str();
+            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
+            string tcutg_name = name.str(); cout << tcutg_name << endl;
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)) m_RawData->SetIsFission(true);
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data

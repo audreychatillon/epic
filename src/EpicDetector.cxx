@@ -456,7 +456,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       faster_data_load(data, &hf_data);
       m_TimeHF_prev    = m_TimeHF_current;
       m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-      cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+      cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+      cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
       m_RawData->SetTimePrevHF(m_TimeHF_prev);
       m_RawData->SetTimeHF(m_TimeHF_current);
       m_RawData->SetDetNbr(-1);
@@ -515,7 +516,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       anode = Label2anode(label);
       det   = Label2det(label);
       index = GetIndex(det,anode);
-      cout << setprecision(25) << " --> FC data: t_hf = " << m_TimeHF_current << "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+      //cout << setprecision(25) << " --> FC data: t_hf = " << m_TimeHF_current << "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
 
       // sampler_data samp = (sampler_data)faster_data_load_p(data);
       // load sampler data:

@@ -226,7 +226,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000, 0, 400000, 200, 0, 20000);
             can_name = base + "_QmaxvQ1";
             m_raw_can[can_name]->cd(a+1);
-            gPad->SetLogz(); 
+            gPad->SetLogz();
             m_raw_h2[his_name]->Draw("colz");
 
             his_name = prefix + "_Q4vQmax";
@@ -297,8 +297,10 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->SetLineColor(kRed+3);
             m_raw_h1[his_name]->Draw("same");
 
+            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK",0);
+
             his_name = prefix + "_TofRaw_cutF_zoom";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 2498000, 2500000);
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
             can_name = base + "_TofRaw_zoom";
             m_raw_can[can_name]->cd(a+1);
@@ -306,7 +308,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q1vTofRaw";
-            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 1000, 2498000, 2500000, 1000, 0, 200000);
+            m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(), 1000, gp-200, gp+1800, 1000, 0, 200000);
             m_raw_h2[his_name]->GetXaxis()->SetTitle("TofRaw [ns] 500 ps / bin");
             m_raw_h2[his_name]->GetYaxis()->SetTitle("Q1");
             can_name = base + "_Q1vTofRaw";
@@ -395,10 +397,11 @@ EpicSpectra::EpicSpectra() {
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[i];
             string prefix = name.str();
 
+            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK",0);
             his_name = prefix + "_TofRaw_ifFF";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
-            can_name = base + "_TofRaw_ifFF";
+            can_name = base + "_TofRaw_cutF";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();

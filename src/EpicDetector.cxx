@@ -454,21 +454,27 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   if (alias == QDC_TDC_X1_TYPE_ALIAS || alias == QDC_X1_TYPE_ALIAS) {
     if (label == "HF") {
       faster_data_load(data, &hf_data);
-      m_TimeHF_prev    = m_TimeHF_current;
-      m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-      cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-      cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
-      m_RawData->SetTimePrevHF(m_TimeHF_prev);
-      m_RawData->SetTimeHF(m_TimeHF_current);
-      m_RawData->SetDetNbr(-1);
-      m_RawData->SetAnodeNbr(-1);
-      m_RawData->SetQ1(-1);
-      m_RawData->SetQ2(-1);
-      m_RawData->SetQ3(-1);
-      m_RawData->SetQ4(-1);
-      m_RawData->SetQmax(-1);
-      m_RawData->SetIsFission(false);
-      m_RawData->SetPulserTrig(false);
+      // at GELINA relexion on the HF cable ~ 875 ns
+      double tmp_prev = m_Time_current;
+      double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
+      double tmp_delta = tmp_thf - tmp_prev;
+      if(tmp_delta > 1000){
+        m_TimeHF_prev    = m_TimeHF_current;
+        m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
+        cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+        cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
+        m_RawData->SetTimePrevHF(m_TimeHF_prev);
+        m_RawData->SetTimeHF(m_TimeHF_current);
+        m_RawData->SetDetNbr(-1);
+        m_RawData->SetAnodeNbr(-1);
+        m_RawData->SetQ1(-1);
+        m_RawData->SetQ2(-1);
+        m_RawData->SetQ3(-1);
+        m_RawData->SetQ4(-1);
+        m_RawData->SetQmax(-1);
+        m_RawData->SetIsFission(false);
+        m_RawData->SetPulserTrig(false);
+      }
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);

@@ -418,8 +418,9 @@ void EpicDetector::BuildPhysicalEvent() {
           cout << "    tofraw_thres = " << tofraw_thres << endl;
           if (tofraw < tofraw_thres) {
             cout << "  old tofraw = " << tofraw << endl;
-            cout << setprecision(25) << "       time_hf_current = " << m_TimeHF_current << endl;
-            cout << setprecision(25) << "       time_hf_prev    = " << m_TimeHF_prev << endl;
+            cout << setprecision(25) << "       time_hf_last    = " << m_RawData->GetTimeLastHF() << endl;
+            cout << setprecision(25) << "       time_hf_current = " << m_RawData->GetTimeHF() << endl;
+            cout << setprecision(25) << "       time_hf_prev    = " << m_RawData->GetTimePrevHF() << endl;
             tofraw += (m_TimeHF_current - m_TimeHF_prev - tofraw_offset) ; 
             cout << "  new tofraw = " << tofraw << endl;
           }

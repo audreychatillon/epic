@@ -501,7 +501,7 @@ void EpicSpectra::FillRaw() {
             m_HF_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
-            m_FC_DeltaTimeHF->Fill((m_RawData->GetDeltaTimeHF()); //ns
+            m_FC_DeltaTimeHF->Fill(m_RawData->GetDeltaTimeHF()); //ns
 	        // to by-pass nponline bug 
             // this should be commented if processing several runs
             // at new runs restart t from 0

@@ -414,7 +414,12 @@ void EpicDetector::BuildPhysicalEvent() {
 	      ////TODO TOFRAW_OFFSET ~ 970 
           double tofraw_offset = 0.;
           double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          if (tofraw < tofraw_thres) tofraw += (m_TimeHF_current - m_TimeHF_prev - tofraw_offset) ; 
+          cout << "tofraw = " << tofraw << endl;
+          cout << "tofraw_thres = " << tofraw_thres << endl;
+          if (tofraw < tofraw_thres) {
+            tofraw += (m_TimeHF_current - m_TimeHF_prev - tofraw_offset) ; 
+            cout << "new tofraw = " << tofraw << endl;
+          }
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
           t_hf    = m_RawData->GetTimeLastHF();

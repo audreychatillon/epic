@@ -455,7 +455,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     if (label == "HF") {
       faster_data_load(data, &hf_data);
       // at GELINA relexion on the HF cable ~ 875 ns
-      double tmp_prev = m_Time_current;
+      double tmp_prev = m_TimeHF_current;
       double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
       double tmp_delta = tmp_thf - tmp_prev;
       if(tmp_delta > 1000){

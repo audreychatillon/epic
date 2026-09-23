@@ -412,7 +412,7 @@ void EpicDetector::BuildPhysicalEvent() {
           t_hf    = m_RawData->GetTimeLastHF();
           tofraw  = m_RawData->GetTofRaw(imax);
 	      ////TODO TOFRAW_OFFSET ~ 970 
-          double tofraw_offset = 0.;
+          double tofraw_offset = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_OFFSET",0);
           double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
           if (tofraw < tofraw_thres) {
             tofraw += (m_RawData->GetDeltaTimeHF() - tofraw_offset) ; 

@@ -415,6 +415,7 @@ void EpicDetector::BuildPhysicalEvent() {
           tofraw  = m_RawData->GetTofRaw(imax);
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
+
           if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " , true fission = " << fission << endl;
           else        cout << "            anode = " << anode << ", q1 = " << q1 << " , false fission = " << fission << endl;
           t_hf    = m_RawData->GetTimeLastHF();

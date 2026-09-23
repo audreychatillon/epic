@@ -339,11 +339,6 @@ void EpicDetector::PrintConfig() {
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK",0);
     cout << endl;
-    // Alpha cut
-    cout << "          Alpha Cut [ch]         : ";
-    for (size_t a = 0; a < m_nAnodes[d]; a++)
-      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_ALPHA",0);
-    cout << endl;
     cout << "     ==== ===================================================== ====" << endl; 
     cout << endl;
     offset += m_nAnodes[d];
@@ -430,9 +425,6 @@ void EpicDetector::BuildPhysicalEvent() {
 void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
-
-  cout << " --- --- --- Enter BuildRawEvent" << endl;
-      cout << "label = " << label << endl;
 
   // Static variable
   static unsigned int index, det, anode;
@@ -594,16 +586,15 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetPulserTrig(false);
             ostringstream name;
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
-            string tcutg_name = name.str(); cout << tcutg_name << endl;
-            if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)) m_RawData->SetIsFission(true);
-            else m_RawData->SetIsFission(false);
+            string tcutg_name = name.str(); 
+            if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)) 
+                m_RawData->SetIsFission(true);
+            else 
+                m_RawData->SetIsFission(false);
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);
             }
-cout << "det = " << det <<  "  " << m_RawData->GetDetNbr(m_RawData->GetFCMult()-1) << endl;
-cout << "anode = " << anode <<  "  " << m_RawData->GetAnodeNbr(m_RawData->GetFCMult()-1) << endl;
-cout << "IsFission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
 
             // sample for anode with Qmax
             if (m_RawData->GetFCMult() == 1) {

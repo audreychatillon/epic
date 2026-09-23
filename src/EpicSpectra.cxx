@@ -41,14 +41,14 @@ EpicSpectra::EpicSpectra() {
     m_TimeHF = new TH1F("TimeHF", "TimeHF", 86400, 0, 86400);
     m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 3000, 2500000, 2500030);
     m_HF_DeltaTimeHF->SetLineColor(kBlack);
-    m_FC_DeltaTimeHF = new TH1F("DT_TimeHF_fFC_ifBeamOn", "DT_TimeHF_fFC_ifBeamOn", 3000, 2500000, 2500030);
+    //m_FC_DeltaTimeHF = new TH1F("DT_TimeHF_fFC_ifBeamOn", "DT_TimeHF_fFC_ifBeamOn", 3000, 2500000, 2500030);
 
     m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
     m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
-    m_FC_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
+    //m_FC_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
 
     m_canT0->cd(1); m_TimeHF->Draw();
-    m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); m_FC_DeltaTimeHF->Draw("same");
+    m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); //m_FC_DeltaTimeHF->Draw("same");
 
     // loop over nDets for raw histos
     if(m_app->HasFlag("--input-raw")){
@@ -501,7 +501,7 @@ void EpicSpectra::FillRaw() {
             m_HF_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
-            m_FC_DeltaTimeHF->Fill(m_RawData->GetDeltaTimeHF()); //ns
+            //m_FC_DeltaTimeHF->Fill(m_RawData->GetDeltaTimeHF()); //ns
 	        // to by-pass nponline bug 
             // this should be commented if processing several runs
             // at new runs restart t from 0
@@ -674,5 +674,5 @@ void EpicSpectra::Clear() {
   // === general histograms
   m_TimeHF->Reset();
   m_HF_DeltaTimeHF->Reset();
-  m_FC_DeltaTimeHF->Reset();
+  //m_FC_DeltaTimeHF->Reset();
 }

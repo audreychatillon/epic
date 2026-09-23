@@ -461,8 +461,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       if(tmp_delta > 1000){
         m_TimeHF_prev    = m_TimeHF_current;
         m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-        cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-        cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
+        //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+        //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
         m_RawData->SetTimePrevHF(m_TimeHF_prev);
         m_RawData->SetTimeHF(m_TimeHF_current);
         m_RawData->SetDetNbr(-1);
@@ -611,9 +611,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
-              cout << setprecision(25) << "--- m_TimeHF_prev    = " << m_TimeHF_prev << endl;
-              cout << setprecision(25) << "    m_TimeHF_current = " << m_TimeHF_current << endl;
-              cout << setprecision(25) << "    delta time hf = " << m_TimeHF_current - m_TimeHF_prev << endl;
               m_RawData->SetDeltaTimeHF((double)((long double)m_TimeHF_current - (long double)m_TimeHF_prev));
               m_RawData->SetTimeLastHF(m_TimeHF_current);
             }

@@ -36,7 +36,8 @@ class EpicSpectra {
 	
 	  // === general histograms and canvas
 	  TH1F * m_TimeHF;
-	  TH1F * m_DeltaTimeHF;
+	  TH1F * m_HF_DeltaTimeHF;
+	  TH1F * m_FC_DeltaTimeHF;
 	  TCanvas * m_canT0;
 	
 	  // === raw and phys histograms and canvas per FC and/or anode

@@ -603,7 +603,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
-              m_RawData->SetDeltaTimeHF(m_TimeHF_current - m_TimeHF_prev);
+              cout << setprecision(25) << "--- m_TimeHF_prev    = " << m_TimeHF_prev << endl;
+              cout << setprecision(25) << "    m_TimeHF_current = " << m_TimeHF_current << endl;
+              cout << setprecision(25) << "    delta time hf = " << m_TimeHF_current - m_TimeHF_prev << endl;
+              m_RawData->SetDeltaTimeHF((double)((long double)m_TimeHF_current - (long double)m_TimeHF_prev));
               m_RawData->SetTimeLastHF(m_TimeHF_current);
             }
 

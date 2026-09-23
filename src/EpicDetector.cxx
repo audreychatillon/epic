@@ -411,10 +411,10 @@ void EpicDetector::BuildPhysicalEvent() {
           anode   = m_RawData->GetAnodeNbr(imax); 
           t_hf    = m_RawData->GetTimeLastHF();
           tofraw  = m_RawData->GetTofRaw(imax);
-	      ////TODO TOFRAW_OFFSET ~ 970 + at phy level to check clock
-          //double tofraw_offset = 0.;
-          //double gamma_thr = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          //if (tof_raw < gamma_thr) tof_raw += (m_TimeHF_current - m_TimeHF_prev - tofraw_offset) ; 
+	      ////TODO TOFRAW_OFFSET ~ 970 
+          double tofraw_offset = 0.;
+          double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
+          if (tofraw < tofraw_thres) tofraw += (m_TimeHF_current - m_TimeHF_prev - tofraw_offset) ; 
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
           t_hf    = m_RawData->GetTimeLastHF();

@@ -380,7 +380,7 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_TofRaw";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
-          can_name = base + "_TofRaw_cutF";
+          can_name = base + "_TofRaw_zoom";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_TofCal";
@@ -418,10 +418,10 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
-            his_name = prefix + "_TofRaw_cutF";
+            his_name = prefix + "_TofRawi_cutF_zoom";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
-            can_name = base + "_TofRaw_cutF";
+            can_name = base + "_TofRaw_zoom";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
@@ -643,15 +643,16 @@ void EpicSpectra::FillPhy() {
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
             // fill spectra
-            his_name = baseA + "_TofRaw";       m_phy_h1[his_name]->Fill(tofraw);
-            his_name = baseA + "_TofCal";       m_phy_h1[his_name]->Fill(tofcal);
+            his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
+            his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
+            his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
 	        if (e>1.e-06){ //e>1eV
-            	his_name = baseA + "_E";        m_phy_h1[his_name]->Fill(e); // MeV
-            	his_name = baseA + "_Q1vE";     m_phy_h2[his_name]->Fill(e,q1);
+            	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
+            	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
             }
 	        else{
-            	his_name = baseA + "_Elow";     m_phy_h1[his_name]->Fill(e*1.e+06); //eV
-            	his_name = baseA + "_Q1vElow";  m_phy_h2[his_name]->Fill(e*1.e+06,q1);
+            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
+            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
 	        }
         }// end of if FF
     }// end of if --input-phy

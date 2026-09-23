@@ -392,6 +392,7 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 ////////////////////////////////////////////////////////////////////////////////
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
+
     ClearEventPhysics();
     short  det     = -1;
     short  anode   = -1;
@@ -418,7 +419,6 @@ void EpicDetector::BuildPhysicalEvent() {
     }
     
     m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, fission);
-    if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

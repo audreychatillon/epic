@@ -131,6 +131,9 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_TofRaw_zoom";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
+          can_name = base + "_TofRaw_offset";
+          m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+          
           can_name = base + "_Q1vTofRaw";
           m_raw_can[can_name] = CreateCanvas(can_name, ncol);
           
@@ -279,9 +282,6 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
-            his_name = prefix + "_TofRaw_offset";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
-            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
             his_name = prefix + "_TofRaw";
             m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
@@ -303,6 +303,14 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
             can_name = base + "_TofRaw_zoom";
+            m_raw_can[can_name]->cd(a+1);
+            gPad->SetLogy();
+            m_raw_h1[his_name]->Draw();
+
+            his_name = prefix + "_TofRaw_cutF_offset";
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
+            m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
+            can_name = base + "_TofRaw_offset";
             m_raw_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
@@ -462,29 +470,38 @@ void EpicSpectra::FillRaw() {
 
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
+          bool replay = m_Cal.GetValue("REPLAY_DATA",0);
           if (m_RawData->GetDetNbr(0) == -1) {
-	    //// to by-pass nponline bug 
-	    //double t_hf = m_RawData->GetTimeHF(); 
- 	    //if( t_hf - time_ref_raw < 0 ) return;
- 	    //else time_ref_raw = t_hf;
-	    // fill spectra
+          
+	        // to by-pass nponline bug
+            // this should be commented if processing several runs
+            // at new runs restart t from 0
+            if(!replay){
+	            double t_hf = m_RawData->GetTimeHF(); 
+ 	            if( t_hf - time_ref_raw < 0 ) return;
+ 	            else time_ref_raw = t_hf;
+            }
+	        // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
-	    //// to by-pass nponline bug 
-	    //double t_hf = m_RawData->GetTimeLastHF(); 
- 	    //if( t_hf - time_ref_raw < 0 ) return;
- 	    //else time_ref_raw = t_hf;
-
+	        // to by-pass nponline bug 
+            // this should be commented if processing several runs
+            // at new runs restart t from 0
+            if(!replay){
+	            double t_hf = m_RawData->GetTimeLastHF(); 
+ 	            if( t_hf - time_ref_raw < 0 ) return;
+ 	            else time_ref_raw = t_hf;
+            }
             // init
             int multPerFC[nDets];
             int IndexMax[nDets];
             double Qmax[nDets];
             for (int d = 0; d < nDets; d++) {
-              multPerFC[d] = 0;
-              IndexMax[d] = -1;
-              Qmax[d] = 0.;
+                multPerFC[d] = 0;
+                IndexMax[d] = -1;
+                Qmax[d] = 0.;
             }
 
             // loop over the raw data
@@ -542,7 +559,6 @@ void EpicSpectra::FillRaw() {
                   his_name = baseA + "_Q4";                m_raw_h1[his_name]->Fill(q4);
                   his_name = baseA + "_Qmax";              m_raw_h1[his_name]->Fill(qm);
                   his_name = baseA + "_TofRaw";            m_raw_h1[his_name]->Fill(tofraw);
-                  his_name = baseA + "_TofRaw_offset";     m_raw_h1[his_name]->Fill(tofraw);
                   his_name = baseA + "_Tqmax_Tcfd";        m_raw_h1[his_name]->Fill(t_qmax - t_cfd);
                   his_name = baseA + "_DTvQ1";             m_raw_h2[his_name]->Fill(q1,t_qmax - t_cfd);
                   his_name = baseA + "_Q1vTofRaw";    m_raw_h2[his_name]->Fill(tofraw, q1);
@@ -558,8 +574,9 @@ void EpicSpectra::FillRaw() {
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                        his_name = baseA + "_TofRaw_cutF";       m_raw_h1[his_name]->Fill(tofraw);
-                        his_name = baseA + "_TofRaw_cutF_zoom";  m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF";         m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF_zoom";    m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF_offset";  m_raw_h1[his_name]->Fill(tofraw);
                       }
                       his_name = baseA + "_Q4QmaxvQ1";          m_raw_h2[his_name]->Fill(q1, q4 / qm);
                       if(multPerFC[d]==1) {
@@ -595,10 +612,12 @@ void EpicSpectra::FillPhy() {
         if(m_Physics->GetIsFission()){
 
 	        // to by-pass nponline bug : comment this lines if you want to process several runs 
-	        //double t_hf = m_Physics->GetTimeHF(); 
- 	        //if( t_hf - time_ref_phy < 0 ) return;
- 	        //else time_ref_phy = t_hf;
-        
+            bool replay = m_Cal.GetValue("REPLAY_DATA",0);
+            if(!replay){
+	            double t_hf = m_Physics->GetTimeHF(); 
+ 	            if( t_hf - time_ref_phy < 0 ) return;
+ 	            else time_ref_phy = t_hf;
+            }
             // init
             short  det    = m_Physics->GetDetNbr();
             short  anode  = m_Physics->GetAnodeNbr();

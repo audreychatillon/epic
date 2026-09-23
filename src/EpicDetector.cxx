@@ -415,7 +415,8 @@ void EpicDetector::BuildPhysicalEvent() {
           tofraw  = m_RawData->GetTofRaw(imax);
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
-          if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " ; fission = " << fission << endl;
+          if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " , true fission = " << fission << endl;
+          else        cout << "            anode = " << anode << ", q1 = " << q1 << " , false fission = " << fission << endl;
           t_hf    = m_RawData->GetTimeLastHF();
           if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }
@@ -594,11 +595,11 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             string tcutg_name = name.str(); 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
                 m_RawData->SetIsFission(true);
-                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
+                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", true fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
             }
             else{ 
                 m_RawData->SetIsFission(false);
-                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
+                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", false fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
             }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
@@ -618,7 +619,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
-            cout << "indexQmax : " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0

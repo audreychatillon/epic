@@ -401,7 +401,7 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_TofRaw_ifFF";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
-            can_name = base + "_TofRaw_cutF";
+            can_name = base + "_TofRaw_ifFF";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();

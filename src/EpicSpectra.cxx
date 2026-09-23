@@ -283,7 +283,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  5200, -10000, 5100000);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
             can_name = base + "_TofRaw";
             m_raw_can[can_name]->cd(a+1);
@@ -373,11 +373,14 @@ EpicSpectra::EpicSpectra() {
         for (unsigned int det = 1; det <= nDets; det++) {
           // create the canvas and histos per detector
           int ncol = ceil(0.5 * nAnodes[det - 1]);
-          string base = "EPIC" + to_string(det);
+          string base = "phy_EPIC" + to_string(det);
           string can_name;
           string his_name;
           
-          can_name = base + "_TofRaw_ifFF";
+          can_name = base + "_TofRaw";
+          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+          
+          can_name = base + "_TofRaw_cutF";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_TofCal";
@@ -402,19 +405,28 @@ EpicSpectra::EpicSpectra() {
             int i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
-            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[i];
+            name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[i];
             string prefix = name.str();
 
             int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK",0);
-            his_name = prefix + "_TofRaw_ifFF";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
-            can_name = base + "_TofRaw_ifFF";
+
+            his_name = prefix + "_TofRaw_cutF";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  5200, -10000, 5100000);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1uss / bin");
+            can_name = base + "_TofRaw_cutF";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
-            his_name = prefix + "_TofCal_ifFF";
+            his_name = prefix + "_TofRaw";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
+            can_name = base + "_TofRaw";
+            m_phy_can[can_name]->cd(a+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
+            his_name = prefix + "_TofCal";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
             can_name = base + "_TofCal";
@@ -628,18 +640,18 @@ void EpicSpectra::FillPhy() {
             double q1     = m_Physics->GetQ1();
             name.str("");
             name.clear();
-            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+            name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
             // fill spectra
-            his_name = baseA + "_TofRaw_ifFF";       m_phy_h1[his_name]->Fill(tofraw);
-            his_name = baseA + "_TofCal_ifFF";       m_phy_h1[his_name]->Fill(tofcal);
+            his_name = baseA + "_TofRaw";       m_phy_h1[his_name]->Fill(tofraw);
+            his_name = baseA + "_TofCal";       m_phy_h1[his_name]->Fill(tofcal);
 	        if (e>1.e-06){ //e>1eV
-            	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
-            	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
+            	his_name = baseA + "_E";        m_phy_h1[his_name]->Fill(e); // MeV
+            	his_name = baseA + "_Q1vE";     m_phy_h2[his_name]->Fill(e,q1);
             }
 	        else{
-            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
-            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
+            	his_name = baseA + "_Elow";     m_phy_h1[his_name]->Fill(e*1.e+06); //eV
+            	his_name = baseA + "_Q1vElow";  m_phy_h2[his_name]->Fill(e*1.e+06,q1);
 	        }
         }// end of if FF
     }// end of if --input-phy

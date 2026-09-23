@@ -44,7 +44,8 @@ EpicSpectra::EpicSpectra() {
     m_FC_DeltaTimeHF = new TH1F("DT_TimeHF_fFC_ifBeamOn", "DT_TimeHF_fFC_ifBeamOn", 3000, 2499130, 2499160);
 
     m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
-    m_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
+    m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
+    m_FC_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
 
     m_canT0->cd(1); m_TimeHF->Draw();
     m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); m_FC_DeltaTimeHF->Draw("same");
@@ -497,9 +498,10 @@ void EpicSpectra::FillRaw() {
             }
 	        // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
-            m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
+            m_HF_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
+            m_FC_DeltaTimeHF->Fill((m_RawData->GetDeltaTimeHF()); //ns
 	        // to by-pass nponline bug 
             // this should be commented if processing several runs
             // at new runs restart t from 0

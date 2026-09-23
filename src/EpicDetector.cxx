@@ -415,13 +415,13 @@ void EpicDetector::BuildPhysicalEvent() {
           tofraw  = m_RawData->GetTofRaw(imax);
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
-          if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " , true fission = " << fission << endl;
           t_hf    = m_RawData->GetTimeLastHF();
           if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }
     }
     
     m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, fission);
+    if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
 
 }
 

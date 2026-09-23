@@ -37,7 +37,6 @@ class EpicSpectra {
 	  // === general histograms and canvas
 	  TH1F * m_TimeHF;
 	  TH1F * m_HF_DeltaTimeHF;
-	  //TH1F * m_FC_DeltaTimeHF;
 	  TCanvas * m_canT0;
 	
 	  // === raw and phys histograms and canvas per FC and/or anode
@@ -55,9 +54,11 @@ class EpicSpectra {
 	  vector<unsigned int> nAnodes ;
 	  vector<string>       actinide ;
 	  vector<unsigned int> anodes ;
+
    	  // reference times needed to avoid filling repeated events in nponline bug
-   	  double time_ref_raw; 
-   	  double time_ref_phy;
+   	  double timehf_ref_raw; 
+   	  double timefc_ref_raw; 
+   	  double timefc_ref_phy;
 	
 	  TCanvas* CreateCanvas(const std::string& name, int ncol);
 	

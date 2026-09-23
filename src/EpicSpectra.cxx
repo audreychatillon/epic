@@ -31,8 +31,10 @@ EpicSpectra::EpicSpectra() {
     nAnodes  = m_detector->GetNumberOfAnodes();
     actinide = m_detector->GetActinideMaterial();
     anodes   = m_detector->GetAnodeNumber();
-    time_ref_raw = 0;
-    time_ref_phy = 0;
+
+    timehf_ref_raw = 0;
+    timefc_ref_raw = 0;
+    timefc_ref_phy = 0;
 
     // general histograms
     m_canT0 = new TCanvas("T0", "T0", 1200, 800);
@@ -41,14 +43,12 @@ EpicSpectra::EpicSpectra() {
     m_TimeHF = new TH1F("TimeHF", "TimeHF", 86400, 0, 86400);
     m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 3000, 2500000, 2500030);
     m_HF_DeltaTimeHF->SetLineColor(kBlack);
-    //m_FC_DeltaTimeHF = new TH1F("DT_TimeHF_fFC_ifBeamOn", "DT_TimeHF_fFC_ifBeamOn", 3000, 2500000, 2500030);
 
     m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
     m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
-    //m_FC_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
 
     m_canT0->cd(1); m_TimeHF->Draw();
-    m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); //m_FC_DeltaTimeHF->Draw("same");
+    m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); 
 
     // loop over nDets for raw histos
     if(m_app->HasFlag("--input-raw")){
@@ -489,27 +489,17 @@ void EpicSpectra::FillRaw() {
           if (m_RawData->GetDetNbr(0) == -1) {
           
 	        // to by-pass nponline bug
-            // this should be commented if processing several runs
-            // at new runs restart t from 0
             if(!replay){
 	            double t_hf = m_RawData->GetTimeHF(); 
- 	            if( t_hf - time_ref_raw < 0 ) return;
- 	            else time_ref_raw = t_hf;
+ 	            if( t_hf - timehf_ref_raw <= 0 && timehf_ref_raw !=0 ) return;
+ 	            else timehf_ref_raw = t_hf;
             }
+
 	        // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_HF_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
-            //m_FC_DeltaTimeHF->Fill(m_RawData->GetDeltaTimeHF()); //ns
-	        // to by-pass nponline bug 
-            // this should be commented if processing several runs
-            // at new runs restart t from 0
-            if(!replay){
-	            double t_hf = m_RawData->GetTimeLastHF(); 
- 	            if( t_hf - time_ref_raw < 0 ) return;
- 	            else time_ref_raw = t_hf;
-            }
             // init
             int multPerFC[nDets];
             int IndexMax[nDets];
@@ -523,6 +513,17 @@ void EpicSpectra::FillRaw() {
             // loop over the raw data
             // search for qmax per FC
             for (int i = 0; i < FC_mult; i++) {
+
+	          // to by-pass nponline bug 
+              // this should be commented if processing several runs
+              // at new runs restart t from 0
+              if(!replay){
+	              double t_fc = m_RawData->GetTimeFC(i); 
+ 	              if( t_fc - timefc_ref_raw <= 0 && timefc_ref_raw != 0 ) return;
+ 	              else timefc_ref_raw = t_fc;
+              }
+
+
               if (m_RawData->GetPulserTrig(i))           continue;
               int det = m_RawData->GetDetNbr(i);
               if (det < 0)          continue;
@@ -630,9 +631,9 @@ void EpicSpectra::FillPhy() {
 	        // to by-pass nponline bug : comment this lines if you want to process several runs 
             bool replay = m_Cal.GetValue("REPLAY_DATA",0);
             if(!replay){
-	            double t_hf = m_Physics->GetTimeHF(); 
- 	            if( t_hf - time_ref_phy < 0 ) return;
- 	            else time_ref_phy = t_hf;
+	            double t_fc = m_Physics->GetTime(); 
+ 	            if( t_fc - timefc_ref_phy <= 0 && timefc_ref_phy != 0 ) return;
+ 	            else timefc_ref_phy = t_fc;
             }
             // init
             short  det    = m_Physics->GetDetNbr();
@@ -674,5 +675,4 @@ void EpicSpectra::Clear() {
   // === general histograms
   m_TimeHF->Reset();
   m_HF_DeltaTimeHF->Reset();
-  //m_FC_DeltaTimeHF->Reset();
 }

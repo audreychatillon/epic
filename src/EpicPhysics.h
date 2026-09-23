@@ -13,7 +13,7 @@ class EpicPhysics {
  private:
         short  fFC_det;         // detector number (starting from 1)
         short  fFC_anode;       // anode number (starting from 1)
-        double fFC_time_hf;     // Time of the last HF at the phys level to avoid event repeart in nponline bug
+        double fFC_time;     // Time of the last HF at the phys level to avoid event repeart in nponline bug
         double fFC_tof_raw;     // TofCal
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
@@ -33,7 +33,7 @@ class EpicPhysics {
    void Clear(){
         fFC_det       = -1.; 
         fFC_anode     = -1.;
-        fFC_time_hf   = -1.;
+        fFC_time      = -1.;
         fFC_tof_raw   = -1.;
         fFC_tof_cal   = -1.;
         fFC_e         = -1.;
@@ -53,7 +53,7 @@ class EpicPhysics {
    inline void SetHit_fFC(
         const short&  det, 
         const short&  anode,
-        const double& t_hf,
+        const double& t_fc,
         const double& tof_raw_ns,
         const double& tof_cal_ns,
         const double& e_MeV,
@@ -61,7 +61,7 @@ class EpicPhysics {
         const bool&   fission){
             fFC_det       = det;
             fFC_anode     = anode;
-	        fFC_time_hf   = t_hf;
+	        fFC_time      = t_fc;
             fFC_tof_raw   = tof_raw_ns;
             fFC_tof_cal   = tof_cal_ns;
             fFC_e         = e_MeV;
@@ -73,7 +73,7 @@ class EpicPhysics {
     //////////////////////    GETTERS    ////////////////////////
     inline short  GetDetNbr()     const { return fFC_det ; };
     inline short  GetAnodeNbr()   const { return fFC_anode ; };
-    inline double GetTimeHF()     const { return fFC_time_hf ; };
+    inline double GetTime()       const { return fFC_time ; };
     inline double GetTofRaw()     const { return fFC_tof_raw ; };
     inline double GetTofCal()     const { return fFC_tof_cal ; };
     inline double GetE()          const { return fFC_e ; };

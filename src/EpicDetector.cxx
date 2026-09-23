@@ -403,11 +403,11 @@ void EpicDetector::BuildPhysicalEvent() {
     bool   fission = false;
 
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
-      for(int i = 0; i<m_RawData->GetFCMult(); i++){
-          cout << "--- i = " << i << ", anode = " << m_RawData->GetAnodeNbr(i) << ", q1 = " << m_RawData->GetQ1(i)  << " ; fission = " << m_RawData->GetIsFission(i) << endl;
-      }
+      //for(int i = 0; i<m_RawData->GetFCMult(); i++){
+      //    cout << "--- i = " << i << ", anode = " << m_RawData->GetAnodeNbr(i) << ", q1 = " << m_RawData->GetQ1(i)  << " ; fission = " << m_RawData->GetIsFission(i) << endl;
+      //}
       short  imax   = m_RawData->GetQmaxIndex();
-      cout << "     imax = " << imax << endl;
+      //cout << "     imax = " << imax << endl;
       if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
           det     = m_RawData->GetDetNbr(imax);
           anode   = m_RawData->GetAnodeNbr(imax); 
@@ -415,7 +415,6 @@ void EpicDetector::BuildPhysicalEvent() {
           tofraw  = m_RawData->GetTofRaw(imax);
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
-
           if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " , true fission = " << fission << endl;
           t_hf    = m_RawData->GetTimeLastHF();
           if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);

@@ -392,7 +392,7 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 ////////////////////////////////////////////////////////////////////////////////
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
-
+    ClearEventPhysics();
     short  det     = -1;
     short  anode   = -1;
     double t_hf    = -1;
@@ -401,11 +401,8 @@ void EpicDetector::BuildPhysicalEvent() {
     double e       = -1;
     double q1      = -1;
     bool   fission = false;
-
+    
     if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
-      //for(int i = 0; i<m_RawData->GetFCMult(); i++){
-      //    cout << "--- i = " << i << ", anode = " << m_RawData->GetAnodeNbr(i) << ", q1 = " << m_RawData->GetQ1(i)  << " ; fission = " << m_RawData->GetIsFission(i) << endl;
-      //}
       short  imax   = m_RawData->GetQmaxIndex();
       //cout << "     imax = " << imax << endl;
       if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
@@ -421,7 +418,7 @@ void EpicDetector::BuildPhysicalEvent() {
     }
     
     m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, fission);
-    //if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
+    if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -39,10 +39,6 @@ class EpicPhysics {
         fFC_e         = -1.;
         fFC_q1        = -1.;
         fFC_isFission = false;
-        //fFC_det.clear();
-        //fFC_anode.clear();
-        //fFC_tof_cal.clear();
-        //fFC_e.clear();
    };//!
 
  public:

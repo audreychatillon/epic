@@ -251,7 +251,7 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_Q1";
             m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
             m_raw_can[can_name]->cd(a+1);
-	    gPad->SetLogy();
+	        gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q2";
@@ -594,11 +594,13 @@ void EpicSpectra::FillPhy() {
         ostringstream name;
         string baseA;
         string his_name;
-        if(!m_Physics->GetIsFission()){
-	    // to by-pass nponline bug 
-	    double t_hf = m_Physics->GetTimeHF(); 
- 	    if( t_hf - time_ref_phy < 0 ) return;
- 	    else time_ref_phy = t_hf;
+        if(m_Physics->GetIsFission()){
+
+	        // to by-pass nponline bug 
+	        double t_hf = m_Physics->GetTimeHF(); 
+ 	        if( t_hf - time_ref_phy < 0 ) return;
+ 	        else time_ref_phy = t_hf;
+        
             // init
             short  det    = m_Physics->GetDetNbr();
             short  anode  = m_Physics->GetAnodeNbr();

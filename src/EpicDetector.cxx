@@ -417,7 +417,6 @@ void EpicDetector::BuildPhysicalEvent() {
           fission = m_RawData->GetIsFission(imax);
 
           if(fission) cout << "            anode = " << anode << ", q1 = " << q1 << " , true fission = " << fission << endl;
-          else        cout << "            anode = " << anode << ", q1 = " << q1 << " , false fission = " << fission << endl;
           t_hf    = m_RawData->GetTimeLastHF();
           if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
       }
@@ -600,7 +599,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
             else{ 
                 m_RawData->SetIsFission(false);
-                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", false fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
             }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data

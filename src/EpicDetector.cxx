@@ -594,10 +594,11 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             string tcutg_name = name.str(); 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
                 m_RawData->SetIsFission(true);
-                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << endl;
+                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
             }
-            else 
+            else{ 
                 m_RawData->SetIsFission(false);
+            }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
               m_RawData->SetTimeLastHF(m_TimeHF_current);
@@ -616,6 +617,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
+            
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0
       } // If FC_Triggered && FC_Threshold && T_cfd

@@ -463,19 +463,19 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           if (m_RawData->GetDetNbr(0) == -1) {
-	    // to by-pass nponline bug 
-	    double t_hf = m_RawData->GetTimeHF(); 
- 	    if( t_hf - time_ref_raw < 0 ) return;
- 	    else time_ref_raw = t_hf;
+	    //// to by-pass nponline bug 
+	    //double t_hf = m_RawData->GetTimeHF(); 
+ 	    //if( t_hf - time_ref_raw < 0 ) return;
+ 	    //else time_ref_raw = t_hf;
 	    // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
           } 
           else {
-	    // to by-pass nponline bug 
-	    double t_hf = m_RawData->GetTimeLastHF(); 
- 	    if( t_hf - time_ref_raw < 0 ) return;
- 	    else time_ref_raw = t_hf;
+	    //// to by-pass nponline bug 
+	    //double t_hf = m_RawData->GetTimeLastHF(); 
+ 	    //if( t_hf - time_ref_raw < 0 ) return;
+ 	    //else time_ref_raw = t_hf;
 
             // init
             int multPerFC[nDets];
@@ -554,34 +554,32 @@ void EpicSpectra::FillRaw() {
                         his_name = baseA + "_WaveFormA";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
-                      his_name = baseA + "_TCutG_discriF";
-                      //if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
                       if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                        his_name = baseA + "_TofRaw_cutF";      m_raw_h1[his_name]->Fill(tofraw);
+                        his_name = baseA + "_TofRaw_cutF";       m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_TofRaw_cutF_zoom";  m_raw_h1[his_name]->Fill(tofraw);
                       }
                       his_name = baseA + "_Q4QmaxvQ1";          m_raw_h2[his_name]->Fill(q1, q4 / qm);
                       if(multPerFC[d]==1) {
-			his_name = baseA + "_Q2Q3vQ1_mult1"; 
-			m_raw_h2[his_name]->Fill(q1, q2 / q3);
-		      }
+			            his_name = baseA + "_Q2Q3vQ1_mult1"; 
+			            m_raw_h2[his_name]->Fill(q1, q2 / q3);
+		              }
                       if(multPerFC[d]==2) {
-			 int index_m2 = 1 - IndexMax[d] ; // multFC==2 -> IndexMax = 0 or = 1
-                         int anode_m2 = m_RawData->GetAnodeNbr(index_m2);
-			 if ((anode - anode_m2) == 1) { 
-				his_name = baseA + "_Q2Q3vQ1_mult2_upstr"; 
-				m_raw_h2[his_name]->Fill(q1, q2 / q3);
-			 }
-			 else if ((anode_m2 - anode) == 1) { 
-				his_name = baseA + "_Q2Q3vQ1_mult2_downstr"; 
-				m_raw_h2[his_name]->Fill(q1, q2 / q3);
-			 }
+			            int index_m2 = 1 - IndexMax[d] ; // multFC==2 -> IndexMax = 0 or = 1
+                        int anode_m2 = m_RawData->GetAnodeNbr(index_m2);
+			            if ((anode - anode_m2) == 1) { 
+				            his_name = baseA + "_Q2Q3vQ1_mult2_upstr"; 
+				            m_raw_h2[his_name]->Fill(q1, q2 / q3);
+			            }
+			            else if ((anode_m2 - anode) == 1) { 
+				        his_name = baseA + "_Q2Q3vQ1_mult2_downstr"; 
+				        m_raw_h2[his_name]->Fill(q1, q2 / q3);
+			          }
                       }  
-		  }
-              }
+		          }
+                }
             }
           } // end of if else Det[0] != -1
         } // end of if FC_mult > 0
@@ -596,10 +594,10 @@ void EpicSpectra::FillPhy() {
         string his_name;
         if(m_Physics->GetIsFission()){
 
-	        // to by-pass nponline bug 
-	        double t_hf = m_Physics->GetTimeHF(); 
- 	        if( t_hf - time_ref_phy < 0 ) return;
- 	        else time_ref_phy = t_hf;
+	        // to by-pass nponline bug : comment this lines if you want to process several runs 
+	        //double t_hf = m_Physics->GetTimeHF(); 
+ 	        //if( t_hf - time_ref_phy < 0 ) return;
+ 	        //else time_ref_phy = t_hf;
         
             // init
             short  det    = m_Physics->GetDetNbr();

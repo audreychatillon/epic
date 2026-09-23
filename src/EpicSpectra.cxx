@@ -671,5 +671,6 @@ void EpicSpectra::Clear() {
   for (auto h : m_phy_h2)       h.second->Reset();
   // === general histograms
   m_TimeHF->Reset();
-  m_DeltaTimeHF->Reset();
+  m_HF_DeltaTimeHF->Reset();
+  m_FC_DeltaTimeHF->Reset();
 }

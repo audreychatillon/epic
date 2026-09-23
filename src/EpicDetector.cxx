@@ -421,8 +421,7 @@ void EpicDetector::BuildPhysicalEvent() {
     }
     
     m_Physics->SetHit_fFC(det, anode, t_hf, tofraw, tofcal, e, q1, fission);
-    if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
-
+    //if(fission) cout << "anode = " << anode << ", q1 = " << q1 << ", tofraw = "<< tofraw << ", tofcal = "<< tofcal << ", e = " << e << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -594,7 +593,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             string tcutg_name = name.str(); 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
                 m_RawData->SetIsFission(true);
-                cout << "=== #" << m_RawData->GetFCMult()-1 << ", anode = " << anode << ", q1 = " << Q1 << ", true fission = " << m_RawData->GetIsFission(m_RawData->GetFCMult()-1) << endl;
             }
             else{ 
                 m_RawData->SetIsFission(false);

@@ -286,7 +286,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw";
-            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  5200, -10000, 5100000);
+            m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -10000, 2590000);
             m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1us / bin ");
             can_name = base + "_TofRaw";
             m_raw_can[can_name]->cd(a+1);
@@ -300,7 +300,7 @@ EpicSpectra::EpicSpectra() {
             m_raw_h1[his_name]->SetLineColor(kRed+3);
             m_raw_h1[his_name]->Draw("same");
 
-            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK",0);
+            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK_RAW",0);
 
             his_name = prefix + "_TofRaw_cutF_zoom";
             m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
@@ -411,10 +411,10 @@ EpicSpectra::EpicSpectra() {
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[i];
             string prefix = name.str();
 
-            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK",0);
+            int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK_PHY",0);
 
             his_name = prefix + "_TofRaw";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  5000, -1000, 4000);
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  2600, -2590000, 10000);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 1ns / bin");
             can_name = base + "_TofRaw";
             m_phy_can[can_name]->cd(a+1);
@@ -422,7 +422,7 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw_cutF_zoom";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  50000, -1000, 4000);
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 20000, gp-200 , gp+1800);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
             can_name = base + "_TofRaw_zoom";
             m_phy_can[can_name]->cd(a+1);

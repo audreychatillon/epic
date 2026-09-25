@@ -60,6 +60,9 @@ EpicDetector::EpicDetector() {
   m_TimeHF_current = 0.;
 
   m_Get_Sampler_Qmax = 0;
+    
+
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildEpicChannelMaps(){
@@ -393,37 +396,188 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
-    ClearEventPhysics();
-    short  det     = -1;
-    short  anode   = -1;
-    double t_fc    = -1;
-    double tofraw  = -1;
-    double tofcal  = -1;
-    double e       = -1;
-    double q1      = -1;
-    bool   fission = false;
-    
-    if(m_RawData->GetFCMult()>0 && m_RawData->GetQmaxIndex()>=0){
-      short  imax   = m_RawData->GetQmaxIndex();
-      //cout << "     imax = " << imax << endl;
-      if(!m_RawData->GetPulserTrig(imax) && imax < m_RawData->GetFCMult()){
-          det     = m_RawData->GetDetNbr(imax);
-          anode   = m_RawData->GetAnodeNbr(imax); 
-          t_fc    = m_RawData->GetTimeFC(imax);
-	      ////TODO select the proper HF 
-          tofraw  = m_RawData->GetTofRaw(imax);
-          ////double tofraw_offset = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_OFFSET",0);
-          ////double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          ////if (tofraw < tofraw_thres) {
-          ////  tofraw += (m_RawData->GetDeltaTimeHF() - tofraw_offset) ; 
-          ////}
-          q1      = m_RawData->GetQ1(imax);
-          fission = m_RawData->GetIsFission(imax);
-          if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
-      }
+    if(m_RawData->GetFCMult() == 0) return;
+
+    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
+
+    // --- -------------------------------------------------------
+    // --- HF DATA
+
+    if(m_RawData->GetDetNbr(0) == -1){
+        const double thf = m_RawData->GetTimeHF();
+        ++m_currentHF;
+
+        // --- DTHF <= 0 : the good HF is the current or is in the past
+        if(DTHF <= 0) {
+            m_recentHF.push_back({m_currentHF, thf});
+
+            // keep only usable HF 
+            // DTHF =  0 -> keep 1 HF
+            // DTHF = -1 -> keep 2 HF
+            // DTHF = -2 -> keep 3 HF
+            const size_t maxHF = static_cast<size_t>(-DTHF + 1);
+            while(m_recentHF.size() > maxHF) m_recentHF.pop_front();
+        }
+
+        // --- DTHF > 0 : the good HF is in the future
+        //     check if pendingFC 
+        else {
+            while(!m_pendingFC.empty()){
+                const RawInfo& fc = m_pendingFC.front();         // front() : first element of m_pendingFC (older)
+                const long long target_hf = fc.hf_index + DTHF;
+
+                // this FC data waits for more future HF : older needs to wait, other also
+                if(target_hf > m_currentHF) break;
+
+                // this FC data waits the HF that just arrives
+                if(target_hf == m_currentHF) {
+                    const double tofraw = fc.tFC - thf;
+                    double tofcal = -1.;
+                    double e      = -1.;
+                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tofraw,tofcal);
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tofraw,tofcal,e,fc.q1,fc.fission);
+                }
+
+                if(target_hf < m_currentHF){
+                    cout << "BuildPhysicalEvent() : one Raw EpicData data without HF will be lost" << endl;
+                }
+
+                // remove this FC data from the waiting list
+                m_pendingFC.pop_front(); // pop_front() remove first element of m_pendingFC
+            }
+        }
+
+        return;
     }
-    
-    m_Physics->SetHit_fFC(det, anode, t_fc, tofraw, tofcal, e, q1, fission);
+
+
+    // --- -------------------------------------------------------
+    // --- FC DATA
+
+    const short imax = m_RawData->GetQmaxIndex();
+    if(imax < 0) return;
+
+    const short det     = m_RawData->GetDetNbr(imax);
+    const short anode   = m_RawData->GetAnodeNbr(imax);
+    const double tFC    = m_RawData->GetTimeFC(imax);
+    const double q1     = m_RawData->GetQ1(imax);
+    const bool fission  = m_RawData->GetIsFission(imax);
+
+
+    // --- DTHF <= 0 : HF is in the past
+    if(DTHF <= 0) {
+        const long long target_hf = m_currentHF + DTHF;
+
+        // not enough HF
+        if(target_hf < 0) return;
+
+        // search HF in the most recent
+        double thf = 0.;
+        bool found = false;
+
+        for(const auto& hf : m_recentHF) {
+            if(hf.first == target_hf) { // first  : index of tHF
+                thf = hf.second;        // second : value of tHF
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            cout << "no HF found in the past " << endl;
+            return;
+        }
+
+        const double tofraw = tFC - thf;
+        double tofcal = -1.;
+        double e      = -1.;
+
+        if(fission) e = TofRaw2Ene(det,anode,tofraw,tofcal);
+        m_Physics->SetHit_fFC(det,anode,tFC,tofraw,tofcal,e,q1,fission);
+    }
+
+    // --- DTHF > 0 : HF is in the future
+    else {
+        RawInfo fc;
+
+        fc.det      = det;
+        fc.anode    = anode;
+        fc.tFC      = tFC;
+        fc.q1       = q1;
+        fc.fission  = fission;
+        fc.hf_index = m_currentHF;
+
+        m_pendingFC.push_back(fc);
+    }
+
+
+
+
+///
+///    if(m_RawData->GetFCMult()==0) return;
+///        
+///    int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF",0);
+///
+///    // --- ------------------------------------------------
+///    // --- HF data
+///    if(m_RawData->GetDetNbr(0)==-1){
+///        double thf = m_RawData->GetTimeHF();
+///        m_pendingHF.push_back(thf);
+///        long long current_hf = m_pendingHF.size() - 1;
+///        
+///        // the good HF is in the future
+///        if(DTHF > 0){
+///            for(auto it = m_pendingFC.begin(); it != m_pendingFC.end();){
+///                long long target_hf = it->hf_index + DTHF ;
+///                if(target_hf == current_hf){
+///                    double tofraw = it->tFC - thf ;
+///                    double tofcal = -1.;
+///                    double e      = -1.;
+///                    if(it->fission) e = TofRaw2Ene(it->det,it->anode,tofraw,tofcal);
+///                    m_Physics->SetHit_fFC(it->det,it->anode,it->tFC,tofraw,tofcal,e,it->q1,it->fission);
+///                    it = m_pendingFC.erase(it);
+///                }
+///                else ++it;
+///            }// end of loop on the pending FC
+///        }
+///    }// end of if HF data
+///
+///    // --- ------------------------------------------------
+///    // --- FC data
+///    else{
+///        short imax = m_RawData->GetQmaxIndex();
+///        if(imax >= 0){
+///            short     det      = m_RawData->GetDetNbr(imax);
+///            short     anode    = m_RawData->GetAnodeNbr(imax);
+///            double    tFC      = m_RawData->GetTimeFC(imax); 
+///            double    q1       = m_RawData->GetQ1(imax);
+///            bool      fission  = m_RawData->GetIsFission(imax);
+///            long long hf_index = m_pendingHF.size() -1 ;
+///            double    tofcal   = -1.;
+///            double    e        = -1.;
+///
+///            // the good HF is in the past
+///            if (DTHF <= 0){
+///                long long target_hf = hf_index + DTHF;
+///                if (target_hf >= 0){
+///                    double tofraw = tFC - m_pendingHF[target_hf];
+///                    if(fission) e = TofRaw2Ene(det,anode,tofraw,tofcal);
+///                    m_Physics->SetHit_fFC(det,anode,tFC,tofraw,tofcal,e,q1,fission);
+///                }
+///
+///            }
+///            // the good HF is in the future
+///            else{
+///                RawInfo fc;
+///                fc.det      = det ;  
+///                fc.anode    = anode ;
+///                fc.tFC      = tFC ;
+///                fc.q1       = q1 ;
+///                fc.fission  = fission ;
+///                fc.hf_index = hf_index ;
+///                m_pendingFC.push_back(fc);
+///            }
+///        }
+///    }// end of if FC data
 }
 
 ////////////////////////////////////////////////////////////////////////////////

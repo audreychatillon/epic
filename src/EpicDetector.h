@@ -8,6 +8,7 @@
 #include "NPVDetector.h"
 
 #include <map>
+#include <deque>
 
 #include <TApplication.h>
 #include <TCanvas.h>
@@ -35,7 +36,20 @@ class EpicDetector : public nptool::VDetector {
       std::shared_ptr<epic::EpicSpectra> m_Spectra{nullptr};
       nptool::CalibrationManager m_Cal;
       std::map<std::string,TCutG*> m_tcutg;
-    
+   
+      // variables to merge the good T_HF with FC data
+      struct RawInfo{
+        short  det;
+        short  anode;
+        double tFC ;
+        double q1;
+        bool   fission;
+        long long hf_index;
+      };
+      std::deque<RawInfo> m_pendingFC;
+      std::deque<std::pair<long long,double>> m_recentHF;
+      long long m_currentHF = -1; 
+
       // Event counters and timing
       int m_total_raw_event{0};
       int m_good_raw_event{0};

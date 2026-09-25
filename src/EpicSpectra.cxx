@@ -687,7 +687,7 @@ void EpicSpectra::FillPhy() {
             string prefix = name.str();
             his_name = prefix + "_E";     
 		cout << "FillPhy() !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-		cout << hisname << endl;
+		cout << his_name << endl;
 	              m_phy_h1[his_name]->Fill(e); // MeV 
         }// end of if FF
     }// end of if --input-phy

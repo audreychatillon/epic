@@ -483,8 +483,6 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_E";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-		cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-                m_phy_h1[his_name]->ls();
             can_name = base + "_E_per_actinide";
             m_phy_can[can_name]->cd(act+1);
             gPad->SetLogy();
@@ -682,13 +680,11 @@ void EpicSpectra::FillPhy() {
             	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
 	    }
 
+            name.str("");
 	    name.clear();
             name << "phy_det" << det << "_" << actinide[index];
             string prefix = name.str();
-            his_name = prefix + "_E";     
-		cout << "FillPhy() !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-		cout << his_name << endl;
-	              m_phy_h1[his_name]->Fill(e); // MeV 
+            his_name = prefix + "_E";       m_phy_h1[his_name]->Fill(e); // MeV 
         }// end of if FF
     }// end of if --input-phy
 

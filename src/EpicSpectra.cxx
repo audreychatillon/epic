@@ -497,7 +497,7 @@ void EpicSpectra::FillRaw() {
 
 	        // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
-            m_HF_DeltaTimeHF->Fill((m_RawData->GetTimeHF() - m_RawData->GetTimePrevHF()) ); //ns
+            m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF()); //ns
           } 
           else {
             // init

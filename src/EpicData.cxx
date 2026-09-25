@@ -3,24 +3,26 @@ ClassImp(epic::EpicData);
 
 //////////////////////////////////////////////////////////////////////
 void epic::EpicData::Clear() {
-  fFC_DetNbr.clear();
-  fFC_AnodeNbr.clear();
-  fFC_PulserTrig.clear();
-  fFC_Time.clear();
-  fFC_TofRaw.clear();
-  fFC_TimeCfd.clear();
-  fFC_TimeQmax.clear();
-  fFC_Qmax.clear();
-  fFC_Q1.clear();
-  fFC_Q2.clear();
-  fFC_Q3.clear();
-  fFC_Q4.clear();
-  fFC_IsFission.clear();
-  fQmax_Sampler.clear();
-  fFC_TimeLastHF = -1;
-  fFC_DeltaTimeHF = -1;
-  fQmax_Index = -1;
-  fHF_Time = -1;
-  fHF_TimePrev = -1;
+
+    fFC_DetNbr.clear();
+    fFC_AnodeNbr.clear();
+    fFC_PulserTrig.clear();
+    fFC_Time.clear();
+    fFC_TofRaw.clear();
+    fFC_TimeCfd.clear();
+    fFC_TimeQmax.clear();
+    fFC_Qmax.clear();
+    fFC_Q1.clear();
+    fFC_Q2.clear();
+    fFC_Q3.clear();
+    fFC_Q4.clear();
+    fFC_IsFission.clear();
+    fFC_TimeLastHF = -1;
+
+    fQmax_Sampler.clear();
+    fQmax_Index = -1;
+
+    fHF_Time = -1;
+    fHF_DeltaT = -1;
 }
 

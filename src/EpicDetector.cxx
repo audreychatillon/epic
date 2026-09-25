@@ -410,13 +410,13 @@ void EpicDetector::BuildPhysicalEvent() {
           det     = m_RawData->GetDetNbr(imax);
           anode   = m_RawData->GetAnodeNbr(imax); 
           t_fc    = m_RawData->GetTimeFC(imax);
+	      ////TODO select the proper HF 
           tofraw  = m_RawData->GetTofRaw(imax);
-	      ////TODO TOFRAW_OFFSET ~ 970 
-          double tofraw_offset = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_OFFSET",0);
-          double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
-          if (tofraw < tofraw_thres) {
-            tofraw += (m_RawData->GetDeltaTimeHF() - tofraw_offset) ; 
-          }
+          ////double tofraw_offset = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_OFFSET",0);
+          ////double tofraw_thres  = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK",0) - 5.;
+          ////if (tofraw < tofraw_thres) {
+          ////  tofraw += (m_RawData->GetDeltaTimeHF() - tofraw_offset) ; 
+          ////}
           q1      = m_RawData->GetQ1(imax);
           fission = m_RawData->GetIsFission(imax);
           if (fission) e  = TofRaw2Ene(det, anode, tofraw, tofcal);
@@ -458,8 +458,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
         //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
         //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
-        m_RawData->SetTimePrevHF(m_TimeHF_prev);
         m_RawData->SetTimeHF(m_TimeHF_current);
+        m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
         m_RawData->SetDetNbr(-1);
         m_RawData->SetAnodeNbr(-1);
         m_RawData->SetQ1(-1);
@@ -606,7 +606,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
             if (m_RawData->GetFCMult() == 1) {
               // no need to overwrite the same data
-              m_RawData->SetDeltaTimeHF((double)((long double)m_TimeHF_current - (long double)m_TimeHF_prev));
               m_RawData->SetTimeLastHF(m_TimeHF_current);
             }
 

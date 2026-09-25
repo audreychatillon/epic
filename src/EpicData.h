@@ -40,14 +40,13 @@ namespace epic {
         vector<double> fFC_Q3;          // Q3 = integration on the "decay"-time
         vector<double> fFC_Q4;          // Q4 = integration on the base-line after Q1
         vector<bool>   fFC_IsFission;   // (Q2/Q3,Q1) inside fission selection by TCutG
-        double         fFC_DeltaTimeHF;  // for tofraw < gamma_peak       
-        double         fFC_TimeLastHF;   // time of the last HF for ToF calculation       
+        double         fFC_TimeLastHF;  // time of the last HF for ToF calculation       
 
-        short          fQmax_Index;    // index of the vector with Qmax starting from 0
-        vector<double> fQmax_Sampler;  // sample of the anode with Qmax
+        short          fQmax_Index;     // index of the vector with Qmax starting from 0
+        vector<double> fQmax_Sampler;   // sample of the anode with Qmax
         
-        double         fHF_Time;      // time of the current HF: fill only for HF data
-        double         fHF_TimePrev;  // time of the previous HF: fill only for HF data
+        double         fHF_Time;        // time of the current HF: fill only for HF data
+        double         fHF_DeltaT;      // time difference between two consecutive HF      
 
     public:
         //////////////////////////////////////////////////////////////
@@ -86,17 +85,16 @@ namespace epic {
         inline void SetQ3(const double& Q3)                {fFC_Q3.push_back(Q3);}//!
         inline void SetQ4(const double& Q4)                {fFC_Q4.push_back(Q4);}//!
         inline void SetIsFission(const bool& b)            {fFC_IsFission.push_back(b);}//!
-        inline void SetDeltaTimeHF(const double& dt_ns)    {fFC_DeltaTimeHF = dt_ns;}//!
         inline void SetTimeLastHF(const double& t_ns)      {fFC_TimeLastHF = t_ns;}//!
         // sample with Qmax
         inline void SetQmaxIndex(const short i)          {fQmax_Index = i;}//!
         inline void SetSampler(const vector<double> v_q) {fQmax_Sampler=v_q;}//!
         // HF
         inline void SetTimeHF(const double& t_ns)     {fHF_Time = t_ns;}//!
-        inline void SetTimePrevHF(const double& t_ns) {fHF_TimePrev = t_ns;}//!
+        inline void SetDeltaT(const double& dt_ns)    {fHF_DeltaT = dt_ns;}//!
         
         //////////////////////    GETTERS    ////////////////////////
-        // fission chamber
+        // FC data
         inline unsigned short GetFCMult() const {return (unsigned short)fFC_AnodeNbr.size();}//!
         inline short  GetDetNbr(const unsigned int &i) const {return fFC_DetNbr[i];}//!
         inline short  GetAnodeNbr(const unsigned int &i) const {return fFC_AnodeNbr[i];}//!
@@ -111,16 +109,15 @@ namespace epic {
         inline double GetQ3(const unsigned int &i) const {return fFC_Q3[i];}//!
         inline double GetQ4(const unsigned int &i) const {return fFC_Q4[i];}//!
         inline bool   GetIsFission(const unsigned int &i) const {return fFC_IsFission[i];}//!
-        inline double GetDeltaTimeHF() const {return fFC_DeltaTimeHF;}//!
         inline double GetTimeLastHF() const {return fFC_TimeLastHF;}//!
         // sample with Qmax
         inline short GetQmaxIndex() const {return fQmax_Index;}//!
         inline double GetSample(const unsigned int &i) const {return fQmax_Sampler[i];}//!
         inline vector<double> GetSampler() const {return fQmax_Sampler;}//!   
         inline unsigned short GetSamplerSize() const {return (unsigned short)fQmax_Sampler.size();}//!
-        // HF
+        // HF data
         inline double GetTimeHF() const {return fHF_Time;}//!
-        inline double GetTimePrevHF() const {return fHF_TimePrev;}//!
+        inline double GetDeltaTHF() const {return fHF_DeltaT;}//!
 
         //////////////////////////////////////////////////////////////
         // Required for ROOT dictionnary

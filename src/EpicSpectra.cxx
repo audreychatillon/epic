@@ -683,8 +683,7 @@ void EpicSpectra::FillPhy() {
 	    name.clear();
             name << "phy_det" << det << "_" << actinide[index];
             string prefix = name.str();
-
-            his_name = prefix + "_E";                m_phy_h1[his_name]->Draw();
+            his_name = prefix + "_E";                m_phy_h1[his_name]->Fill(e); // MeV
 	    
         }// end of if FF
     }// end of if --input-phy

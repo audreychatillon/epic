@@ -35,6 +35,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
+#include <algorithm>
 
 using namespace epic;
 using namespace std;
@@ -210,6 +211,24 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q4_gate_stop.resize(m_nAtot, 80.);
   m_TofRaw_max.resize(m_nAtot, -1.); // ns
 
+  // number of actinides per detector
+  // TODO mass per actinide to normalize
+  m_actinides_per_det.resize(m_nDets);
+  int offset = 0;
+  for (int d = 0; d < m_nDets; d++) {
+    for (int a = 0 ; a < m_nAnodes[d]; a++){ 
+      string name_actinide = m_actinide[offset + a];
+      // if find reaches end(), name_actinide is not yet in m_actinides_per_det
+      if (find(m_actinides_per_det[d].begin(),
+		m_actinides_per_det[d].end(),
+		name_actinide) 
+		== m_actinides_per_det[d].end()) {
+      m_actinides_per_det[d].push_back(name_actinide);
+    }
+  }
+  offset += m_nAnodes[d];
+  }// end of loop over m_nDets
+
   BuildEpicChannelMaps();
   ReadConversionConfig();
   PrintConfig();
@@ -344,6 +363,11 @@ void EpicDetector::PrintConfig() {
     cout << endl;
     cout << "     ==== ===================================================== ====" << endl; 
     cout << endl;
+    cout << "Number of actinides : " << m_actinides_per_det[d].size() << endl;
+    cout << "                      " ; 
+    for (int act = 0 ; act < m_actinides_per_det[d].size() ; act++) cout << m_actinides_per_det[0][act] << "   " ;
+    cout << endl;
+    cout << "     ==== ===================================================== ====" << endl; 
     offset += m_nAnodes[d];
   }
   cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > TofRawMax are rejected " << endl;

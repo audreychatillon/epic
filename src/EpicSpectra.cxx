@@ -31,6 +31,7 @@ EpicSpectra::EpicSpectra() {
     nAnodes  = m_detector->GetNumberOfAnodes();
     actinide = m_detector->GetActinideMaterial();
     anodes   = m_detector->GetAnodeNumber();
+    actinides_per_det = m_detector->GetActinidesPerDet();
 
     timehf_ref_raw = 0;
     timefc_ref_raw = 0;
@@ -401,7 +402,6 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_Q1vElow";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
 
-
           // loop over the anodes and create the histo per anode
           for (unsigned int a = 0; a < nAnodes[det - 1]; a++) {
             int anode = anodes[offset+a]; 
@@ -470,6 +470,26 @@ EpicSpectra::EpicSpectra() {
 
           } // end of loop over nAnodes[d-1]
           offset += nAnodes[det-1];
+          
+          can_name = base + "_E_per_actinide";
+          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+
+	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
+
+            ostringstream name;
+            name << "phy_det" << det << "_" << actinides_per_det[det-1][act];
+            string prefix = name.str();
+
+            his_name = prefix + "_E";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_E_per_actinide";
+            m_phy_can[can_name]->cd(act+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
+	  }
+
         } // end of loop over nDets
     }// end of if --input-phy
 }
@@ -628,7 +648,7 @@ void EpicSpectra::FillPhy() {
         string his_name;
         if(m_Physics->GetIsFission()){
 
-	        // to by-pass nponline bug : comment this lines if you want to process several runs 
+	    // to by-pass nponline bug : comment this lines if you want to process several runs 
             bool replay = m_Cal.GetValue("REPLAY_DATA",0);
             if(!replay){
 	            double t_fc = m_Physics->GetTime(); 
@@ -651,14 +671,21 @@ void EpicSpectra::FillPhy() {
             his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
-	        if (e>1.e-06){ //e>1eV
+	    if (e>1.e-06){ //e>1eV
             	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
             	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
             }
-	        else{
+	    else{
             	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
             	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
-	        }
+	    }
+
+	    name.clear();
+            name << "phy_det" << det << "_" << actinide[index];
+            string prefix = name.str();
+
+            his_name = prefix + "_E";                m_phy_h1[his_name]->Draw();
+	    
         }// end of if FF
     }// end of if --input-phy
 

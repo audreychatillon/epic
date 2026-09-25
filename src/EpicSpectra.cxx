@@ -472,7 +472,7 @@ EpicSpectra::EpicSpectra() {
           offset += nAnodes[det-1];
           
           can_name = base + "_E_per_actinide";
-          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+          m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 

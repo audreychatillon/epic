@@ -431,9 +431,9 @@ void EpicDetector::BuildPhysicalEvent() {
 
                 // this FC data waits the HF that just arrives
                 if(target_hf == m_currentHF) {
-                    const double tofraw = fc.tFC - thf;
+                    double tofraw = fc.tFC - thf;
                     //TODO: take the following HF instead 
-                    if(tofraw < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
+                    if(tofraw < m_Cal.GetValue("EPIC_" + to_string(fc.det) + "_ANODE_" + to_string(fc.anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
                     double tofcal = -1.;
                     double e      = -1.;
                     if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tofraw,tofcal);
@@ -489,7 +489,7 @@ void EpicDetector::BuildPhysicalEvent() {
             return;
         }
 
-        const double tofraw = tFC - thf;
+        double tofraw = tFC - thf;
         // TODO TAKE THE NEXT HF INSTEAD
         if(tofraw < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
         double tofcal = -1.;

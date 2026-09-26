@@ -217,14 +217,23 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   int offset = 0;
   for (int d = 0; d < m_nDets; d++) {
     for (int a = 0 ; a < m_nAnodes[d]; a++){ 
-      string name_actinide = m_actinide[offset + a];
-      // if find reaches end(), name_actinide is not yet in m_actinides_per_det
-      if (find(m_actinides_per_det[d].begin(),
-		m_actinides_per_det[d].end(),
-		name_actinide) 
-		== m_actinides_per_det[d].end()) {
-      m_actinides_per_det[d].push_back(name_actinide);
-    }
+	string name_actinide = m_actinide[offset + a];
+	int index = -1 ;
+      	for (int i = 0; i < m_actinides_per_det[d].size(); i++){
+	   if(m_actinides_per_det[d][i].name == name_actinide){
+		index = i;
+		break;
+	   }
+	}
+	if (index == -1){
+	   Actinide new_actinide;
+	   new_actinide.name = name_actinide;
+	   new_actinide.mass = m_actinide_mass[offset+a];
+	   m_actinides_per_det[d].push_back(new_actinide);
+	}
+	else{
+	   m_actinides_per_det[d][index].mass += m_actinide_mass[offset + a] ;
+	}
   }
   offset += m_nAnodes[d];
   }// end of loop over m_nDets
@@ -295,7 +304,12 @@ void EpicDetector::PrintConfig() {
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_actinide[offset + a];
     cout << endl;
-    // actinide material
+    // actinide mass
+    cout << "          actinide mass          : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++)
+      cout << left << setw(colWidth) << m_actinide_mass[offset + a];
+    cout << endl;
+    // anode label
     cout << "          label                  : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++){
       ostringstream oss;
@@ -363,9 +377,8 @@ void EpicDetector::PrintConfig() {
     cout << endl;
     cout << "     ==== ===================================================== ====" << endl; 
     cout << endl;
-    cout << "Number of actinides : " << m_actinides_per_det[d].size() << endl;
-    cout << "                      " ; 
-    for (int act = 0 ; act < m_actinides_per_det[d].size() ; act++) cout << m_actinides_per_det[0][act] << "   " ;
+    cout << "Number of actinides : " << m_actinides_per_det[d].size() << " : ";
+    for (int act = 0 ; act < m_actinides_per_det[d].size() ; act++) cout << m_actinides_per_det[d][act].name << " [" << m_actinides_per_det[d][act].mass  << " ug]  " ;
     cout << endl;
     cout << "     ==== ===================================================== ====" << endl; 
     offset += m_nAnodes[d];

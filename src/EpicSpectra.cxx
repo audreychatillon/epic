@@ -477,7 +477,7 @@ EpicSpectra::EpicSpectra() {
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 
             ostringstream name;
-            name << "phy_det" << det << "_" << actinides_per_det[det-1][act];
+            name << "phy_det" << det << "_" << actinides_per_det[det-1][act].name;
             string prefix = name.str();
 
             his_name = prefix + "_E";

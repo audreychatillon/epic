@@ -54,7 +54,7 @@ class EpicSpectra {
 	  vector<unsigned int>   nAnodes ;
 	  vector<string>         actinide ;
 	  vector<unsigned int>   anodes ;
-	  vector<vector<string>> actinides_per_det ;
+	  vector<vector<EpicDetector::Actinide>> actinides_per_det;
 
    	  // reference times needed to avoid filling repeated events in nponline bug
    	  double timehf_ref_raw; 

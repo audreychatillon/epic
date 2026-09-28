@@ -708,7 +708,7 @@ void EpicSpectra::FillPhy() {
 	    his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
 	    string his_name_N = his_name;
 	    string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
-	    his_name = prefix + "_E_ratioU235";
+	    his_name = prefix + "_Ew_ratioU235";
 	    m_phy_h1[his_name]->Clear();;
             m_phy_h1[his_name] = (TH1D*)m_phy_h1[his_name_N]->Clone(his_name.c_str());
 	    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);

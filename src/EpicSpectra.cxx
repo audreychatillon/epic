@@ -32,6 +32,7 @@ EpicSpectra::EpicSpectra() {
     actinide = m_detector->GetActinideMaterial();
     anodes   = m_detector->GetAnodeNumber();
     actinides_per_det = m_detector->GetActinidesPerDet();
+    mass_per_actinide = m_detector->GetMassPerActinide();
 
     timehf_ref_raw = 0;
     timefc_ref_raw = 0;
@@ -473,6 +474,9 @@ EpicSpectra::EpicSpectra() {
           
           can_name = base + "_E_per_actinide";
           m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+          
+          can_name = base + "_Eratio";
+          m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 
@@ -484,6 +488,22 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
             can_name = base + "_E_per_actinide";
+            m_phy_can[can_name]->cd(act+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
+            his_name = prefix + "_Eweighted";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_E_per_actinide";
+            m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
+            his_name = prefix + "_Ew_ratioU235";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
@@ -684,7 +704,12 @@ void EpicSpectra::FillPhy() {
 	    name.clear();
             name << "phy_det" << det << "_" << actinide[index];
             string prefix = name.str();
-            his_name = prefix + "_E";       m_phy_h1[his_name]->Fill(e); // MeV 
+            his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
+	    his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e/mass_per_actinide[det-1][actinide[index]]);
+	    string his_name_clone = prefix + "_Eweighted";
+	    his_name = prefix + "_E_ratioU235";
+            m_phy_h1[his_name] = (TH1D*)m_phy_h1[his_name_clone]->Clone(his_name.c_str());
+	    m_phy_h1[his_name]->Divide(m_phy_h1["phy_det_" + to_string(det) + "_235U"]);
         }// end of if FF
     }// end of if --input-phy
 

@@ -71,7 +71,8 @@ class EpicDetector : public nptool::VDetector {
       vector<TVector3>     m_posD; 
       vector<TVector3>     m_posA; 
       vector<unsigned int> m_AnodeNumber;
-      vector<vector<Actinide>> m_actinides_per_det;
+      vector<vector<Actinide>>   m_actinides_per_det;
+      vector<map<string,double>> m_mass_per_actinide;
     
       // configuration parameters
       int m_Get_Sampler_Qmax{0};
@@ -103,7 +104,8 @@ class EpicDetector : public nptool::VDetector {
         int index = GetIndex(det,anode); 
         return m_posA[index];
       }
-      const vector<vector<Actinide>>& GetActinidesPerDet() const {return m_actinides_per_det;}
+      const vector<vector<Actinide>>&   GetActinidesPerDet() const {return m_actinides_per_det;}
+      const vector<map<string,double>>& GetMassPerActinide() const {return m_mass_per_actinide;}
 
     // === Label / Index mapping
     unsigned int Label2det(const std::string &label);

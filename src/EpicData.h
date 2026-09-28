@@ -123,7 +123,7 @@ namespace epic {
         // Required for ROOT dictionnary
         ClassDef(EpicData, 1) // EpicData structure
   };
-} // namespace fission_chamber
+} // namespace epic
 #endif
 
 

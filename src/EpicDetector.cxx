@@ -214,10 +214,12 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   // number of actinides per detector
   // TODO mass per actinide to normalize
   m_actinides_per_det.resize(m_nDets);
+  m_mass_per_actinide.resize(m_nDets);
   int offset = 0;
   for (int d = 0; d < m_nDets; d++) {
     for (int a = 0 ; a < m_nAnodes[d]; a++){ 
 	string name_actinide = m_actinide[offset + a];
+        m_mass_per_actinide[d][name_actinide] += m_actinide_mass[offset+a];
 	int index = -1 ;
       	for (int i = 0; i < m_actinides_per_det[d].size(); i++){
 	   if(m_actinides_per_det[d][i].name == name_actinide){
@@ -234,8 +236,8 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 	else{
 	   m_actinides_per_det[d][index].mass += m_actinide_mass[offset + a] ;
 	}
-  }
-  offset += m_nAnodes[d];
+    }
+    offset += m_nAnodes[d];
   }// end of loop over m_nDets
 
   BuildEpicChannelMaps();

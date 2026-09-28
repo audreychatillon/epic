@@ -478,6 +478,35 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_Eratio";
           m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
+
+	  // JEFF4-0 and ENDF/BVIII-0 cross sections
+	  ifstream XSfile("doc/XS_JEFF4-0_235U_238U_242Pu.dat");	
+          if (!XSfile.is_open()) {
+              cerr << "Erreur : impossible d'ouvrir le fichier doc/XS_JEFF4-0_BVIII-0_235U_238U_242Pu.dat" << endl;
+          }
+	  else{
+	      vector<double> XS_JEFF_nENE;
+	      vector<double> XS_JEFF_235U;
+	      vector<double> XS_JEFF_238U;
+	      vector<double> XS_JEFF_242Pu;
+	      vector<double> XS_JEFF_ratio_235U;
+	      vector<double> XS_JEFF_ratio_238U;
+	      vector<double> XS_JEFF_ratio_242Pu;
+	      double e, u8, u5, pu42;
+              while(XSfile >> e >> u5 >> u8 >> pu42){
+	  	XS_JEFF_nENE.push_back(e);
+	  	XS_JEFF_235U.push_back(u5);
+	  	XS_JEFF_238U.push_back(u8);
+	  	XS_JEFF_242Pu.push_back(pu42);
+	  	XS_JEFF_ratio_235U.push_back(u5/u5);
+	  	XS_JEFF_ratio_238U.push_back(u8/u5);
+	  	XS_JEFF_ratio_242Pu.push_back(pu42/u5);
+	      }
+	      m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
+	      m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_238U.data());   	
+	      m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_242Pu.data());   	
+	  }
+
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 
             ostringstream name;
@@ -506,13 +535,20 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
             m_phy_h1[his_name]->Draw();
+
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-
-	  }
-
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]){ 
+		m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->Draw("PL same");
+		m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->SetLineColor(kRed);
+	    }
+	  }// end of loop over the actinides per detector
         } // end of loop over nDets
+
+
+
+
     }// end of if --input-phy
 }
 

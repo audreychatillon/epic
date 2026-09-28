@@ -44,6 +44,7 @@ class EpicSpectra {
 	  std::map<std::string,TH2*> m_raw_h2;
 	  std::map<std::string,TH1*> m_phy_h1;
 	  std::map<std::string,TH2*> m_phy_h2;
+	  std::map<std::string,TGraph*> m_phy_gr;
 	  std::map<std::string,TCanvas*> m_raw_can;
 	  std::map<std::string,TCanvas*> m_phy_can;
 	  std::shared_ptr<nptool::Application> m_app;

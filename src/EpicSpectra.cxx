@@ -505,9 +505,12 @@ EpicSpectra::EpicSpectra() {
 	      m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
 	      m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_238U.data());   	
 	      m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph((short)XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_242Pu.data());   	
-	      m_phy_gr["XSratio_JEFF_235U_235U"]->ls();
-	      m_phy_gr["XSratio_JEFF_238U_235U"]->ls();
-	      m_phy_gr["XSratio_JEFF_242Pu_235U"]->ls();
+	      m_phy_gr["XSratio_JEFF_235U_235U"]->SetName("XSratio_JEFF_235U_235U");
+	      m_phy_gr["XSratio_JEFF_238U_235U"]->SetName("XSratio_JEFF_238U_235U");
+	      m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetName("XSratio_JEFF_242Pu_235U");
+	      m_phy_gr["XSratio_JEFF_235U_235U"]->SetTitle("XSratio_JEFF_235U_235U");
+	      m_phy_gr["XSratio_JEFF_238U_235U"]->SetTitle("XSratio_JEFF_238U_235U");
+	      m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetTitle("XSratio_JEFF_242Pu_235U");
 	  }
 
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){

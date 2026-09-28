@@ -545,10 +545,10 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-	    //if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]){ 
-	    //    m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->Draw("PL same");
-	    //    m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->SetLineColor(kRed);
-	    //}
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]){ 
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->Draw("PL same");
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->SetLineColor(kRed);
+	    }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets
 

@@ -511,6 +511,9 @@ EpicSpectra::EpicSpectra() {
 	      m_phy_gr["XSratio_JEFF_235U_235U"]->SetTitle("XSratio_JEFF_235U_235U");
 	      m_phy_gr["XSratio_JEFF_238U_235U"]->SetTitle("XSratio_JEFF_238U_235U");
 	      m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetTitle("XSratio_JEFF_242Pu_235U");
+	      m_phy_gr["XSratio_JEFF_235U_235U"]->ls();
+	      m_phy_gr["XSratio_JEFF_238U_235U"]->ls();
+	      m_phy_gr["XSratio_JEFF_242Pu_235U"]->ls();
 	  }
 
 	  for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
@@ -544,10 +547,10 @@ EpicSpectra::EpicSpectra() {
 
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-            m_phy_h1[his_name]->Draw("HIST");
 	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->Draw("PL same");
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->Draw("ALP");
 	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act-1].name+"_235U"]->SetLineColor(kRed);
+            	m_phy_h1[his_name]->Draw("HIST same");
 	    }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets

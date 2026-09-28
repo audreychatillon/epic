@@ -505,8 +505,10 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
-            gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
+            can_name = base + "_Eratio";
+            m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+            m_phy_h1[his_name]->Draw("HIST");
 
 	  }
 

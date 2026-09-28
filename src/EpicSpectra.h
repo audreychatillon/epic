@@ -58,6 +58,11 @@ class EpicSpectra {
 	  vector<vector<EpicDetector::Actinide>> actinides_per_det;
 	  vector<map<string,double>> mass_per_actinide;
 
+          vector<double> XS_JEFF_nENE;
+          vector<double> XS_JEFF_ratio_235U;
+          vector<double> XS_JEFF_ratio_238U;
+          vector<double> XS_JEFF_ratio_242Pu;
+
    	  // reference times needed to avoid filling repeated events in nponline bug
    	  double timehf_ref_raw; 
    	  double timefc_ref_raw; 

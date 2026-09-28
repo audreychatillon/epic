@@ -709,7 +709,7 @@ void EpicSpectra::FillPhy() {
 	    string his_name_clone = prefix + "_Eweighted";
 	    his_name = prefix + "_E_ratioU235";
             m_phy_h1[his_name] = (TH1D*)m_phy_h1[his_name_clone]->Clone(his_name.c_str());
-	    m_phy_h1[his_name]->Divide(m_phy_h1["phy_det_" + to_string(det) + "_235U_Eweighted"]);
+	    m_phy_h1[his_name]->Divide(m_phy_h1["phy_det" + to_string(det) + "_235U_Eweighted"]);
         }// end of if FF
     }// end of if --input-phy
 

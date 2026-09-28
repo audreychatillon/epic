@@ -706,10 +706,15 @@ void EpicSpectra::FillPhy() {
             string prefix = name.str();
             his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
 	    his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
-	    string his_name_clone = prefix + "_Eweighted";
 	    his_name = prefix + "_E_ratioU235";
-            m_phy_h1[his_name] = (TH1D*)m_phy_h1[his_name_clone]->Clone(his_name.c_str());
-	    m_phy_h1[his_name]->Divide(m_phy_h1["phy_det" + to_string(det) + "_235U_Eweighted"]);
+	    m_phy_h1[his_name]->Clear();
+	    for (int b = 1 ; b <= m_phy_h1[his_name]->GetNbinsX(); b++){
+		if(m_phy_h1["phy_det" + to_string(det) + "_235U_Eweighted"]->GetBinContent(b)!=0)
+		m_phy_h1[his_name]->SetBinContent(b,m_phy_h1["phy_det"+to_string(det)+"_"+actinide[index]+"_Eweighted"]->GetBinContent(b)/m_phy_h1["phy_det" + to_string(det) + "_235U_Eweighted"]->GetBinContent(b));
+	    }
+	    //string his_name_clone = prefix + "_Eweighted";
+            //m_phy_h1[his_name] = (TH1D*)m_phy_h1[his_name_clone]->Clone(his_name.c_str());
+	    //m_phy_h1[his_name]->Divide(m_phy_h1["phy_det" + to_string(det) + "_235U_Eweighted"]);
         }// end of if FF
     }// end of if --input-phy
 

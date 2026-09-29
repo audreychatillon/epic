@@ -55,16 +55,16 @@ EpicSpectra::EpicSpectra() {
 	  XS_JEFF_ratio_242Pu.push_back(pu42/u5);
 	 }
 	}
-        //m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
-        m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph();
+        m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
+        //m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetName("XSratio_JEFF40_235U_235U");
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetTitle("XSratio_JEFF40_235U_235U");
-        //m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_238U.data());   	
-        m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph();
+        m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_238U.data());   	
+        //m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_238U_235U"]->SetName("XSratio_JEFF40_238U_235U");
         m_phy_gr["XSratio_JEFF_238U_235U"]->SetTitle("XSratio_JEFF40_238U_235U");
-        //m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_242Pu.data());   	
-        m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph();
+        m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_242Pu.data());   	
+        //m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph();
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetName("XSratio_JEFF40_242Pu_235U");
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetTitle("XSratio_JEFF40_242Pu_235U");
     }
@@ -758,11 +758,11 @@ void EpicSpectra::FillPhy() {
 	    m_phy_h1[his_name]->Reset();;
             m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
 	    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-	    for(int i = 0 ; i < (int)XS_JEFF_nENE.size(); i++){
-               m_phy_gr["XSratio_JEFF_235U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_235U[i]);   	
-               m_phy_gr["XSratio_JEFF_238U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_238U[i]);   	
-               m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_242Pu[i]);   	
-	    }
+	    //for(int i = 0 ; i < (int)XS_JEFF_nENE.size(); i++){
+            //   m_phy_gr["XSratio_JEFF_235U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_235U[i]);   	
+            //   m_phy_gr["XSratio_JEFF_238U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_238U[i]);   	
+            //   m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_242Pu[i]);   	
+	    //}
         }// end of if FF
     }// end of if --input-phy
 

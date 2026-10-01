@@ -446,7 +446,7 @@ void EpicDetector::BuildPhysicalEvent() {
         cout << "    . fHF_Time        = " << m_RawData->GetTimeHF() << endl;
         cout << "    . fFC_Time [Qmax] = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
         for(int i = 0 ; i < m_RawData->GetFCMult() ; i++){
-            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr() << ", anode = " << m_RawData->GetAnodeNbr(i) << endl; 
+            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr(i) << ", anode = " << m_RawData->GetAnodeNbr(i) << endl; 
         }
 
 

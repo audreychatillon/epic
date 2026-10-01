@@ -436,31 +436,22 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 void EpicDetector::BuildPhysicalEvent() {
 
    cout << "--- Enter in BuildPhysicalEvent --- " << endl;
+
    cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
-
+   
    if(m_RawData->GetFCMult() == 0) return;
-
-   if(m_RawData->GetFCMult() == 1){
-        cout << "m_RawData->GetFCMult() == 1 : " << endl;
-        cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
-        cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
-        cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
-        cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
-        if(m_RawData->GetQmaxIndex()>=0){
-            cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
-        }
-   }
-   else{
-        cout << "m_RawData->GetFCMult() > 1 : " << endl;
-        cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
-        cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
-        cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl;
-        cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
-        if(m_RawData->GetQmaxIndex()>=0){
-            cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
-        }
+   
+   cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
+   cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+   cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
+   cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
+   
+   if(m_RawData->GetQmaxIndex()>=0){
+       cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
    }
    
+   if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0)
+       cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
 
 //
 //    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
@@ -654,6 +645,7 @@ void EpicDetector::BuildPhysicalEvent() {
 void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
+  if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
 
   // Static variable
   static unsigned int index, det, anode;
@@ -852,7 +844,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
-            cout << "BuildRawEvent : HF data " << endl;
+            cout << "BuildRawEvent : FC data " << endl;
             cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
             cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
             cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;

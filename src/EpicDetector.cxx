@@ -438,15 +438,16 @@ void EpicDetector::BuildPhysicalEvent() {
    if(m_RawData->GetFCMult() == 0) return;
    
    if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0){
+   const short imax = m_RawData->GetQmaxIndex();
         cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
         cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
-        cout << "    . fQmax_Index     = " << m_RawData->GetQmaxIndex() << endl; 
+        cout << "    . fQmax_Index     = " << imax << ", anode = " << m_RawData->GetAnodeNbr(imax) <<  endl; 
         cout << "    . fHF_Index       = " << m_RawData->GetHFIndex() << endl; 
-        cout << "    . fFC_TimeLastHF  = " << m_RawData->GetTimeLastHF() << endl;
-        cout << "    . fHF_Time        = " << m_RawData->GetTimeHF() << endl;
-        cout << "    . fFC_Time [Qmax] = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
+        cout << setprecision(25) << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+        cout << setprecision(25) << "    . fHF_Time       = "     << m_RawData->GetTimeHF() << endl;
+        cout << setprecision(25) << "    . fHF_DeltaTHF   = " << m_RawData->GetDeltaTHF() << endl;
         for(int i = 0 ; i < m_RawData->GetFCMult() ; i++){
-            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr(i) << ", anode = " << m_RawData->GetAnodeNbr(i) << endl; 
+            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr(i) << ", anode = " << m_RawData->GetAnodeNbr(i) << ", " << endl; 
         }
 
 
@@ -661,68 +662,107 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   // double Qmax_per_evt = 0 ;
 
   if (alias == QDC_TDC_X1_TYPE_ALIAS || alias == QDC_X1_TYPE_ALIAS) {
+
     if (label == "HF") {
       faster_data_load(data, &hf_data);
       // at GELINA relexion on the HF cable ~ 875 ns
       double tmp_prev = m_TimeHF_current;
       double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
       double tmp_delta = tmp_thf - tmp_prev;
-      if(tmp_delta > 1000){
+      if(tmp_delta > 1000){ // reflexion at GELINA
         m_TimeHF_prev    = m_TimeHF_current;
         m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
         //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
         //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
-        m_RawData->SetTimeHF(m_TimeHF_current);
-        m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
+
+        // fill vectors
         m_RawData->SetDetNbr(-1);
         m_RawData->SetAnodeNbr(-1);
+        m_RawData->SetPulserTrig(false);
+        m_RawData->SetTimeFC(-1);
+        m_RawData->SetTofRaw(-1);
+        m_RawData->SetTimeCfd(-1);
+        m_RawData->SetTimeQmax(-1);
+        m_RawData->SetQmax(-1);
         m_RawData->SetQ1(-1);
         m_RawData->SetQ2(-1);
         m_RawData->SetQ3(-1);
         m_RawData->SetQ4(-1);
-        m_RawData->SetQmax(-1);
         m_RawData->SetIsFission(false);
-        m_RawData->SetPulserTrig(false);
+
+        // if first element in group init fFC non vector data to default value
+        if(m_RawData->GetFCMult()==1){
+            m_RawData->SetTimeLastHF(m_TimeHF_current);
+            m_RawData->SetQmaxIndex(-1);
+        }
+
+        // fill values of HF data
+        m_RawData->SetTimeHF(m_TimeHF_current);
+        m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
         m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
-        if(m_RawData->GetFCMult()==1) m_RawData->SetQmaxIndex(-1);
-        //cout << "BuildRawEvent : HF data " << endl;
-        //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-        //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-        //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
       }
     }
+
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
+
+      // fill vectors
+      m_RawData->SetDetNbr(-1);
       m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeFC(TimeFC);
       m_RawData->SetTofRaw(tof_raw);
+      m_RawData->SetTimeCfd(-1);
+      m_RawData->SetTimeQmax(-1);
+      m_RawData->SetQmax(-1);
       m_RawData->SetQ1(fc_data.q1);
       m_RawData->SetQ2(-1);
       m_RawData->SetQ3(-1);
       m_RawData->SetQ4(-1);
-      m_RawData->SetQmax(-1);
-      m_RawData->SetPulserTrig(true);
-      m_RawData->SetTimeLastHF(m_TimeHF_current);
-      m_RawData->SetTimeCfd(-1);
+      m_RawData->SetIsFission(false);
+
+      // if first element in group init fFC and fHF non vector data to default values
+      if(m_RawData->GetFCMult()==1){
+          m_RawData->SetTimeLastHF(m_TimeHF_current);
+          m_RawData->SetQmaxIndex(-1);
+          m_RawData->SetTimeHF(-1);
+          m_RawData->SetDeltaT(-1);
+          m_RawData->SetHFIndex(-1);
+      }
+
     }
   } else if (alias == QDC_TDC_X2_TYPE_ALIAS) {
     if (label == "PULSER" || label == "FAKE_FISSION") {
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
+
+      // fill vectors
+      m_RawData->SetDetNbr(-1);
       m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetPulserTrig(true);
       m_RawData->SetTimeFC(TimeFC);
+      m_RawData->SetTofRaw(tof_raw);
+      m_RawData->SetTimeCfd(-1);
+      m_RawData->SetTimeQmax(-1);
+      m_RawData->SetQmax(-1);
       m_RawData->SetQ1(fc_data.q1);
       m_RawData->SetQ2(fc_data.q2);
-      m_RawData->SetQ3(0);
-      m_RawData->SetQ4(0);
-      m_RawData->SetQmax(0);
+      m_RawData->SetQ3(-1);
+      m_RawData->SetQ4(-1);
       m_RawData->SetIsFission(false);
-      m_RawData->SetPulserTrig(true);
-      m_RawData->SetTimeLastHF(m_TimeHF_current);
-      m_RawData->SetTimeCfd(-1);
+
+      // if first element in group init fFC and fHF non vector data to default values
+      if(m_RawData->GetFCMult()==1){
+          m_RawData->SetTimeLastHF(m_TimeHF_current);
+          m_RawData->SetQmaxIndex(-1);
+          m_RawData->SetTimeHF(-1);
+          m_RawData->SetDeltaT(-1);
+          m_RawData->SetHFIndex(-1);
+      }
+
     }
   } else if (alias == QDC_TDC_X4_TYPE_ALIAS) {
     nptool::message("yellow", "epic", "Epic::BuildRawEvent",
@@ -803,18 +843,20 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
+
+            // fill vectors
             m_RawData->SetDetNbr(det);   
             m_RawData->SetAnodeNbr(anode); 
+            m_RawData->SetPulserTrig(false);
+            m_RawData->SetTimeFC(TimeFC);
+            m_RawData->SetTofRaw(tof_raw);
+            m_RawData->SetTimeCfd(T_cfd);
+            m_RawData->SetTimeQmax(T_qmax);
+            m_RawData->SetQmax(Qmax);
             m_RawData->SetQ1(Q1);
             m_RawData->SetQ2(Q2);
             m_RawData->SetQ3(Q3);
             m_RawData->SetQ4(Q4);
-            m_RawData->SetQmax(Qmax);
-            m_RawData->SetTofRaw(tof_raw);
-            m_RawData->SetTimeFC(TimeFC);
-            m_RawData->SetTimeCfd(T_cfd);
-            m_RawData->SetTimeQmax(T_qmax);
-            m_RawData->SetPulserTrig(false);
             ostringstream name;
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str(); 
@@ -824,25 +866,31 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             else{ 
                 m_RawData->SetIsFission(false);
             }
-            if (m_RawData->GetFCMult() == 1) {
-              // no need to overwrite the same data
-              m_RawData->SetTimeLastHF(m_TimeHF_current);
-            }
 
             // sample for anode with Qmax
             if (m_RawData->GetFCMult() == 1) {
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
-                m_RawData->SetHFIndex(-1);
             } 
             else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
-                //TODO need to find out how GetQmaxIndex could be <= at this stage !!!!
+                //if HF si a first data in group QmaxIndex = -1 and FCMult>1
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                     if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                     m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
+
+            // if first element in group init fHF non vector data to default values
+            // init fFC_LastTimeHF 
+            if (m_RawData->GetFCMult() == 1) {
+              m_RawData->SetTimeLastHF(m_TimeHF_current);
+              m_RawData->SetTimeHF(-1);
+              m_RawData->SetDeltaT(-1);
+              m_RawData->SetHFIndex(-1);
+              m_RawData->SetHFIndex(-1);
+            }
+
             //cout << "BuildRawEvent : FC data " << endl;
             //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
             //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;

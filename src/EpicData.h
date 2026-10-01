@@ -40,13 +40,14 @@ namespace epic {
         vector<double> fFC_Q3;          // Q3 = integration on the "decay"-time
         vector<double> fFC_Q4;          // Q4 = integration on the base-line after Q1
         vector<bool>   fFC_IsFission;   // (Q2/Q3,Q1) inside fission selection by TCutG
-        double         fFC_TimeLastHF;  // time of the last HF for ToF calculation       
+        double         fFC_TimeLastHF;  // time of the last HF for ToF calculation     
 
         short          fQmax_Index;     // index of the vector with Qmax starting from 0
         vector<double> fQmax_Sampler;   // sample of the anode with Qmax
         
         double         fHF_Time;        // time of the current HF: fill only for HF data
         double         fHF_DeltaT;      // time difference between two consecutive HF      
+        short          fHF_Index;       // index of the vector with HF (can be in group with FC data) from 0
 
     public:
         //////////////////////////////////////////////////////////////
@@ -92,6 +93,7 @@ namespace epic {
         // HF
         inline void SetTimeHF(const double& t_ns)     {fHF_Time = t_ns;}//!
         inline void SetDeltaT(const double& dt_ns)    {fHF_DeltaT = dt_ns;}//!
+        inline void SetHFIndex(const short i)         {fHF_Index = i;}//!
         
         //////////////////////    GETTERS    ////////////////////////
         // FC data
@@ -118,6 +120,7 @@ namespace epic {
         // HF data
         inline double GetTimeHF() const {return fHF_Time;}//!
         inline double GetDeltaTHF() const {return fHF_DeltaT;}//!
+        inline short  GetHFIndex() const {return fHF_Index;}//
 
         //////////////////////////////////////////////////////////////
         // Required for ROOT dictionnary

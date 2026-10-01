@@ -24,5 +24,6 @@ void epic::EpicData::Clear() {
 
     fHF_Time = -1;
     fHF_DeltaT = -1;
+    fHF_Index = -1;
 }
 

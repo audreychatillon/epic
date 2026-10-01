@@ -435,24 +435,22 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
-   //cout << "--- Enter in BuildPhysicalEvent --- " << endl;
-
-   //cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
-   //
-   //if(m_RawData->GetFCMult() == 0) return;
-   //
-   //cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
-   //cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
-   //cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
-   //cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
-   //
-   //if(m_RawData->GetQmaxIndex()>=0){
-   //    cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
-   //}
+   if(m_RawData->GetFCMult() == 0) return;
    
-   if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0)
-       cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
+   if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0){
+        cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
+        cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
+        cout << "    . fQmax_Index     = " << m_RawData->GetQmaxIndex() << endl; 
+        cout << "    . fHF_Index       = " << m_RawData->GetHFIndex() << endl; 
+        cout << "    . fFC_TimeLastHF  = " << m_RawData->GetTimeLastHF() << endl;
+        cout << "    . fHF_Time        = " << m_RawData->GetTimeHF() << endl;
+        cout << "    . fFC_Time [Qmax] = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
+        for(int i = 0 ; i < m_RawData->GetFCMult() ; i++){
+            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr() << ", anode = " << m_RawData->GetAnodeNbr(i) << endl; 
+        }
 
+
+   }
 //
 //    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
 //
@@ -645,7 +643,8 @@ void EpicDetector::BuildPhysicalEvent() {
 void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
-  if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
+  //
+  //if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
 
   // Static variable
   static unsigned int index, det, anode;

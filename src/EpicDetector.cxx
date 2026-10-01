@@ -436,22 +436,22 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 void EpicDetector::BuildPhysicalEvent() {
 
    if(m_RawData->GetFCMult() == 0) return;
-   
-   if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0){
-   const short imax = m_RawData->GetQmaxIndex();
-        cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
-        cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
-        cout << "    . fQmax_Index     = " << imax << ", anode = " << m_RawData->GetAnodeNbr(imax) <<  endl; 
-        cout << "    . fHF_Index       = " << m_RawData->GetHFIndex() << endl; 
-        cout << setprecision(25) << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
-        cout << setprecision(25) << "    . fHF_Time       = "     << m_RawData->GetTimeHF() << endl;
-        cout << setprecision(25) << "    . fHF_DeltaTHF   = " << m_RawData->GetDeltaTHF() << endl;
-        for(int i = 0 ; i < m_RawData->GetFCMult() ; i++){
-            cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr(i) << ", anode = " << m_RawData->GetAnodeNbr(i) << ", " << endl; 
-        }
-
-
-   }
+ 
+   //// [DEBUG ====
+   //if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0){
+   //const short imax = m_RawData->GetQmaxIndex();
+   //     cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
+   //     cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
+   //     cout << "    . fQmax_Index     = " << imax << ", anode = " << m_RawData->GetAnodeNbr(imax) <<  endl; 
+   //     cout << "    . fHF_Index       = " << m_RawData->GetHFIndex() << endl; 
+   //     cout << setprecision(25) << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+   //     cout << setprecision(25) << "    . fHF_Time       = "     << m_RawData->GetTimeHF() << endl;
+   //     cout << setprecision(25) << "    . fHF_DeltaTHF   = " << m_RawData->GetDeltaTHF() << endl;
+   //     for(int i = 0 ; i < m_RawData->GetFCMult() ; i++){
+   //         cout << "   #" << i << " :  det = " << m_RawData->GetDetNbr(i) << ", anode = " << m_RawData->GetAnodeNbr(i) << ", " << endl; 
+   //     }
+   //}
+   //// ==== END DEBUG]
 //
 //    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
 //

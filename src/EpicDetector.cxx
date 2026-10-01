@@ -435,123 +435,149 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
-    if(m_RawData->GetFCMult() == 0) return;
+   cout << "--- Enter in BuildPhysicalEvent --- " << endl;
+   cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
 
-    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
+   if(m_RawData->GetFCMult() == 0) return;
 
-    // --- -------------------------------------------------------
-    // --- HF DATA
-
-    if(m_RawData->GetDetNbr(0) == -1){
-        const double thf = m_RawData->GetTimeHF();
-        ++m_currentHF;
-
-        // --- DTHF <= 0 : the good HF is the current or is in the past
-        if(DTHF <= 0) {
-            m_recentHF.push_back({m_currentHF, thf});
-
-            // keep only usable HF 
-            // DTHF =  0 -> keep 1 HF
-            // DTHF = -1 -> keep 2 HF
-            // DTHF = -2 -> keep 3 HF
-            const size_t maxHF = static_cast<size_t>(-DTHF + 1);
-            while(m_recentHF.size() > maxHF) m_recentHF.pop_front();
+   if(m_RawData->GetFCMult() == 1){
+        cout << "m_RawData->GetFCMult() == 1 : " << endl;
+        cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
+        cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+        cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
+        cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
+        if(m_RawData->GetQmaxIndex()>=0){
+            cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
         }
-
-        // --- DTHF > 0 : the good HF is in the future
-        //     check if pendingFC 
-        else {
-            while(!m_pendingFC.empty()){
-                const RawInfo& fc = m_pendingFC.front();         // front() : first element of m_pendingFC (older)
-                const long long target_hf = fc.hf_index + DTHF;
-
-                // this FC data waits for more future HF : older needs to wait, other also
-                if(target_hf > m_currentHF) break;
-
-                // this FC data waits the HF that just arrives
-                if(target_hf == m_currentHF) {
-                    double tofraw = fc.tFC - thf;
-                    //TODO: take the following HF instead 
-                    if(tofraw < m_Cal.GetValue("EPIC_" + to_string(fc.det) + "_ANODE_" + to_string(fc.anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
-                    double tofcal = -1.;
-                    double e      = -1.;
-                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tofraw,tofcal);
-                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tofraw,tofcal,e,fc.q1,fc.fission);
-                }
-
-                if(target_hf < m_currentHF){
-                    cout << "BuildPhysicalEvent() : one Raw EpicData data without HF will be lost" << endl;
-                }
-
-                // remove this FC data from the waiting list
-                m_pendingFC.pop_front(); // pop_front() remove first element of m_pendingFC
-            }
+   }
+   else{
+        cout << "m_RawData->GetFCMult() > 1 : " << endl;
+        cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
+        cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+        cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl;
+        cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
+        if(m_RawData->GetQmaxIndex()>=0){
+            cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
         }
+   }
+   
 
-        return;
-    }
-
-
-    // --- -------------------------------------------------------
-    // --- FC DATA
-
-    const short imax = m_RawData->GetQmaxIndex();
-    if(imax < 0) return;
-
-    const short det     = m_RawData->GetDetNbr(imax);
-    const short anode   = m_RawData->GetAnodeNbr(imax);
-    const double tFC    = m_RawData->GetTimeFC(imax);
-    const double q1     = m_RawData->GetQ1(imax);
-    const bool fission  = m_RawData->GetIsFission(imax);
-
-
-    // --- DTHF <= 0 : HF is in the past
-    if(DTHF <= 0) {
-        const long long target_hf = m_currentHF + DTHF;
-
-        // not enough HF
-        if(target_hf < 0) return;
-
-        // search HF in the most recent
-        double thf = 0.;
-        bool found = false;
-
-        for(const auto& hf : m_recentHF) {
-            if(hf.first == target_hf) { // first  : index of tHF
-                thf = hf.second;        // second : value of tHF
-                found = true;
-                break;
-            }
-        }
-        if(!found){
-            cout << "no HF found in the past " << endl;
-            return;
-        }
-
-        double tofraw = tFC - thf;
-        // TODO TAKE THE NEXT HF INSTEAD
-        if(tofraw < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
-        double tofcal = -1.;
-        double e      = -1.;
-
-        if(fission) e = TofRaw2Ene(det,anode,tofraw,tofcal);
-        m_Physics->SetHit_fFC(det,anode,tFC,tofraw,tofcal,e,q1,fission);
-    }
-
-    // --- DTHF > 0 : HF is in the future
-    else {
-        RawInfo fc;
-
-        fc.det      = det;
-        fc.anode    = anode;
-        fc.tFC      = tFC;
-        fc.q1       = q1;
-        fc.fission  = fission;
-        fc.hf_index = m_currentHF;
-
-        m_pendingFC.push_back(fc);
-    }
-
+//
+//    const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
+//
+//    // --- -------------------------------------------------------
+//    // --- HF DATA : can also be in group with FC data
+//
+//    if(m_RawData->GetDetNbr(0) == -1){
+//        const double thf = m_RawData->GetTimeHF();
+//        ++m_currentHF;
+//
+//        // --- DTHF <= 0 : the good HF is the current or is in the past
+//        if(DTHF <= 0) {
+//            m_recentHF.push_back({m_currentHF, thf});
+//
+//            // keep only usable HF 
+//            // DTHF =  0 -> keep 1 HF
+//            // DTHF = -1 -> keep 2 HF
+//            // DTHF = -2 -> keep 3 HF
+//            const size_t maxHF = static_cast<size_t>(-DTHF + 1);
+//            while(m_recentHF.size() > maxHF) m_recentHF.pop_front();
+//        }
+//
+//        // --- DTHF > 0 : the good HF is in the future
+//        //     check if pendingFC 
+//        else {
+//            while(!m_pendingFC.empty()){
+//                const RawInfo& fc = m_pendingFC.front();         // front() : first element of m_pendingFC (older)
+//                const long long target_hf = fc.hf_index + DTHF;
+//
+//                // this FC data waits for more future HF : older needs to wait, other also
+//                if(target_hf > m_currentHF) break;
+//
+//                // this FC data waits the HF that just arrives
+//                if(target_hf == m_currentHF) {
+//                    double tofraw = fc.tFC - thf;
+//                    //TODO: take the following HF instead 
+//                    if(tofraw < m_Cal.GetValue("EPIC_" + to_string(fc.det) + "_ANODE_" + to_string(fc.anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
+//                    double tofcal = -1.;
+//                    double e      = -1.;
+//                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tofraw,tofcal);
+//                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tofraw,tofcal,e,fc.q1,fc.fission);
+//                }
+//
+//                if(target_hf < m_currentHF){
+//                    cout << "BuildPhysicalEvent() : one Raw EpicData data without HF will be lost" << endl;
+//                }
+//
+//                // remove this FC data from the waiting list
+//                m_pendingFC.pop_front(); // pop_front() remove first element of m_pendingFC
+//            }
+//        }
+//
+//        return;
+//    }
+//
+//
+//    // --- -------------------------------------------------------
+//    // --- FC DATA
+//
+//    const short imax = m_RawData->GetQmaxIndex();
+//    if(imax < 0) return;
+//
+//    const short det     = m_RawData->GetDetNbr(imax);
+//    const short anode   = m_RawData->GetAnodeNbr(imax);
+//    const double tFC    = m_RawData->GetTimeFC(imax);
+//    const double q1     = m_RawData->GetQ1(imax);
+//    const bool fission  = m_RawData->GetIsFission(imax);
+//
+//
+//    // --- DTHF <= 0 : HF is in the past
+//    if(DTHF <= 0) {
+//        const long long target_hf = m_currentHF + DTHF;
+//
+//        // not enough HF
+//        if(target_hf < 0) return;
+//
+//        // search HF in the most recent
+//        double thf = 0.;
+//        bool found = false;
+//
+//        for(const auto& hf : m_recentHF) {
+//            if(hf.first == target_hf) { // first  : index of tHF
+//                thf = hf.second;        // second : value of tHF
+//                found = true;
+//                break;
+//            }
+//        }
+//        if(!found){
+//            cout << "no HF found in the past " << endl;
+//            return;
+//        }
+//
+//        double tofraw = tFC - thf;
+//        // TODO TAKE THE NEXT HF INSTEAD
+//        if(tofraw < m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0) - 5.) tofraw += 2500000.; //remove hard coding
+//        double tofcal = -1.;
+//        double e      = -1.;
+//
+//        if(fission) e = TofRaw2Ene(det,anode,tofraw,tofcal);
+//        m_Physics->SetHit_fFC(det,anode,tFC,tofraw,tofcal,e,q1,fission);
+//    }
+//
+//    // --- DTHF > 0 : HF is in the future
+//    else {
+//        RawInfo fc;
+//
+//        fc.det      = det;
+//        fc.anode    = anode;
+//        fc.tFC      = tFC;
+//        fc.q1       = q1;
+//        fc.fission  = fission;
+//        fc.hf_index = m_currentHF;
+//
+//        m_pendingFC.push_back(fc);
+//    }
+//
 
 
 
@@ -666,6 +692,12 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         m_RawData->SetQmax(-1);
         m_RawData->SetIsFission(false);
         m_RawData->SetPulserTrig(false);
+        m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
+        if(m_RawData->GetFCMult()==1) m_RawData->SetQmaxIndex(-1);
+        cout << "BuildRawEvent : HF data " << endl;
+        cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+        cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+        cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
       }
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
@@ -776,7 +808,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         stop  = min(signal_size * 2, T_cfd + m_Q4_gate_stop[index]);  // +: after Tcfd
         if (start < stop) Q4 = sample.integrateSignal(2, start, stop);
 
-        if (Q1 > 0 && Q2 > 0 && Q3 > 0) {
+        if (Q1 != 0 && Q2 != 0 && Q3 != 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
@@ -810,6 +842,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             if (m_RawData->GetFCMult() == 1) {
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(0);
+                m_RawData->SetHFIndex(-1);
             } 
             else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
                 //TODO need to find out how GetQmaxIndex could be <= at this stage !!!!
@@ -819,6 +852,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
+            cout << "BuildRawEvent : HF data " << endl;
+            cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+            cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+            cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0

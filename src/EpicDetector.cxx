@@ -435,20 +435,20 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
-   cout << "--- Enter in BuildPhysicalEvent --- " << endl;
+   //cout << "--- Enter in BuildPhysicalEvent --- " << endl;
 
-   cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
-   
-   if(m_RawData->GetFCMult() == 0) return;
-   
-   cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
-   cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
-   cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
-   cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
-   
-   if(m_RawData->GetQmaxIndex()>=0){
-       cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
-   }
+   //cout << "m_RawData->GetFCMult() = " << m_RawData->GetFCMult() << endl;
+   //
+   //if(m_RawData->GetFCMult() == 0) return;
+   //
+   //cout << "    . fQmax_Index = " << m_RawData->GetQmaxIndex() << endl; 
+   //cout << "    . fFC_TimeLastHF = " << m_RawData->GetTimeLastHF() << endl;
+   //cout << "    . fHF_Index   = " << m_RawData->GetHFIndex() << endl; 
+   //cout << "    . fHF_Time       = " << m_RawData->GetTimeHF() << endl;
+   //
+   //if(m_RawData->GetQmaxIndex()>=0){
+   //    cout << "    . fFC_Time       = " << m_RawData->GetTimeFC(m_RawData->GetQmaxIndex()) << endl;
+   //}
    
    if(m_RawData->GetQmaxIndex()>=0 && m_RawData->GetHFIndex()>=0)
        cout << " ==================>>>>>>>>>>>>>>>>>>> HF and FC in the same group " << endl;
@@ -686,10 +686,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         m_RawData->SetPulserTrig(false);
         m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
         if(m_RawData->GetFCMult()==1) m_RawData->SetQmaxIndex(-1);
-        cout << "BuildRawEvent : HF data " << endl;
-        cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-        cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-        cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
+        //cout << "BuildRawEvent : HF data " << endl;
+        //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+        //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+        //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
       }
     }
     if (label == "PULSER" || label == "FAKE_FISSION") {
@@ -844,10 +844,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 }
             }
             else m_RawData->SetQmaxIndex(-1);
-            cout << "BuildRawEvent : FC data " << endl;
-            cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-            cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-            cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
+            //cout << "BuildRawEvent : FC data " << endl;
+            //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+            //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+            //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0

@@ -867,19 +867,17 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                 m_RawData->SetIsFission(false);
             }
 
-            // sample for anode with Qmax
-            if (m_RawData->GetFCMult() == 1) {
+            // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
+            if(m_RawData->GetQmaxIndex() == -1){
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
-                m_RawData->SetQmaxIndex(0);
+                m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
             } 
-            else if(m_RawData->GetFCMult()>1 && m_RawData->GetQmaxIndex()>=0) {
-                //if HF si a first data in group QmaxIndex = -1 and FCMult>1
+            else {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                     if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                     m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
                 }
             }
-            else m_RawData->SetQmaxIndex(-1);
 
             // if first element in group init fHF non vector data to default values
             // init fFC_LastTimeHF 

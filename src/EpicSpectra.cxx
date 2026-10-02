@@ -583,12 +583,13 @@ EpicSpectra::EpicSpectra() {
 	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
 	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
 	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
 	        }
 	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
 	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlue);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
 	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
 	        }
 
             can_name = base + "_Eratio";

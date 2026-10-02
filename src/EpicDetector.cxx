@@ -807,10 +807,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               m_RawData->SetHFIndex(-1);
             }
 
-            cout << "BuildRawEvent : FC data " << endl;
-            cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-            cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-            cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
+            //cout << "BuildRawEvent : FC data " << endl;
+            //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+            //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+            //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0

@@ -767,7 +767,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-
+            cout << "fill vectors" << endl;
             // fill vectors
             m_RawData->SetDetNbr(det);   
             m_RawData->SetAnodeNbr(anode); 
@@ -783,7 +783,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             m_RawData->SetQ4(Q4);
             ostringstream name;
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
-            string tcutg_name = name.str(); 
+            string tcutg_name = name.str();
+            cout << "tcutg_name" << tcutg_name << endl; 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
                 m_RawData->SetIsFission(true);
             }

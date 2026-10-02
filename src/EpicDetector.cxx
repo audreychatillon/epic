@@ -584,6 +584,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   if (alias == QDC_TDC_X1_TYPE_ALIAS || alias == QDC_X1_TYPE_ALIAS) {
 
     if (label == "HF") {
+      cout << "label = " << label << endl;
       faster_data_load(data, &hf_data);
       // at GELINA relexion on the HF cable ~ 875 ns
       double tmp_prev = m_TimeHF_current;
@@ -624,6 +625,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     }
 
     if (label == "PULSER" || label == "FAKE_FISSION") {
+      cout << "label = " << label << endl;
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
@@ -655,6 +657,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     }
   } else if (alias == QDC_TDC_X2_TYPE_ALIAS) {
     if (label == "PULSER" || label == "FAKE_FISSION") {
+      cout << "label = " << label << endl;
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
@@ -688,6 +691,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     nptool::message("yellow", "epic", "Epic::BuildRawEvent",
                     "Warning: QDC_TDC_X4_TYPE_ALIAS found on label " + label);
   } else if (alias == SAMPLER_DATA_TYPE_ALIAS) {
+      cout << "label = " << label << endl;
 
     if (label.front() == 'F') {
       m_total_raw_event++; // total number of counts in all anodes, if mult=2,

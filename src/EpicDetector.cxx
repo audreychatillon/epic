@@ -435,14 +435,125 @@ void EpicDetector::InitializeDataOutputPhysics(std::shared_ptr<nptool::VDataOutp
 /// called in npanalysis
 void EpicDetector::BuildPhysicalEvent() {
 
+    m_Physics->Clear();
     int mult = m_RawData->GetFCMult();
-
     if(mult == 0) return;
 
     const int DTHF = m_Cal.GetValue("WHICH_HF_FOR_TOF", 0);
     const short imax = m_RawData->GetQmaxIndex();
     const short ihf  = m_RawData->GetHFIndex();
     const double thf = m_RawData->GetTimeHF();
+
+    // === =========================================
+    // === CASE GOOD HF IS IN THE FUTURE
+    if(DTHF > 0){
+
+        // HF only or HF + FC case but with tHF < tFC
+        if ( (ihf >= 0 && imax == -1) || (ihf >=0 && imax >= 0 && thf < m_RawData->GetTimeFC(imax)) ) {
+            ++m_currentHF;
+
+            // look in the past to find : FC <--|DTHF|--- HF
+            while (!m_pendingFC.empty()){
+                
+                //go to the first element
+                const RawInfo& fc = m_pendingFC.front();
+
+                // if the new hf is not yet the good one
+                // neither the first element, nor the others 
+                // would fit with this hf : need to wait
+                if(fc.hf_index + DTHF > m_currentHF) break;
+
+                // if the new hf is the good one
+                // fill phy level and remove raw from pending
+                if(fc.hf_index + DTHF == m_currentHF){
+                    double tof_raw = fc.tFC - thf;
+                    double tof_cal = -1.; 
+                    double e = -1;       
+                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    m_pendingFC.pop_front(); // remove the first element
+                }
+
+                if(fc.hf_index + DTHF < m_currentHF){
+                    cout << "ATTENTION ATTENTION : FC not considered, HF (in future) missing" << endl;
+                    m_pendingFC.pop_front();
+                }
+
+            }
+        }
+
+        // all FC data
+        if(imax>=0){
+            RawInfo fc;
+            fc.det = m_RawData->GetDetNbr(imax);
+            fc.anode = m_RawData->GetAnodeNbr(imax);      
+            fc.tFC = m_RawData->GetTimeFC(imax);    
+            fc.q1 = m_RawData->GetQ1(imax);      
+            fc.fission = m_RawData->GetIsFission(imax);
+            fc.hf_index = m_currentHF;
+            m_pendingFC.push_back(fc);
+        }
+
+        // HF + FC case but with tFC < tHF
+        // tFC was just pushed back in m_pendingFC
+
+        if ( (ihf >=0 && imax >= 0 && thf > m_RawData->GetTimeFC(imax)) ) {
+            ++m_currentHF;
+
+            // look in the past to find : FC <--|DTHF|--- HF
+            while (!m_pendingFC.empty()){
+                
+                //go to the first element
+                const RawInfo& fc = m_pendingFC.front();
+
+                // if the new hf is not yet the good one
+                // neither the first element, nor the others 
+                // would fit with this hf : need to wait
+                if(fc.hf_index + DTHF > m_currentHF) break;
+
+                // if the new hf is the good one
+                // fill phy level and remove raw from pending
+                if(fc.hf_index + DTHF == m_currentHF){
+                    double tof_raw = fc.tFC - thf;
+                    double tof_cal = -1.; 
+                    double e = -1;       
+                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    m_pendingFC.pop_front(); // remove the first element
+                }
+
+                if(fc.hf_index + DTHF < m_currentHF){
+                    cout << "ATTENTION ATTENTION : FC not considered, HF (in future) missing" << endl;
+                    m_pendingFC.pop_front();
+                }
+
+            }
+        }
+    }
+    // === =========================================
+    // === CASE GOOD HF IS IN THE PAST
+    // === TODO this is the opposite
+    else if(DTHF<0){
+
+    }
+    // === =========================================
+    // === CASE GOOD HF IS THE LAST 
+    else{
+        if(imax>=0){
+            short  det = m_RawData->GetDetNbr(imax);
+            short  anode = m_RawData->GetAnodeNbr(imax);      
+            double time = m_RawData->GetTimeFC(imax);    
+            double tof_raw = m_RawData->GetTofRaw(imax); 
+            double tof_cal = -1.; 
+            double e = -1;       
+            double q1 = m_RawData->GetQ1(imax);      
+            bool   isFission = m_RawData->GetIsFission(imax);
+            if(isFission) e = TofRaw2Ene(det,anode,tof_raw,tof_cal);
+            m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,isFission);
+        }
+    }
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

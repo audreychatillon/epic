@@ -31,8 +31,8 @@ class EpicDetector : public nptool::VDetector {
 
     public:
       struct Actinide{
-	string name;
-	double mass;
+	        string name;
+	        double mass;
       };
     
     // === Data members
@@ -44,6 +44,7 @@ class EpicDetector : public nptool::VDetector {
       std::map<std::string,TCutG*> m_tcutg;
    
       // variables to merge the good T_HF with FC data
+      long long m_currentHF = -1; 
       struct RawInfo{
         short  det;
         short  anode;
@@ -53,8 +54,7 @@ class EpicDetector : public nptool::VDetector {
         long long hf_index;
       };
       std::deque<RawInfo> m_pendingFC;
-      std::deque<std::pair<long long,double>> m_recentHF;
-      long long m_currentHF = -1; 
+      //std::deque<std::pair<long long,double>> m_recentHF;
 
 
       // Event counters and timing

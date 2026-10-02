@@ -784,23 +784,29 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             ostringstream name;
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str();
-            cout << "tcutg_name" << tcutg_name << endl; 
+            cout << "tcutg_name : " << tcutg_name << endl; 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
+            cout << "isFission = true " << endl; 
                 m_RawData->SetIsFission(true);
+            cout << "isFission = true " << endl; 
             }
             else{ 
+            cout << "isFission = false " << endl; 
                 m_RawData->SetIsFission(false);
+            cout << "isFission = false " << endl; 
             }
 
             // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
             if(m_RawData->GetQmaxIndex() == -1){
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
-            } 
+            	cout << "[1]m_RawData->GetFCMult()-1 : " << m_RawData->GetFCMult()-1 << endl;
+	     } 
             else {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                     if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                     m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
+            	cout << "[2]m_RawData->GetFCMult()-1 : " << m_RawData->GetFCMult()-1 << endl;
                 }
             }
 

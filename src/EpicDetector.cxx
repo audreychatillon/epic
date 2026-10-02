@@ -54,6 +54,8 @@ EpicDetector::EpicDetector() {
   m_nAtot = 0;
 
   m_Cal.InitCalibration();
+  m_RawData->Clear();
+  m_Physics->Clear();
 
   m_total_raw_event = 0;
   m_good_raw_event = 0;
@@ -62,7 +64,6 @@ EpicDetector::EpicDetector() {
 
   m_Get_Sampler_Qmax = 0;
     
-
 
 }
 ////////////////////////////////////////////////////////////////////////////////

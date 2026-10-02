@@ -562,7 +562,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
   
-  if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
+  //if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
 
   // Static variable
   static unsigned int index, det, anode;
@@ -578,13 +578,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   alias = faster_data_type_alias(data); //  type of the data
   // double Qmax_per_evt = 0 ;
 
-    cout << "alias = " << alias << endl;
-    cout << "label = " << label << endl;
 
   if (alias == QDC_TDC_X1_TYPE_ALIAS || alias == QDC_X1_TYPE_ALIAS) {
 
     if (label == "HF") {
-      cout << "label = " << label << endl;
       faster_data_load(data, &hf_data);
       // at GELINA relexion on the HF cable ~ 875 ns
       double tmp_prev = m_TimeHF_current;
@@ -625,7 +622,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     }
 
     if (label == "PULSER" || label == "FAKE_FISSION") {
-      cout << "label = " << label << endl;
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
@@ -657,7 +653,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     }
   } else if (alias == QDC_TDC_X2_TYPE_ALIAS) {
     if (label == "PULSER" || label == "FAKE_FISSION") {
-      cout << "label = " << label << endl;
       faster_data_load(data, &fc_data);
       double TimeFC = timestamp + (double)(qdc_conv_dt_ns(fc_data.tdc));
       double tof_raw = TimeFC - m_TimeHF_current;
@@ -691,7 +686,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     nptool::message("yellow", "epic", "Epic::BuildRawEvent",
                     "Warning: QDC_TDC_X4_TYPE_ALIAS found on label " + label);
   } else if (alias == SAMPLER_DATA_TYPE_ALIAS) {
-      cout << "label = " << label << endl;
 
     if (label.front() == 'F') {
       m_total_raw_event++; // total number of counts in all anodes, if mult=2,
@@ -767,7 +761,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
           if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
-            cout << "fill vectors" << endl;
+
             // fill vectors
             m_RawData->SetDetNbr(det);   
             m_RawData->SetAnodeNbr(anode); 
@@ -784,19 +778,15 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             ostringstream name;
             name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
             string tcutg_name = name.str();
-            cout << "tcutg_name : " << tcutg_name << endl; 
             if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
-            cout << "isFission = true " << endl; 
                 m_RawData->SetIsFission(true);
-            cout << "isFission = true " << endl; 
             }
             else{ 
-            cout << "isFission = false " << endl; 
                 m_RawData->SetIsFission(false);
-            cout << "isFission = false " << endl; 
             }
 
             // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
+            cout << "m_RawData->GetQmaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
             if(m_RawData->GetQmaxIndex() == -1){
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);

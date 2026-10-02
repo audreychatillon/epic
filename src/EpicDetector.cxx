@@ -561,8 +561,8 @@ void EpicDetector::BuildPhysicalEvent() {
 void EpicDetector::BuildRawEvent(const std::string &daq,
                                  const std::string &label, void *data) {
 #ifdef FASTERAC_FOUND
-  //
-  //if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
+  
+  if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
 
   // Static variable
   static unsigned int index, det, anode;

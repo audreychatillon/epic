@@ -600,9 +600,6 @@ EpicSpectra::EpicSpectra() {
 	        }
 	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
 	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlue);
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
 	        }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets

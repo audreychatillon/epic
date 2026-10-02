@@ -787,17 +787,14 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
 
             // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
-            cout << "m_RawData->GetQmaxIndex() = " << m_RawData->GetQmaxIndex() << endl;
             if(m_RawData->GetQmaxIndex() == -1){
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
-            	cout << "[1]m_RawData->GetFCMult()-1 : " << m_RawData->GetFCMult()-1 << endl;
 	     } 
             else {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                     if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                     m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
-            	cout << "[2]m_RawData->GetFCMult()-1 : " << m_RawData->GetFCMult()-1 << endl;
                 }
             }
 

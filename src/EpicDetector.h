@@ -52,9 +52,12 @@ class EpicDetector : public nptool::VDetector {
         bool   fission;
         long long hf_index;
       };
-      std::deque<RawInfo> m_pendingFC;
-      std::deque<std::pair<long long,double>> m_recentHF;
-      long long m_currentHF = -1; 
+      //std::deque<RawInfo> m_pendingFC;
+      //std::deque<std::pair<long long,double>> m_recentHF;
+      //long long m_currentHF = -1; 
+      vector<RawInfo> m_pendingFC;
+      vector<double>  m_pendingHF;
+
 
       // Event counters and timing
       int m_total_raw_event{0};

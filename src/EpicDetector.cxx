@@ -578,6 +578,9 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   alias = faster_data_type_alias(data); //  type of the data
   // double Qmax_per_evt = 0 ;
 
+    cout << "alias = " << alias << endl;
+    cout << "label = " << label << endl;
+
   if (alias == QDC_TDC_X1_TYPE_ALIAS || alias == QDC_X1_TYPE_ALIAS) {
 
     if (label == "HF") {

@@ -589,8 +589,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       if(tmp_delta > 1000){ // reflexion at GELINA
         m_TimeHF_prev    = m_TimeHF_current;
         m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-        //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-        //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
+        cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+        cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
 
         // fill vectors
         m_RawData->SetDetNbr(-1);
@@ -805,10 +805,10 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               m_RawData->SetHFIndex(-1);
             }
 
-            //cout << "BuildRawEvent : FC data " << endl;
-            //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-            //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-            //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
+            cout << "BuildRawEvent : FC data " << endl;
+            cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
+            cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
+            cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0

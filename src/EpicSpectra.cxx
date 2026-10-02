@@ -625,9 +625,9 @@ void EpicSpectra::FillRaw() {
         int FC_mult = m_RawData->GetFCMult();
         if (FC_mult > 0) {
           bool replay = m_Cal.GetValue("REPLAY_DATA",0);
-          if (m_RawData->GetDetNbr(0) == -1) {
+          if (m_RawData->GetHFIndex>=0) {
           
-	        // to by-pass nponline bug
+	    // to by-pass nponline bug
             if(!replay){
 	            double t_hf = m_RawData->GetTimeHF(); 
  	            if( t_hf - timehf_ref_raw <= 0 && timehf_ref_raw !=0 ) return;
@@ -638,7 +638,7 @@ void EpicSpectra::FillRaw() {
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF()); //ns
           } 
-          else {
+          if (m_RawData->GetQmaxIndex>=0){
             // init
             int multPerFC[nDets];
             int IndexMax[nDets];

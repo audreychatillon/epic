@@ -115,11 +115,11 @@ EpicSpectra::EpicSpectra() {
     m_canT0->Divide(1, 2);
 
     m_TimeHF = new TH1F("TimeHF", "TimeHF", 86400, 0, 86400);
-    m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 3000, 2500000, 2500030);
+    m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 5100, 0, 5100000);
     m_HF_DeltaTimeHF->SetLineColor(kBlack);
 
     m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
-    m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
+    m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns]");
 
     m_canT0->cd(1); m_TimeHF->Draw();
     m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); 
@@ -634,7 +634,7 @@ void EpicSpectra::FillRaw() {
  	            else timehf_ref_raw = t_hf;
             }
 
-	        // fill spectra
+	    // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF()); //ns
           } 

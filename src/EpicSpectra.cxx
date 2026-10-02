@@ -45,16 +45,16 @@ EpicSpectra::EpicSpectra() {
         vector<double> XS_JEFF_242Pu;
         double e, u8, u5, pu42;  //e is in eV
         while(XSfile >> e >> u5 >> u8 >> pu42){
-	 if (e<=20000000){
-    	  XS_JEFF_nENE.push_back(e*1.e-06);
-    	  XS_JEFF_235U.push_back(u5);
-    	  XS_JEFF_238U.push_back(u8);
-    	  XS_JEFF_242Pu.push_back(pu42);
-	  XS_JEFF_ratio_235U.push_back(u5/u5);
-	  XS_JEFF_ratio_238U.push_back(u8/u5);
-	  XS_JEFF_ratio_242Pu.push_back(pu42/u5);
-	 }
-	}
+	        if (e<=20000000){
+    	        XS_JEFF_nENE.push_back(e*1.e-06);
+    	        XS_JEFF_235U.push_back(u5);
+    	        XS_JEFF_238U.push_back(u8);
+    	        XS_JEFF_242Pu.push_back(pu42);
+	            XS_JEFF_ratio_235U.push_back(u5/u5);
+	            XS_JEFF_ratio_238U.push_back(u8/u5);
+	            XS_JEFF_ratio_242Pu.push_back(pu42/u5);
+	        }
+	    }
         m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
         //m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetName("XSratio_JEFF40_235U_235U");
@@ -458,7 +458,7 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_TofRaw_cutF_zoom";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 20000, gp-200 , gp+1800);
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 25000, gp-600 , gp+1900);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
             can_name = base + "_TofRaw_zoom";
             m_phy_can[can_name]->cd(a+1);
@@ -466,7 +466,7 @@ EpicSpectra::EpicSpectra() {
             m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_TofCal";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, 0, 2000);
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  25000, -500, 2000);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
             can_name = base + "_TofCal";
             m_phy_can[can_name]->cd(a+1);

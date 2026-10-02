@@ -34,10 +34,10 @@ EpicSpectra::EpicSpectra() {
     actinides_per_det = m_detector->GetActinidesPerDet();
     mass_per_actinide = m_detector->GetMassPerActinide();
 
-    // JEFF4-0 and ENDF/BVIII-0 cross sections
+    // JEFF4-0 cross sections
     ifstream XSfile("doc/XS_JEFF4-0_235U_238U_242Pu.dat");	
     if (!XSfile.is_open()) {
-        cerr << "Erreur : impossible d'ouvrir le fichier doc/XS_JEFF4-0_BVIII-0_235U_238U_242Pu.dat" << endl;
+        cerr << "Erreur : impossible d'ouvrir le fichier doc/XS_JEFF4-0_235U_238U_242Pu.dat" << endl;
     }
     else{
         vector<double> XS_JEFF_235U;
@@ -55,6 +55,7 @@ EpicSpectra::EpicSpectra() {
 	            XS_JEFF_ratio_242Pu.push_back(pu42/u5);
 	        }
 	    }
+        XSfile.close();
         m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
         //m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetName("XSratio_JEFF40_235U_235U");
@@ -67,6 +68,42 @@ EpicSpectra::EpicSpectra() {
         //m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph();
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetName("XSratio_JEFF40_242Pu_235U");
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetTitle("XSratio_JEFF40_242Pu_235U");
+    }
+
+    // BVIII cross sections
+    ifstream XSfile2("doc/XS_BVIII_235U_238U_242Pu.dat");	
+    if (!XSfile2.is_open()) {
+        cerr << "Erreur : impossible d'ouvrir le fichier doc/XS_BVIII_235U_238U_242Pu.dat" << endl;
+    }
+    else{
+        vector<double> XS_BVIII_235U;
+        vector<double> XS_BVIII_238U;
+        vector<double> XS_BVIII_242Pu;
+        double e, u8, u5, pu42;  //e is in eV
+        while(XSfile2 >> e >> u5 >> u8 >> pu42){
+	        if (e<=20000000){
+    	        XS_BVIII_nENE.push_back(e*1.e-06);
+    	        XS_BVIII_235U.push_back(u5);
+    	        XS_BVIII_238U.push_back(u8);
+    	        XS_BVIII_242Pu.push_back(pu42);
+	            XS_BVIII_ratio_235U.push_back(u5/u5);
+	            XS_BVIII_ratio_238U.push_back(u8/u5);
+	            XS_BVIII_ratio_242Pu.push_back(pu42/u5);
+	        }
+	    }
+        XSfile2.close();
+        m_phy_gr["XSratio_BVIII_235U_235U"]  = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_235U.data());   	
+        //m_phy_gr["XSratio_BVIII_235U_235U"]  = new TGraph();
+        m_phy_gr["XSratio_BVIII_235U_235U"]->SetName("XSratio_BVIII40_235U_235U");
+        m_phy_gr["XSratio_BVIII_235U_235U"]->SetTitle("XSratio_BVIII40_235U_235U");
+        m_phy_gr["XSratio_BVIII_238U_235U"]  = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_238U.data());   	
+        //m_phy_gr["XSratio_BVIII_238U_235U"]  = new TGraph();
+        m_phy_gr["XSratio_BVIII_238U_235U"]->SetName("XSratio_BVIII40_238U_235U");
+        m_phy_gr["XSratio_BVIII_238U_235U"]->SetTitle("XSratio_BVIII40_238U_235U");
+        m_phy_gr["XSratio_BVIII_242Pu_235U"] = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_242Pu.data());   	
+        //m_phy_gr["XSratio_BVIII_242Pu_235U"] = new TGraph();
+        m_phy_gr["XSratio_BVIII_242Pu_235U"]->SetName("XSratio_BVIII40_242Pu_235U");
+        m_phy_gr["XSratio_BVIII_242Pu_235U"]->SetTitle("XSratio_BVIII40_242Pu_235U");
     }
 
     timehf_ref_raw = 0;
@@ -543,17 +580,29 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
             m_phy_h1[his_name]->Draw();
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
-	    }
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlue);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	        }
 
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	    }
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlue);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	        }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets
 

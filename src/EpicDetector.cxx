@@ -588,7 +588,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       double tmp_prev = m_TimeHF_current;
       double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
       double tmp_delta = tmp_thf - tmp_prev;
-      if(tmp_delta > 1000){ // reflexion at GELINA
+      //if(tmp_delta > 1000){ // reflexion at GELINA
         m_TimeHF_prev    = m_TimeHF_current;
         m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
         //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
@@ -619,7 +619,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         m_RawData->SetTimeHF(m_TimeHF_current);
         m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
         m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
-      }
+      //}
     }
 
     if (label == "PULSER" || label == "FAKE_FISSION") {

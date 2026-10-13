@@ -588,38 +588,39 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       double tmp_prev = m_TimeHF_current;
       double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
       double tmp_delta = tmp_thf - tmp_prev;
-      if(tmp_delta > 1000){ // reflexion at GELINA
-        m_TimeHF_prev    = m_TimeHF_current;
-        m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-        //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-        //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
 
-        // fill vectors
-        m_RawData->SetDetNbr(-1);
-        m_RawData->SetAnodeNbr(-1);
-        m_RawData->SetPulserTrig(false);
-        m_RawData->SetTimeFC(-1);
-        m_RawData->SetTofRaw(-1);
-        m_RawData->SetTimeCfd(-1);
-        m_RawData->SetTimeQmax(-1);
-        m_RawData->SetQmax(-1);
-        m_RawData->SetQ1(-1);
-        m_RawData->SetQ2(-1);
-        m_RawData->SetQ3(-1);
-        m_RawData->SetQ4(-1);
-        m_RawData->SetIsFission(false);
+      //if(tmp_delta > 1000){ // tentative to suppress the reflexion at GELINA : better to do it offline
+      m_TimeHF_prev    = m_TimeHF_current;
+      m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
+      //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
+      //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
 
-        // if first element in group init fFC non vector data to default value
-        if(m_RawData->GetFCMult()==1){
-            m_RawData->SetTimeLastHF(m_TimeHF_current);
-            m_RawData->SetQmaxIndex(-1);
-        }
+      // fill vectors
+      m_RawData->SetDetNbr(-1);
+      m_RawData->SetAnodeNbr(-1);
+      m_RawData->SetPulserTrig(false);
+      m_RawData->SetTimeFC(-1);
+      m_RawData->SetTofRaw(-1);
+      m_RawData->SetTimeCfd(-1);
+      m_RawData->SetTimeQmax(-1);
+      m_RawData->SetQmax(-1);
+      m_RawData->SetQ1(-1);
+      m_RawData->SetQ2(-1);
+      m_RawData->SetQ3(-1);
+      m_RawData->SetQ4(-1);
+      m_RawData->SetIsFission(false);
 
-        // fill values of HF data
-        m_RawData->SetTimeHF(m_TimeHF_current);
-        m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
-        m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
+      // if first element in group init fFC non vector data to default value
+      if(m_RawData->GetFCMult()==1){
+          m_RawData->SetTimeLastHF(m_TimeHF_current);
+          m_RawData->SetQmaxIndex(-1);
       }
+
+      // fill values of HF data
+      m_RawData->SetTimeHF(m_TimeHF_current);
+      m_RawData->SetDeltaT(m_TimeHF_current - m_TimeHF_prev);
+      m_RawData->SetHFIndex(m_RawData->GetFCMult() - 1);
+      //} // end of suppression of reflexion
     }
 
     if (label == "PULSER" || label == "FAKE_FISSION") {

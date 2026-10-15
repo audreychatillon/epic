@@ -585,15 +585,13 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
     if (label == "HF") {
       faster_data_load(data, &hf_data);
       // at GELINA relexion on the HF cable ~ 875 ns
-      double tmp_prev = m_TimeHF_current;
-      double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
-      double tmp_delta = tmp_thf - tmp_prev;
+      //double tmp_prev = m_TimeHF_current;
+      //double tmp_thf = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc))); 
+      //double tmp_delta = tmp_thf - tmp_prev;
 
       //if(tmp_delta > 1000){ // tentative to suppress the reflexion at GELINA : better to do it offline
       m_TimeHF_prev    = m_TimeHF_current;
       m_TimeHF_current = (double)(timestamp + (long double)(qdc_conv_dt_ns(hf_data.tdc)));
-      //cout << setprecision(25) << " --> HF data: t_hf = " << m_TimeHF_current << " (DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-      //cout << setprecision(25) << "              timestamp = " << timestamp << " dt_ns " << qdc_conv_dt_ns(hf_data.tdc) << endl;
 
       // fill vectors
       m_RawData->SetDetNbr(-1);

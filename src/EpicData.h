@@ -40,6 +40,7 @@ namespace epic {
         vector<double> fFC_Q3;          // Q3 = integration on the "decay"-time
         vector<double> fFC_Q4;          // Q4 = integration on the base-line after Q1
         vector<bool>   fFC_IsFission;   // (Q2/Q3,Q1) inside fission selection by TCutG
+        vector<bool>   fFC_HighThres;   // Q1 above high threshold
         double         fFC_TimeLastHF;  // time of the last HF for ToF calculation     
 
         short          fQmax_Index;     // index of the vector with Qmax starting from 0
@@ -86,6 +87,7 @@ namespace epic {
         inline void SetQ3(const double& Q3)                {fFC_Q3.push_back(Q3);}//!
         inline void SetQ4(const double& Q4)                {fFC_Q4.push_back(Q4);}//!
         inline void SetIsFission(const bool& b)            {fFC_IsFission.push_back(b);}//!
+        inline void SetHighThres(const bool& b)            {fFC_HighThres.push_back(b);}//!
         inline void SetTimeLastHF(const double& t_ns)      {fFC_TimeLastHF = t_ns;}//!
         // sample with Qmax
         inline void SetQmaxIndex(const short i)          {fQmax_Index = i;}//!
@@ -111,6 +113,7 @@ namespace epic {
         inline double GetQ3(const unsigned int &i) const {return fFC_Q3[i];}//!
         inline double GetQ4(const unsigned int &i) const {return fFC_Q4[i];}//!
         inline bool   GetIsFission(const unsigned int &i) const {return fFC_IsFission[i];}//!
+        inline bool   GetHighThres(const unsigned int &i) const {return fFC_HighThres[i];}//!
         inline double GetTimeLastHF() const {return fFC_TimeLastHF;}//!
         // sample with Qmax
         inline short GetQmaxIndex() const {return fQmax_Index;}//!

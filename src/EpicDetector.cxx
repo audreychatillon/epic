@@ -373,6 +373,11 @@ void EpicDetector::PrintConfig() {
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_TofRaw_max[offset + a];
     cout << endl;
+    // Q1 high threshold
+    cout << "          Q1 high threshold [ch] : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++)
+      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_Q1_HIGH_THRESHOLD",0);
+    cout << endl;
     // Gamma Peak
     cout << "          Gamma Peak [ch]        : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
@@ -607,6 +612,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(-1);
       m_RawData->SetQ4(-1);
       m_RawData->SetIsFission(false);
+      m_RawData->SetHighThres(false);
 
       // if first element in group init fFC non vector data to default value
       if(m_RawData->GetFCMult()==1){
@@ -640,6 +646,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(-1);
       m_RawData->SetQ4(-1);
       m_RawData->SetIsFission(false);
+      m_RawData->SetHighThres(false);
 
       // if first element in group init fFC and fHF non vector data to default values
       if(m_RawData->GetFCMult()==1){
@@ -671,6 +678,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       m_RawData->SetQ3(-1);
       m_RawData->SetQ4(-1);
       m_RawData->SetIsFission(false);
+      m_RawData->SetHighThres(false);
 
       // if first element in group init fFC and fHF non vector data to default values
       if(m_RawData->GetFCMult()==1){
@@ -783,6 +791,12 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             }
             else{ 
                 m_RawData->SetIsFission(false);
+            }
+	    if(Q1 >= m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGH_THRESHOLD",0)){
+		m_RawData->SetHighThres(true);
+	    }
+	    else{
+		m_RawData->SetHighThres(false);
             }
 
             // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1

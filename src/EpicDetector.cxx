@@ -475,7 +475,7 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = -1;       
-                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
+                    if(fc.fission && fc.det >= 0 && fc.anode >= 0) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
                     m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }

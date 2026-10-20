@@ -463,16 +463,16 @@ EpicSpectra::EpicSpectra() {
           can_name = base + "_TofCal";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
+          can_name = base + "_TofCal_Q1_high_thres";
+          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+          
           can_name = base + "_E";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
-          can_name = base + "_Elow";
+          can_name = base + "_E_Q1_high_thres";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
           
           can_name = base + "_Q1vE";
-          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
-          
-          can_name = base + "_Q1vElow";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
 
           // loop over the anodes and create the histo per anode
@@ -510,6 +510,14 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
+            his_name = prefix + "_TofCal_Q1_high_thres";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 25000, -500, 2000);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin");
+            can_name = base + "_TofCal_Q1_high_thres";
+            m_phy_can[can_name]->cd(a+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
             his_name = prefix + "_E";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
@@ -518,10 +526,10 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
-            his_name = prefix + "_Elow";
-            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  1000, 0, 1);
-            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [eV] 1 meV / bin ");
-            can_name = base + "_Elow";
+            his_name = prefix + "_E_Q1_high_thres";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_E_Q1_high_thres";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
@@ -533,14 +541,6 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogz(); 
             m_phy_h2[his_name]->Draw("colz");
 
-            his_name = prefix + "_Q1vElow";
-            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),1000,0,1,1500, 0, 300000);
-            m_phy_h2[his_name]->GetXaxis()->SetTitle("Energy [eV]");
-            can_name = base + "_Q1vElow";
-            m_phy_can[can_name]->cd(a+1);
-            gPad->SetLogz(); 
-            m_phy_h2[his_name]->Draw("colz");
-
           } // end of loop over nAnodes[d-1]
           offset += nAnodes[det-1];
           
@@ -548,6 +548,12 @@ EpicSpectra::EpicSpectra() {
           m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
           
           can_name = base + "_Eratio";
+          m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+          
+          can_name = base + "_E_per_actinide_Q1_high_thres";
+          m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+          
+          can_name = base + "_Eratio_Q1_high_thres";
           m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
 
@@ -566,10 +572,25 @@ EpicSpectra::EpicSpectra() {
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
 
+            his_name = prefix + "_E_Q1_high_thres";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_E_per_actinide_Q1_high_thres";
+            m_phy_can[can_name]->cd(act+1);
+            gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
+
             his_name = prefix + "_Eweighted";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
             m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
             can_name = base + "_E_per_actinide";
+            m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+            gPad->SetLogy();
+
+            his_name = prefix + "_Eweighted_Q1_high_thres";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_E_per_actinide_Q1_high_thres";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             gPad->SetLogy();
             m_phy_h1[his_name]->Draw();
@@ -580,27 +601,55 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
             m_phy_h1[his_name]->Draw();
-	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
-	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
-	        }
-	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
-	        }
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	    }
+	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
+	    }
 
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        }
-	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        }
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	    }
+	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	    }
+
+            his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
+            m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+            m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+            can_name = base + "_Eratio_Q1_high_thres";
+            m_phy_can[can_name]->cd(act+1);
+            m_phy_h1[his_name]->Draw();
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	    }
+	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
+	    }
+
+            can_name = base + "_Eratio_Q1_high_thres";
+            m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+            m_phy_h1[his_name]->Draw("HIST");
+	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	    }
+	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	    }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets
 
@@ -762,57 +811,68 @@ void EpicSpectra::FillPhy() {
         ostringstream name;
         string baseA;
         string his_name;
-        if(m_Physics->GetIsFission()){
 
-	    // to by-pass nponline bug : comment this lines if you want to process several runs 
-            bool replay = m_Cal.GetValue("REPLAY_DATA",0);
-            if(!replay){
-	            double t_fc = m_Physics->GetTime(); 
- 	            if( t_fc - timefc_ref_phy <= 0 && timefc_ref_phy != 0 ) return;
- 	            else timefc_ref_phy = t_fc;
-            }
-            // init
-            short  det    = m_Physics->GetDetNbr();
-            short  anode  = m_Physics->GetAnodeNbr();
-            int    index  = m_detector->GetIndex(det, anode);
-            double tofraw = m_Physics->GetTofRaw();
-            double tofcal = m_Physics->GetTofCal();
-            double e      = m_Physics->GetE();
-            double q1     = m_Physics->GetQ1();
-            name.str("");
-            name.clear();
-            name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
-            baseA = name.str();
+	// to by-pass nponline bug : comment this lines if you want to process several runs 
+        bool replay = m_Cal.GetValue("REPLAY_DATA",0);
+        if(!replay){
+	        double t_fc = m_Physics->GetTime(); 
+ 	        if( t_fc - timefc_ref_phy <= 0 && timefc_ref_phy != 0 ) return;
+ 	        else timefc_ref_phy = t_fc;
+        }
+        // init
+        short  det    = m_Physics->GetDetNbr();
+        short  anode  = m_Physics->GetAnodeNbr();
+        int    index  = m_detector->GetIndex(det, anode);
+        double tofraw = m_Physics->GetTofRaw();
+        double tofcal = m_Physics->GetTofCal();
+        double e      = m_Physics->GetE();
+        double q1     = m_Physics->GetQ1();
+
+        name.str("");
+        name.clear();
+        name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+        baseA = name.str();
+        his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
+
+        if(m_Physics->GetIsFission()){
             // fill spectra
             his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
             his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
-	    if (e>1.e-06){ //e>1eV
-            	his_name = baseA + "_E";             m_phy_h1[his_name]->Fill(e); // MeV
-            	his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
-            }
-	    else{
-            	his_name = baseA + "_Elow";          m_phy_h1[his_name]->Fill(e*1.e+06); //eV
-            	his_name = baseA + "_Q1vElow";       m_phy_h2[his_name]->Fill(e*1.e+06,q1);
+            his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
+
+	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0){
+            	his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
+            	his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
 	    }
 
             name.str("");
 	    name.clear();
             name << "phy_det" << det << "_" << actinide[index];
+
             string prefix = name.str();
             his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
 	    his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+
 	    string his_name_N = his_name;
 	    string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
 	    his_name = prefix + "_Ew_ratioU235";
 	    m_phy_h1[his_name]->Reset();;
             m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
 	    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-	    //for(int i = 0 ; i < (int)XS_JEFF_nENE.size(); i++){
-            //   m_phy_gr["XSratio_JEFF_235U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_235U[i]);   	
-            //   m_phy_gr["XSratio_JEFF_238U_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_238U[i]);   	
-            //   m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetPoint(i+1, XS_JEFF_nENE[i],XS_JEFF_ratio_242Pu[i]);   	
-	    //}
+
+
+	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0){
+            	his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
+	    	his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+	    	string his_name_N = his_name;
+	    	string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted_Q1_high_thres" ;
+	    	his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
+	    	m_phy_h1[his_name]->Reset();;
+            	m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+	    	m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+	    }
+
         }// end of if FF
     }// end of if --input-phy
 

@@ -832,7 +832,7 @@ void EpicSpectra::FillPhy() {
         name.clear();
         name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
         baseA = name.str();
-        his_name = baseA + "_Q1vE";          m_phy_h2[his_name]->Fill(e,q1);
+        his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
 
         if(m_Physics->GetIsFission()){
             // fill spectra
@@ -841,7 +841,7 @@ void EpicSpectra::FillPhy() {
             his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
             his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
 
-	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0){
+	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
             	his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
             	his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
 	    }
@@ -862,7 +862,7 @@ void EpicSpectra::FillPhy() {
 	    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
 
-	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0){
+	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
             	his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
 	    	his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
 	    	string his_name_N = his_name;

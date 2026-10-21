@@ -475,7 +475,8 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    if(fc.det>0 && fc.anode>0) m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+		    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [1] det = " << fc.det << ", and anode = " << fc.anode << endl;
                     m_pendingFC.pop_front(); // remove the first element
                 }
 
@@ -496,7 +497,8 @@ void EpicDetector::BuildPhysicalEvent() {
             fc.q1 = m_RawData->GetQ1(imax);      
             fc.fission = m_RawData->GetIsFission(imax);
             fc.hf_index = m_currentHF;
-            m_pendingFC.push_back(fc);
+	    if(fc.det > 0 && fc.anode > 0) m_pendingFC.push_back(fc);
+	    else cout << "EpicDetector::BuildPhysicalEvent : could not push_back fc --> fc.det = " << fc.det << ", and fc.anode = " << fc.anode << endl;
         }
 
         // HF + FC case but with tFC < tHF
@@ -522,7 +524,8 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    if(fc.det>0 && fc.anode>0) m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+		    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [2] det = " << fc.det << ", and anode = " << fc.anode << endl;
                     m_pendingFC.pop_front(); // remove the first element
                 }
 

@@ -50,11 +50,11 @@ class EpicSpectra {
 	  std::shared_ptr<nptool::Application> m_app;
 	  std::map<std::string,TCutG*> m_tcutg;
 	
-	  unsigned int nDets ;
-	  unsigned int nAnodesTot ;
-	  vector<unsigned int>   nAnodes ;
+	  unsigned short nDets ;
+	  unsigned short nAnodesTot ;
+	  vector<unsigned short> nAnodes ;
 	  vector<string>         actinide ;
-	  vector<unsigned int>   anodes ;
+	  vector<unsigned short> anodes ;
 	  vector<vector<EpicDetector::Actinide>> actinides_per_det;
 	  vector<map<string,double>> mass_per_actinide;
 

@@ -146,7 +146,7 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
     }
     // read the number of anodes of the EPIC fission chamber
     if (block->HasTokenList(nAnodes)) {
-      nA = block->GetInt("nANODES");
+      nA = (short)(block->GetInt("nANODES"));
       if (block->HasTokenList(DZprevA)) {
         if (nA == 1)
           dz.push_back(block->GetDouble("DZ_prevA", "mm"));
@@ -171,10 +171,11 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
       }
       if (block->HasTokenList(AnodeNumber)) {
         if (nA == 1){
-          m_AnodeNumber.push_back(block->GetInt("AnodeNumber"));
+          m_AnodeNumber.push_back((short)(block->GetInt("AnodeNumber")));
         }
         else {
-          num = block->GetVectorInt("AnodeNumber");
+          vector<int> tmp_num = block->GetVectorInt("AnodeNumber");
+          for(size_t i = 0 ; i < tmp_num.size() ; i++) num.push_back((short)tmp_num[i]); 
           m_AnodeNumber.insert(m_AnodeNumber.end(), num.begin(), num.end());
         }
       }
@@ -396,8 +397,7 @@ void EpicDetector::PrintConfig() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void EpicDetector::AddEpic(vector<double> &pos, int nA, double zOff,
-                           vector<double> &dz) {
+void EpicDetector::AddEpic(vector<double> &pos, short nA, double zOff, vector<double> &dz) {
 
   TVector3 DetectorPos(pos[0], pos[1], pos[2]);
   m_posD.push_back(DetectorPos);
@@ -871,7 +871,7 @@ short EpicDetector::GetIndex(short det, short anode) const {
   return it->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double EpicDetector::TofRaw2Ene(int det, int anode, double tofraw, double &tofcal) {
+double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &tofcal) {
 
   const double mn_MeV = 939.565;
   short index = GetIndex(det, anode);

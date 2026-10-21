@@ -793,7 +793,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             else{ 
                 m_RawData->SetIsFission(false);
             }
-	    if(Q1 >= m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGH_THRESHOLD",0)){
+	    if(Q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) *  m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGHEST_CH",0)){
 		m_RawData->SetHighThres(true);
 	    }
 	    else{

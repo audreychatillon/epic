@@ -263,9 +263,12 @@ void EpicDetector::ReadConversionConfig() {
       short det = block->GetInt("det", 1);
       short anode = block->GetInt("anode", 1);
       short index = GetIndex(det, anode);
-      if (index < 0 || index >= m_cfd_fract.size() || anode != m_index2channel[index].anode || det != m_index2channel[index].det){ 
+      if (index < 0 || index >= m_cfd_fract.size() ){ 
         cout << "     ERROR OF MAPPING in EpicDetector::ReadConversionConfig "<< endl;
         cout << "            - index of the input is " << index << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
+      }
+      else if (anode != m_index2channel[index].anode || det != m_index2channel[index].det){ 
+        cout << "     ERROR OF MAPPING in EpicDetector::ReadConversionConfig "<< endl;
         cout << "            - det from ConfigEPIC.dat : " << det << "!= det from detector.yaml : " << m_index2channel[index].det  << endl;
         cout << "            - anode from ConfigEPIC.dat : " << anode << "!= anode from detector.yaml : " << m_index2channel[index].anode  << endl;
       }
@@ -864,6 +867,7 @@ short EpicDetector::GetIndex(short det, short anode) const {
   if (det <= 0 || det > m_nDets || anode <= 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
          << ") and m_nDets=" << m_nDets << endl;
+    cout << "return index = -1 " << endl;
     return -1;
   }
   auto it = m_anode2index[det-1].find(anode);
@@ -883,7 +887,7 @@ double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &t
     return ((gamma - 1.0) * mn_MeV);
   }
   else{
-     cout << "ERROR in EpidDetector::TofRaw2Ene, index = -1" << endl;
+     cout << "ERROR in EpicDetector::TofRaw2Ene, index = -1" << endl;
      tofcal = tofraw;
      return -1.;
   }

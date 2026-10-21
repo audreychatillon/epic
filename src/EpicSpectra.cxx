@@ -540,7 +540,8 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr[his_name]->SetTitle(his_name.c_str());
             double tmp_q1 = m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0) ;
 	    m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
-	    m_phy_gr[his_name]->SetPoint(0,19.9,tmp_q1);
+	    m_phy_gr[his_name]->SetPoint(1,19.9,tmp_q1);
+	    m_phy_gr[his_name]->SetLineWidth(2) ;
             m_phy_gr[his_name]->Draw("sameLP");
           } // end of loop over nAnodes[d-1]
           offset += nAnodes[det-1];

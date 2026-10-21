@@ -558,7 +558,8 @@ void EpicDetector::BuildPhysicalEvent() {
             double e = TofRaw2Ene(det,anode,tof_raw,tof_cal);
             double q1 = m_RawData->GetQ1(imax);      
             bool   isFission = m_RawData->GetIsFission(imax);
-            m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,isFission);
+            if(det>0 && anode>0) m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,isFission);
+	    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [3] det = " << det << ", and anode = " << anode << endl;
         }
     }
 

@@ -829,17 +829,7 @@ void EpicSpectra::FillPhy() {
         double e      = m_Physics->GetE();
         double q1     = m_Physics->GetQ1();
 
-	if(index < 0 ){
-		cout << "ATTENTION at EpicSpectra::FillPhy() corrupted event : " << endl;
-        	cout << "det    = " << m_Physics->GetDetNbr() << endl ;
-        	cout << "anode  = " << m_Physics->GetAnodeNbr() << endl ;
-        	cout << "index  = " << m_detector->GetIndex(det, anode) << endl ;
-        	cout << "tofraw = " << m_Physics->GetTofRaw() << endl ;
-        	cout << "tofcal = " << m_Physics->GetTofCal() << endl ;
-        	cout << "e      = " << m_Physics->GetE() << endl ;
-        	cout << "q1     = " << m_Physics->GetQ1() << endl ;
-	}
-	else{
+	if(index >= 0 ){
             name.str("");
             name.clear();
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
@@ -898,6 +888,7 @@ void EpicSpectra::Clear() {
   // === phys histograms
   for (auto h : m_phy_h1)       h.second->Reset();
   for (auto h : m_phy_h2)       h.second->Reset();
+  for (auto h : m_phy_gr)       h.second->Reset();
   // === general histograms
   m_TimeHF->Reset();
   m_HF_DeltaTimeHF->Reset();

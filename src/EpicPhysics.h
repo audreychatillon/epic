@@ -61,7 +61,7 @@ class EpicPhysics {
         const bool&   fission){
             fFC_det       = det;
             fFC_anode     = anode;
-	        fFC_time      = t_fc;
+	    fFC_time      = t_fc;
             fFC_tof_raw   = tof_raw_ns;
             fFC_tof_cal   = tof_cal_ns;
             fFC_e         = e_MeV;

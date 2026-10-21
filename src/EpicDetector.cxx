@@ -262,7 +262,6 @@ void EpicDetector::ReadConversionConfig() {
     for (auto block : blocks) {
       short det = block->GetInt("det", 1);
       short anode = block->GetInt("anode", 1);
-      cout << "[1]call GetIndex with det = " << det << ", anode = " << anode << endl;
       short index = GetIndex(det, anode);
       if (index < 0 || index >= m_cfd_fract.size() ){ 
         cout << "     ERROR OF MAPPING in EpicDetector::ReadConversionConfig "<< endl;
@@ -706,7 +705,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       // identification of the electronic channel
       anode = Label2anode(label);
       det   = Label2det(label);
-      cout << "[2]call GetIndex with det = " << det << ", anode = " << anode << endl;
       index = GetIndex(det,anode);
       if(index < 0) cout << "ERROR in EpicDetector::BuildRawEvent index = " << index << endl;
       // sampler_data samp = (sampler_data)faster_data_load_p(data);
@@ -879,7 +877,6 @@ short EpicDetector::GetIndex(short det, short anode) const {
 double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &tofcal) {
 
   const double mn_MeV = 939.565;
-      cout << "[3]call GetIndex with det = " << det << ", anode = " << anode << endl;
   short index = GetIndex(det, anode);
   if(index>=0){
     double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);

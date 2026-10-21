@@ -586,6 +586,7 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_E_per_actinide";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             gPad->SetLogy();
+            m_phy_h1[his_name]->Draw();
 
             his_name = prefix + "_Eweighted_Q1_high_thres";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);

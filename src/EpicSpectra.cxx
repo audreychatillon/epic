@@ -232,7 +232,6 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (short a = 0; a < nAnodes[det - 1]; a++) {
             short anode = anodes[offset + a];
-            cout << "call GetIndex(" << det << ", " << anode << ") in EpicSpectra --input-raw" << endl;
             short i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -479,7 +478,6 @@ EpicSpectra::EpicSpectra() {
           // loop over the anodes and create the histo per anode
           for (short a = 0; a < nAnodes[det - 1]; a++) {
             short anode = anodes[offset+a]; 
-		cout << "call GetIndex(" << det << "," << anode << ") in EpicSpectra --input-phy" << endl;
             short i = m_detector->GetIndex(det, anode);
 
             ostringstream name;
@@ -734,7 +732,6 @@ void EpicSpectra::FillRaw() {
                   short det = m_RawData->GetDetNbr(IndexMax[d]);
                   if (det != (d + 1)) std::cout << "ERROR: didn't recover Qmax data to fill raw spectra" << std::endl;
                   short anode = m_RawData->GetAnodeNbr(IndexMax[d]);
-		cout << "call GetIndex(" << det <<"," << anode<< ") in EpicSpectra:FillRaw()" << endl;
                   short index = m_detector->GetIndex(det, anode);
                   name.str("");
                   name.clear();
@@ -822,62 +819,74 @@ void EpicSpectra::FillPhy() {
  	        if( t_fc - timefc_ref_phy <= 0 && timefc_ref_phy != 0 ) return;
  	        else timefc_ref_phy = t_fc;
         }
+
         // init
         short  det    = m_Physics->GetDetNbr();
         short  anode  = m_Physics->GetAnodeNbr();
-		cout << "call GetIndex(" << det <<"," << anode<< ") in EpicSpectra:FillPhy()" << endl;
-        short    index  = m_detector->GetIndex(det, anode);
+        short  index  = m_detector->GetIndex(det, anode);
         double tofraw = m_Physics->GetTofRaw();
         double tofcal = m_Physics->GetTofCal();
         double e      = m_Physics->GetE();
         double q1     = m_Physics->GetQ1();
 
-        name.str("");
-        name.clear();
-        name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
-        baseA = name.str();
-        his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
-
-        if(m_Physics->GetIsFission()){
-            // fill spectra
-            his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
-            his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
-            his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
-            his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
-
-	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
-            	his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
-            	his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
-	    }
-
+	if(index < 0 ){
+		cout << "ATTENTION at EpicSpectra::FillPhy() corrupted event : " << endl;
+        	cout << "det    = " << m_Physics->GetDetNbr() << endl ;
+        	cout << "anode  = " << m_Physics->GetAnodeNbr() << endl ;
+        	cout << "index  = " << m_detector->GetIndex(det, anode) << endl ;
+        	cout << "tofraw = " << m_Physics->GetTofRaw() << endl ;
+        	cout << "tofcal = " << m_Physics->GetTofCal() << endl ;
+        	cout << "e      = " << m_Physics->GetE() << endl ;
+        	cout << "q1     = " << m_Physics->GetQ1() << endl ;
+	}
+	else{
             name.str("");
-	    name.clear();
-            name << "phy_det" << det << "_" << actinide[index];
+            name.clear();
+            name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+            baseA = name.str();
+            his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
 
-            string prefix = name.str();
-            his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
-	    his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+            if(m_Physics->GetIsFission()){
+                // fill spectra
+                his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
+                his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
+                his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
+                his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
 
-	    string his_name_N = his_name;
-	    string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
-	    his_name = prefix + "_Ew_ratioU235";
-	    m_phy_h1[his_name]->Reset();;
-            m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-	    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+	        if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
+                	his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
+                	his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
+	        }
+
+                name.str("");
+	        name.clear();
+                name << "phy_det" << det << "_" << actinide[index];
+
+                string prefix = name.str();
+                his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
+	        his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+
+	        string his_name_N = his_name;
+	        string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
+	        his_name = prefix + "_Ew_ratioU235";
+	        m_phy_h1[his_name]->Reset();;
+                m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+	        m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
 
-	    if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
-            	his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
-	    	his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
-	    	string his_name_N = his_name;
-	    	string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted_Q1_high_thres" ;
-	    	his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
-	    	m_phy_h1[his_name]->Reset();;
-            	m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-	    	m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-	    }
+	        if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGH_THRESHOLD",0)){
+                	his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
+	        	his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+	        	string his_name_N = his_name;
+	        	string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted_Q1_high_thres" ;
+	        	his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
+	        	m_phy_h1[his_name]->Reset();;
+                	m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+	        	m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+	        }
 
-        }// end of if FF
+            }// end of if FF
+	} // end of else (index>=0)
     }// end of if --input-phy
 }
 ////////////////////////////////////////////////////////////////////////////////

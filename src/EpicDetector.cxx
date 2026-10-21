@@ -478,8 +478,7 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    if(fc.det>0 && fc.anode>0) m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
-		    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [1] det = " << fc.det << ", and anode = " << fc.anode << endl;
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
 
@@ -527,8 +526,7 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    if(fc.det>0 && fc.anode>0) m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
-		    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [2] det = " << fc.det << ", and anode = " << fc.anode << endl;
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
 

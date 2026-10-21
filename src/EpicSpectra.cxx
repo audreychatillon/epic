@@ -822,14 +822,14 @@ void EpicSpectra::FillPhy() {
 
         // init
         short  det    = m_Physics->GetDetNbr();
-        short  anode  = m_Physics->GetAnodeNbr();
-        short  index  = m_detector->GetIndex(det, anode);
-        double tofraw = m_Physics->GetTofRaw();
-        double tofcal = m_Physics->GetTofCal();
-        double e      = m_Physics->GetE();
-        double q1     = m_Physics->GetQ1();
 
-	if(index >= 0 ){
+	if(det >= 0 ){
+            short  anode  = m_Physics->GetAnodeNbr();
+            short  index  = m_detector->GetIndex(det, anode);
+            double tofraw = m_Physics->GetTofRaw();
+            double tofcal = m_Physics->GetTofCal();
+            double e      = m_Physics->GetE();
+            double q1     = m_Physics->GetQ1();
             name.str("");
             name.clear();
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];

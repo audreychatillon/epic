@@ -843,7 +843,7 @@ void EpicSpectra::FillPhy() {
                 his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
                 his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
 
-	        if(q1 >= m_cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
+	        if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
                 	his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
                 	his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
 	        }

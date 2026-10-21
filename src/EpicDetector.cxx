@@ -474,8 +474,7 @@ void EpicDetector::BuildPhysicalEvent() {
                 if(fc.hf_index + DTHF == m_currentHF){
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
-                    double e = -1;       
-                    if(fc.fission && fc.det >= 0 && fc.anode >= 0) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
+                    double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
                     m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
@@ -522,8 +521,7 @@ void EpicDetector::BuildPhysicalEvent() {
                 if(fc.hf_index + DTHF == m_currentHF){
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
-                    double e = -1;       
-                    if(fc.fission) e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
+                    double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
                     m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
@@ -543,7 +541,7 @@ void EpicDetector::BuildPhysicalEvent() {
 
     }
     // === =========================================
-    // === CASE GOOD HF IS THE LAST 
+    // === CASE GOOD HF IS THE LAST HF (DTHF == 0)
     else{
         if(imax>=0){
             short  det = m_RawData->GetDetNbr(imax);
@@ -551,10 +549,9 @@ void EpicDetector::BuildPhysicalEvent() {
             double time = m_RawData->GetTimeFC(imax);    
             double tof_raw = m_RawData->GetTofRaw(imax); 
             double tof_cal = -1.; 
-            double e = -1;       
+            double e = TofRaw2Ene(det,anode,tof_raw,tof_cal);
             double q1 = m_RawData->GetQ1(imax);      
             bool   isFission = m_RawData->GetIsFission(imax);
-            if(isFission) e = TofRaw2Ene(det,anode,tof_raw,tof_cal);
             m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,isFission);
         }
     }

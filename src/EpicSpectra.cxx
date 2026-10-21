@@ -45,27 +45,24 @@ EpicSpectra::EpicSpectra() {
         vector<double> XS_JEFF_242Pu;
         double e, u8, u5, pu42;  //e is in eV
         while(XSfile >> e >> u5 >> u8 >> pu42){
-	        if (e<=20000000){
-    	        XS_JEFF_nENE.push_back(e*1.e-06);
-    	        XS_JEFF_235U.push_back(u5);
-    	        XS_JEFF_238U.push_back(u8);
-    	        XS_JEFF_242Pu.push_back(pu42);
-	            XS_JEFF_ratio_235U.push_back(u5/u5);
-	            XS_JEFF_ratio_238U.push_back(u8/u5);
-	            XS_JEFF_ratio_242Pu.push_back(pu42/u5);
-	        }
-	    }
+	   if (e<=20000000){
+    	       XS_JEFF_nENE.push_back(e*1.e-06);
+    	       XS_JEFF_235U.push_back(u5);
+    	       XS_JEFF_238U.push_back(u8);
+    	       XS_JEFF_242Pu.push_back(pu42);
+	       XS_JEFF_ratio_235U.push_back(u5/u5);
+	       XS_JEFF_ratio_238U.push_back(u8/u5);
+	       XS_JEFF_ratio_242Pu.push_back(pu42/u5);
+	   }
+	}
         XSfile.close();
         m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_235U.data());   	
-        //m_phy_gr["XSratio_JEFF_235U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetName("XSratio_JEFF40_235U_235U");
         m_phy_gr["XSratio_JEFF_235U_235U"]->SetTitle("XSratio_JEFF40_235U_235U");
         m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_238U.data());   	
-        //m_phy_gr["XSratio_JEFF_238U_235U"]  = new TGraph();
         m_phy_gr["XSratio_JEFF_238U_235U"]->SetName("XSratio_JEFF40_238U_235U");
         m_phy_gr["XSratio_JEFF_238U_235U"]->SetTitle("XSratio_JEFF40_238U_235U");
         m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph(XS_JEFF_nENE.size(),XS_JEFF_nENE.data(),XS_JEFF_ratio_242Pu.data());   	
-        //m_phy_gr["XSratio_JEFF_242Pu_235U"] = new TGraph();
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetName("XSratio_JEFF40_242Pu_235U");
         m_phy_gr["XSratio_JEFF_242Pu_235U"]->SetTitle("XSratio_JEFF40_242Pu_235U");
     }
@@ -93,15 +90,12 @@ EpicSpectra::EpicSpectra() {
 	    }
         XSfile2.close();
         m_phy_gr["XSratio_BVIII_235U_235U"]  = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_235U.data());   	
-        //m_phy_gr["XSratio_BVIII_235U_235U"]  = new TGraph();
         m_phy_gr["XSratio_BVIII_235U_235U"]->SetName("XSratio_BVIII40_235U_235U");
         m_phy_gr["XSratio_BVIII_235U_235U"]->SetTitle("XSratio_BVIII40_235U_235U");
         m_phy_gr["XSratio_BVIII_238U_235U"]  = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_238U.data());   	
-        //m_phy_gr["XSratio_BVIII_238U_235U"]  = new TGraph();
         m_phy_gr["XSratio_BVIII_238U_235U"]->SetName("XSratio_BVIII40_238U_235U");
         m_phy_gr["XSratio_BVIII_238U_235U"]->SetTitle("XSratio_BVIII40_238U_235U");
         m_phy_gr["XSratio_BVIII_242Pu_235U"] = new TGraph(XS_BVIII_nENE.size(),XS_BVIII_nENE.data(),XS_BVIII_ratio_242Pu.data());   	
-        //m_phy_gr["XSratio_BVIII_242Pu_235U"] = new TGraph();
         m_phy_gr["XSratio_BVIII_242Pu_235U"]->SetName("XSratio_BVIII40_242Pu_235U");
         m_phy_gr["XSratio_BVIII_242Pu_235U"]->SetTitle("XSratio_BVIII40_242Pu_235U");
     }
@@ -331,7 +325,7 @@ EpicSpectra::EpicSpectra() {
             his_name = prefix + "_Q1";
             m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
             m_raw_can[can_name]->cd(a+1);
-	        gPad->SetLogy();
+	    gPad->SetLogy();
             m_raw_h1[his_name]->Draw();
 
             his_name = prefix + "_Q2";
@@ -540,7 +534,14 @@ EpicSpectra::EpicSpectra() {
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_phy_h2[his_name]->Draw("colz");
-
+	    his_name = prefix + "_Q1_THRES";
+            m_phy_gr[his_name] = new TGraph();
+            m_phy_gr[his_name]->SetName(his_name.c_str()); 
+            m_phy_gr[his_name]->SetTitle(his_name.c_str());
+            double tmp_q1 = m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0) ;
+	    m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
+	    m_phy_gr[his_name]->SetPoint(0,19.9,tmp_q1);
+            m_phy_gr[his_name]->Draw("sameLP");
           } // end of loop over nAnodes[d-1]
           offset += nAnodes[det-1];
           

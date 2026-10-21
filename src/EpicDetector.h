@@ -102,6 +102,7 @@ class EpicDetector : public nptool::VDetector {
       const vector<unsigned short>& GetAnodeNumber()       const { return m_AnodeNumber;}
       TVector3 GetEpicPosition(const unsigned short det) const { return m_posD[det - 1];}
       TVector3 GetAnodePosition(const unsigned short det, const unsigned short anode) const {
+      cout << "[4]call GetIndex with det = " << det << ", anode = " << anode << endl;
         short index = GetIndex(det,anode);
 	if(index<0) cout <<"ERROR in EpicDetector::GetAnodePosition, index = -1" << endl; 
         return m_posA[index];

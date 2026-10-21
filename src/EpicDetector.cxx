@@ -73,13 +73,13 @@ void EpicDetector::BuildEpicChannelMaps(){
     m_anode2index.clear();
     m_index2channel.clear();
     m_anode2index.resize(m_nDets);
-    int global_index = 0 ;
-    int offset = 0;
-    for(int d = 0 ; d < m_nDets; d++){
-        int nA = m_nAnodes[d];
-        for(int a = 0 ; a < nA ; a++){
+    short global_index = 0 ;
+    short offset = 0;
+    for(short d = 0 ; d < m_nDets; d++){
+        short nA = m_nAnodes[d];
+        for(short a = 0 ; a < nA ; a++){
             // channel maps
-            int anode = m_AnodeNumber[offset+a];
+            short anode = m_AnodeNumber[offset+a];
             m_anode2index[d][anode] = global_index;
             m_index2channel.push_back({d+1, anode});
             global_index++;
@@ -128,12 +128,12 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   vector<string> AnodeNumber = {"AnodeNumber"}; // Anode number as labeled in FC_det_AnodeNumber
 
   vector<double> Pos;
-  int            nA;
+  short          nA;
   double         zOff;
   vector<double> dz;
   vector<string> material;
   vector<double> mass_material;
-  vector<int>    num;
+  vector<short>  num;
 
   for (auto block : blocks) {
     // read position of the EPIC fission chamber
@@ -216,13 +216,13 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   // TODO mass per actinide to normalize
   m_actinides_per_det.resize(m_nDets);
   m_mass_per_actinide.resize(m_nDets);
-  int offset = 0;
-  for (int d = 0; d < m_nDets; d++) {
-    for (int a = 0 ; a < m_nAnodes[d]; a++){ 
+  short offset = 0;
+  for (short d = 0; d < m_nDets; d++) {
+    for (short a = 0 ; a < m_nAnodes[d]; a++){ 
 	string name_actinide = m_actinide[offset + a];
         m_mass_per_actinide[d][name_actinide] += m_actinide_mass[offset+a];
-	int index = -1 ;
-      	for (int i = 0; i < m_actinides_per_det[d].size(); i++){
+	short index = -1 ;
+      	for (short i = 0; i < m_actinides_per_det[d].size(); i++){
 	   if(m_actinides_per_det[d][i].name == name_actinide){
 		index = i;
 		break;
@@ -259,12 +259,11 @@ void EpicDetector::ReadConversionConfig() {
 
     auto blocks = parser.GetAllBlocksWithToken("ConfigEPIC");
     for (auto block : blocks) {
-      int det = block->GetInt("det", 1);
-      int anode = block->GetInt("anode", 1);
-      cout << "call Get Index in EpicDetector::ReadConversionConfig()" << endl;
-      int index = GetIndex(det, anode);
-      if (index >= m_cfd_fract.size() || anode != m_index2channel[index].anode || det != m_index2channel[index].det){ 
-        cout << "     ERROR OF MAPPING "<< endl;
+      short det = block->GetInt("det", 1);
+      short anode = block->GetInt("anode", 1);
+      short index = GetIndex(det, anode);
+      if (index < 0 || index >= m_cfd_fract.size() || anode != m_index2channel[index].anode || det != m_index2channel[index].det){ 
+        cout << "     ERROR OF MAPPING in EpicDetector::ReadConversionConfig "<< endl;
         cout << "            - index of the input is " << index << " >= " << m_cfd_fract.size() << " = size of vector" << endl;
         cout << "            - det from ConfigEPIC.dat : " << det << "!= det from detector.yaml : " << m_index2channel[index].det  << endl;
         cout << "            - anode from ConfigEPIC.dat : " << anode << "!= anode from detector.yaml : " << m_index2channel[index].anode  << endl;
@@ -572,7 +571,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
   //if(m_RawData->GetFCMult()==0) cout << " === === === NEW GROUP READOUT === === ===" << endl;
 
   // Static variable
-  static unsigned int index, det, anode;
+  static short index, det, anode;
   static long double timestamp;
   static unsigned char alias;
   static qdc_t_x1 hf_data;
@@ -703,10 +702,8 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
       // identification of the electronic channel
       anode = Label2anode(label);
       det   = Label2det(label);
-	cout << "call GetIndex is EpicDetector::BuildRawEvent()" << endl;
       index = GetIndex(det,anode);
-      //cout << setprecision(25) << " --> FC data: t_hf = " << m_TimeHF_current << "(DELTA = " << m_TimeHF_current - m_TimeHF_prev << ")" << endl;
-
+      if(index < 0) cout << "ERROR in EpicDetector::BuildRawEvent index = " << index << endl;
       // sampler_data samp = (sampler_data)faster_data_load_p(data);
       // load sampler data:
       sampler samp;
@@ -821,11 +818,6 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
               m_RawData->SetDeltaT(-1);
               m_RawData->SetHFIndex(-1);
             }
-
-            //cout << "BuildRawEvent : FC data " << endl;
-            //cout << "       FCMult = " << m_RawData->GetFCMult() << endl;
-            //cout << "    fHF_Index = " << m_RawData->GetHFIndex() << endl;
-            //cout << "  fQmax_Index = " << m_RawData->GetQmaxIndex() << endl;
             
           } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0
@@ -842,7 +834,7 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int EpicDetector::Label2det(const std::string &label) {
+short EpicDetector::Label2det(const std::string &label) {
   // generic to handle FC_det_anode or FC_anode
   size_t pos1 = label.find("_");
   size_t pos2 = label.find("_", pos1 + 1);
@@ -850,29 +842,30 @@ unsigned int EpicDetector::Label2det(const std::string &label) {
     return 1;
   else { // format: FC_det_anode
     string number = label.substr(pos1 + 1, pos2 - pos1 - 1);
-    return stoi(number);
+    return (short)(stoi(number));
   }
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int EpicDetector::Label2anode(const std::string &label) {
+short EpicDetector::Label2anode(const std::string &label) {
   // generic to handle FC_det_anode or FC_anode
   size_t pos1 = label.find("_");
   size_t pos2 = label.find("_", pos1 + 1);
   if (pos2 == string::npos) { // format: FC_anode => only one FC
     string number = label.substr(pos1 + 1);
-    return stoi(number);
+    return (short)(stoi(number));
   } else { // format: FC_det_anode
     string number = label.substr(pos2 + 1);
-    return stoi(number);
+    return (short)(stoi(number));
   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 // det is 1-based, anode is 1-based
-unsigned int EpicDetector::GetIndex(int det, int anode) const {
-  if (det == 0 || det > m_nDets || anode == 0 ) {
+short EpicDetector::GetIndex(short det, short anode) const {
+  if (det <= 0 || det > m_nDets || anode <= 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
          << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1
          << "]=" << m_nAnodes[det - 1] << endl;
+    return -1;
   }
   auto it = m_anode2index[det-1].find(anode);
   return it->second;
@@ -881,14 +874,20 @@ unsigned int EpicDetector::GetIndex(int det, int anode) const {
 double EpicDetector::TofRaw2Ene(int det, int anode, double tofraw, double &tofcal) {
 
   const double mn_MeV = 939.565;
-  cout << "cal GetIndex in EpicDetector::TofRaw2Ene" << endl;
-  int index = GetIndex(det, anode);
-  double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);
-  double offset = m_posA[index].Z() / 299.792458 - gammapeak;
-  tofcal = tofraw + offset;
-  double beta = (m_posA[index].Z() / tofcal) / 299.792458;
-  double gamma = 1.0 / sqrt(1.0 - pow(beta, 2));
-  return ((gamma - 1.0) * mn_MeV);
+  short index = GetIndex(det, anode);
+  if(index>=0){
+    double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);
+    double offset = m_posA[index].Z() / 299.792458 - gammapeak;
+    tofcal = tofraw + offset;
+    double beta = (m_posA[index].Z() / tofcal) / 299.792458;
+    double gamma = 1.0 / sqrt(1.0 - pow(beta, 2));
+    return ((gamma - 1.0) * mn_MeV);
+  }
+  else{
+     cout << "ERROR in EpidDetector::TofRaw2Ene, index = -1" << endl;
+     tofcal = tofraw;
+     return -1.;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

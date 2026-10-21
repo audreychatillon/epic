@@ -64,14 +64,14 @@ class EpicDetector : public nptool::VDetector {
       double m_TimeHF_current{0.};
     
       // detector configuration
-      unsigned int         m_nDets{0}; 
-      unsigned int         m_nAtot{0}; 
-      vector<unsigned int> m_nAnodes;
-      vector<string>       m_actinide;
-      vector<double>       m_actinide_mass;
-      vector<TVector3>     m_posD; 
-      vector<TVector3>     m_posA; 
-      vector<unsigned int> m_AnodeNumber;
+      unsigned short         m_nDets{0}; 
+      unsigned short         m_nAtot{0}; 
+      vector<unsigned short> m_nAnodes;
+      vector<string>         m_actinide;
+      vector<double>         m_actinide_mass;
+      vector<TVector3>       m_posD; 
+      vector<TVector3>       m_posA; 
+      vector<unsigned short> m_AnodeNumber;
       vector<vector<Actinide>>   m_actinides_per_det;
       vector<map<string,double>> m_mass_per_actinide;
     
@@ -89,38 +89,39 @@ class EpicDetector : public nptool::VDetector {
       vector<double> m_Q4_gate_stop;
       vector<double> m_TofRaw_max;
     
-      void AddEpic(vector<double>& Pos, int nA, double zOff, vector<double>& dz);
+      void AddEpic(vector<double>& Pos, short nA, double zOff, vector<double>& dz);
     
     public:
       // === Getters
-      epic::EpicData*             GetRawData() const {return m_RawData;}
-      epic::EpicPhysics*          GetPhysics() const {return m_Physics;}
-      unsigned int                GetNumberOfDets()      const { return m_nDets; }
-      unsigned int                GetNumberOfAnodesTot() const { return m_nAtot; }
-      const vector<unsigned int>& GetNumberOfAnodes()    const { return m_nAnodes;}
-      const vector<string>&       GetActinideMaterial()  const { return m_actinide;}
-      const vector<unsigned int>& GetAnodeNumber()       const { return m_AnodeNumber;}
-      TVector3 GetEpicPosition(const unsigned int det)   const { return m_posD[det - 1];}
-      TVector3 GetAnodePosition(const unsigned int det, const unsigned int anode) const {
-        int index = GetIndex(det,anode); 
+      epic::EpicData*    GetRawData() const {return m_RawData;}
+      epic::EpicPhysics* GetPhysics() const {return m_Physics;}
+      unsigned short     GetNumberOfDets()      const { return m_nDets; }
+      unsigned short     GetNumberOfAnodesTot() const { return m_nAtot; }
+      const vector<unsigned short>& GetNumberOfAnodes()    const { return m_nAnodes;}
+      const vector<string>&         GetActinideMaterial()  const { return m_actinide;}
+      const vector<unsigned short>& GetAnodeNumber()       const { return m_AnodeNumber;}
+      TVector3 GetEpicPosition(const unsigned short det) const { return m_posD[det - 1];}
+      TVector3 GetAnodePosition(const unsigned short det, const unsigned short anode) const {
+        short index = GetIndex(det,anode);
+	if(index<0) cout <<"ERROR in EpicDetector::GetAnodePosition, index = -1" << endl; 
         return m_posA[index];
       }
       const vector<vector<Actinide>>&   GetActinidesPerDet() const {return m_actinides_per_det;}
       const vector<map<string,double>>& GetMassPerActinide() const {return m_mass_per_actinide;}
 
     // === Label / Index mapping
-    unsigned int Label2det(const std::string &label);
-    unsigned int Label2anode(const std::string &label);
-    unsigned int GetIndex(int det, int anode) const; // det is 1-based, anode is 1-based
+    short Label2det(const std::string &label);
+    short Label2anode(const std::string &label);
+    short GetIndex(short det, short anode) const; // det is 1-based, anode is 1-based
     void         BuildEpicChannelMaps();
     struct epic_channel{
-      int det;
-      int anode;
+      short det;
+      short anode;
     };
-    vector<unordered_map<int,int>> m_anode2index; //!
-    vector<epic_channel>           m_index2channel; //!
+    vector<unordered_map<short,short>> m_anode2index; //!
+    vector<epic_channel>               m_index2channel; //!
  
-    double TofRaw2Ene(int det, int anode, double tof_raw, double &tof_cal);
+    double TofRaw2Ene(short det, short anode, double tof_raw, double &tof_cal);
 
 
     // === inherrited from nptool::VPlugin

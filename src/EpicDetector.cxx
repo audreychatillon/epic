@@ -863,8 +863,7 @@ short EpicDetector::Label2anode(const std::string &label) {
 short EpicDetector::GetIndex(short det, short anode) const {
   if (det <= 0 || det > m_nDets || anode <= 0 ) {
     cout << "ERROR : EpicDetector::GetIndex(" << det << ", " << anode
-         << "): but m_nDets=" << m_nDets << " and m_nAnodes[" << det - 1
-         << "]=" << m_nAnodes[det - 1] << endl;
+         << ") and m_nDets=" << m_nDets << endl;
     return -1;
   }
   auto it = m_anode2index[det-1].find(anode);

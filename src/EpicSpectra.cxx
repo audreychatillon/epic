@@ -622,27 +622,27 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd(act+1);
             m_phy_h1[his_name]->Draw();
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
-	    }
-	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
-	    }
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
+	        }
 
             can_name = base + "_Eratio";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	    }
-	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	    }
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        }
 
             his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
             m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
@@ -650,27 +650,29 @@ EpicSpectra::EpicSpectra() {
             can_name = base + "_Eratio_Q1_high_thres";
             m_phy_can[can_name]->cd(act+1);
             m_phy_h1[his_name]->Draw();
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
-	    }
-	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
-	    }
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
+	        }
 
             can_name = base + "_Eratio_Q1_high_thres";
             m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
             m_phy_h1[his_name]->Draw("HIST");
-	    if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	    }
-	    if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-	        m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-	    }
+            his_name = prefix + "_Ew_ratioU235";
+            m_phy_h1[his_name]->Draw("HIST same");
+	        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        }
+	        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+	            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+	        }
 	  }// end of loop over the actinides per detector
         } // end of loop over nDets
 

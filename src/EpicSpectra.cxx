@@ -468,6 +468,9 @@ EpicSpectra::EpicSpectra() {
           
           can_name = base + "_Q1vE";
           m_phy_can[can_name] = CreateCanvas(can_name, ncol);
+          
+          can_name = base + "_Q2Q3vQ1_nAexcluded";
+          m_phy_can[can_name] = CreateCanvas(can_name, ncol);
 
           // loop over the anodes and create the histo per anode
           for (short a = 0; a < nAnodes[det - 1]; a++) {
@@ -534,15 +537,30 @@ EpicSpectra::EpicSpectra() {
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_phy_h2[his_name]->Draw("colz");
-	    his_name = prefix + "_Q1_THRES";
+
+            vector<double> xnA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_Q1vE_nA_X");
+            vector<double> ynA = m_Cal.GetCorrection("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_TCUTG_Q1vE_nA_Y");
+            his_name = prefix + "_TCutG_exclusion_nA";
+            m_tcutg[his_name] = new TCutG(his_name.c_str(),xnA.size(),xnA.data(),ynA.data());
+            m_tcutg[his_name]->Draw("same");
+	        
+            his_name = prefix + "_Q1_THRES";
             m_phy_gr[his_name] = new TGraph();
             m_phy_gr[his_name]->SetName(his_name.c_str()); 
             m_phy_gr[his_name]->SetTitle(his_name.c_str());
             double tmp_q1 = m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0) ;
-	    m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
-	    m_phy_gr[his_name]->SetPoint(1,19.9,tmp_q1);
-	    m_phy_gr[his_name]->SetLineWidth(2) ;
+	        m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
+	        m_phy_gr[his_name]->SetPoint(1,19.9,tmp_q1);
+	        m_phy_gr[his_name]->SetLineWidth(2) ;
             m_phy_gr[his_name]->Draw("sameLP");
+
+            his_name = prefix + "_Q2Q3vQ1_nAexcluded";
+            m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 500000, 250, -0.1, 2.4);
+            can_name = base + "_Q2Q3vQ1";
+            m_phy_can[can_name]->cd(a+1);
+            gPad->SetLogz(); 
+            m_phy_h2[his_name]->Draw("colz");
+
           } // end of loop over nAnodes[d-1]
           offset += nAnodes[det-1];
           
@@ -833,11 +851,14 @@ void EpicSpectra::FillPhy() {
             double tofcal = m_Physics->GetTofCal();
             double e      = m_Physics->GetE();
             double q1     = m_Physics->GetQ1();
+            double q2     = m_Physics->GetQ2();
+            double q3     = m_Physics->GetQ3();
             name.str("");
             name.clear();
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
             his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
+            
 
             if(m_Physics->GetIsFission()){
                 // fill spectra

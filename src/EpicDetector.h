@@ -50,6 +50,8 @@ class EpicDetector : public nptool::VDetector {
         short  anode;
         double tFC ;
         double q1;
+        double q2;
+        double q3;
         bool   fission;
         long long hf_index;
       };

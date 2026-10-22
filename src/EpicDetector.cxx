@@ -478,7 +478,7 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.q2,fc.q3,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
 
@@ -497,6 +497,8 @@ void EpicDetector::BuildPhysicalEvent() {
             fc.anode = m_RawData->GetAnodeNbr(imax);      
             fc.tFC = m_RawData->GetTimeFC(imax);    
             fc.q1 = m_RawData->GetQ1(imax);      
+            fc.q2 = m_RawData->GetQ2(imax);      
+            fc.q3 = m_RawData->GetQ3(imax);      
             fc.fission = m_RawData->GetIsFission(imax);
             fc.hf_index = m_currentHF;
 	    if(fc.det > 0 && fc.anode > 0) m_pendingFC.push_back(fc);
@@ -526,7 +528,7 @@ void EpicDetector::BuildPhysicalEvent() {
                     double tof_raw = fc.tFC - thf;
                     double tof_cal = -1.; 
                     double e = TofRaw2Ene(fc.det,fc.anode,tof_raw,tof_cal);
-                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.fission);
+                    m_Physics->SetHit_fFC(fc.det,fc.anode,fc.tFC,tof_raw,tof_cal,e,fc.q1,fc.q2,fc.q3,fc.fission);
                     m_pendingFC.pop_front(); // remove the first element
                 }
 
@@ -555,8 +557,10 @@ void EpicDetector::BuildPhysicalEvent() {
             double tof_cal = -1.; 
             double e = TofRaw2Ene(det,anode,tof_raw,tof_cal);
             double q1 = m_RawData->GetQ1(imax);      
+            double q2 = m_RawData->GetQ2(imax);      
+            double q3 = m_RawData->GetQ3(imax);      
             bool   isFission = m_RawData->GetIsFission(imax);
-            if(det>0 && anode>0) m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,isFission);
+            if(det>0 && anode>0) m_Physics->SetHit_fFC(det,anode,time,tof_raw,tof_cal,e,q1,q2,q3,isFission);
 	    else cout << "EpicDetector::BuildPhysicalEvent could not SetHit_fFC [3] det = " << det << ", and anode = " << anode << endl;
         }
     }

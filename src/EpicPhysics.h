@@ -18,6 +18,8 @@ class EpicPhysics {
         double fFC_tof_cal;     // TofCal
         double fFC_e;           // energy [MeV]
         double fFC_q1;          // Total charge
+        double fFC_q2;          // 
+        double fFC_q3;          // 
         bool   fFC_isFission;   // true if (Q2/Q3 vs Q1 is Inside TCutG
 
 
@@ -38,6 +40,8 @@ class EpicPhysics {
         fFC_tof_cal   = -1.;
         fFC_e         = -1.;
         fFC_q1        = -1.;
+        fFC_q2        = -1.;
+        fFC_q3        = -1.;
         fFC_isFission = false;
    };//!
 
@@ -58,6 +62,8 @@ class EpicPhysics {
         const double& tof_cal_ns,
         const double& e_MeV,
         const double& q1,
+        const double& q2,
+        const double& q3,
         const bool&   fission){
             fFC_det       = det;
             fFC_anode     = anode;
@@ -66,6 +72,8 @@ class EpicPhysics {
             fFC_tof_cal   = tof_cal_ns;
             fFC_e         = e_MeV;
             fFC_q1        = q1;
+            fFC_q2        = q2;
+            fFC_q3        = q3;
             fFC_isFission = fission;
         }; //!
 
@@ -78,6 +86,8 @@ class EpicPhysics {
     inline double GetTofCal()     const { return fFC_tof_cal ; };
     inline double GetE()          const { return fFC_e ; };
     inline double GetQ1()         const { return fFC_q1 ; };
+    inline double GetQ2()         const { return fFC_q2 ; };
+    inline double GetQ3()         const { return fFC_q3 ; };
     inline bool   GetIsFission()  const { return fFC_isFission ; };
 
    //////////////////////////////////////////////////////////////

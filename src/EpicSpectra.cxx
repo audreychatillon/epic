@@ -835,7 +835,7 @@ void EpicSpectra::FillPhy() {
         string baseA;
         string his_name;
 
-	// to by-pass nponline bug : comment this lines if you want to process several runs 
+	    // to by-pass nponline bug : comment this lines if you want to process several runs 
         bool replay = m_Cal.GetValue("REPLAY_DATA",0);
         if(!replay){
 	        double t_fc = m_Physics->GetTime(); 
@@ -846,7 +846,7 @@ void EpicSpectra::FillPhy() {
         // init
         short  det    = m_Physics->GetDetNbr();
 
-	if(det >= 0 ){
+	    if(det >= 0 ){
             short  anode  = m_Physics->GetAnodeNbr();
             short  index  = m_detector->GetIndex(det, anode);
             double tofraw = m_Physics->GetTofRaw();
@@ -860,8 +860,10 @@ void EpicSpectra::FillPhy() {
             name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
             baseA = name.str();
             his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
-            
-
+            //his_name = prefix + "_TCutG_exclusion_nA";
+            //if(q3>0){
+            //    if(m_tcutg[hisname]->IsInside(q1,q2/q3))     
+            //}
             if(m_Physics->GetIsFission()){
                 // fill spectra
                 his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);

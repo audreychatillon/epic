@@ -556,7 +556,7 @@ EpicSpectra::EpicSpectra() {
 
             his_name = prefix + "_Q2Q3vQ1_nAexcluded";
             m_phy_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),2000, 0, 500000, 250, -0.1, 2.4);
-            can_name = base + "_Q2Q3vQ1";
+            can_name = base + "_Q2Q3vQ1_nAexcluded";
             m_phy_can[can_name]->cd(a+1);
             gPad->SetLogz(); 
             m_phy_h2[his_name]->Draw("colz");

@@ -636,9 +636,9 @@ EpicSpectra::EpicSpectra() {
       } // end of loop over nAnodes[d-1]
       offset += nAnodes[det-1];
       
-      ////can_name = baseD + "_E_per_actinide";
-      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
-      ////
+      can_name = baseD + "_E_per_actinide";
+      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      
       ////can_name = baseD + "_Eratio";
       ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       ////
@@ -648,19 +648,19 @@ EpicSpectra::EpicSpectra() {
       ////can_name = baseD + "_Eratio_U235_Q1_high_thres";
       ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
-      ////for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
+      for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 
-      ////  ostringstream name;
-      ////  name << "phy_det" << det << "_" << actinides_per_det[det-1][act].name;
-      ////  string baseA = name.str();
+        ostringstream name;
+        name << "phy_det" << det << "_" << actinides_per_det[det-1][act].name;
+        string baseA = name.str();
 
-      ////  his_name = baseA + "_E";
-      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-      ////  can_name = baseD + "_E_per_actinide";
-      ////  m_phy_can[can_name]->cd(act+1);
-      ////  gPad->SetLogy();
-      ////  m_phy_h1[his_name]->Draw();
+        his_name = baseA + "_E";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+        can_name = baseD + "_E_per_actinide";
+        m_phy_can[can_name]->cd(act+1);
+        gPad->SetLogy();
+        m_phy_h1[his_name]->Draw();
 
       ////  his_name = baseA + "_E_Q1_high_thres";
       ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
@@ -670,13 +670,13 @@ EpicSpectra::EpicSpectra() {
       ////  gPad->SetLogy();
       ////  m_phy_h1[his_name]->Draw();
 
-      ////  his_name = baseA + "_Eweighted";
-      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-      ////  can_name = baseD + "_E_per_actinide";
-      ////  m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-      ////  gPad->SetLogy();
-      ////  m_phy_h1[his_name]->Draw();
+        his_name = baseA + "_Eweighted";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+        can_name = baseD + "_E_per_actinide";
+        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+        gPad->SetLogy();
+        m_phy_h1[his_name]->Draw();
 
       ////  his_name = baseA + "_Eweighted_Q1_high_thres";
       ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
@@ -743,7 +743,7 @@ EpicSpectra::EpicSpectra() {
       ////  if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
       ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
       ////  }
-      ////}// end of loop over the actinides per detector
+      }// end of loop over the actinides per detector
     } // end of loop over nDets
   }// end of if --input-phy
 }
@@ -933,11 +933,9 @@ void EpicSpectra::FillPhy() {
 
       // histogram Q2/Q3 vs Q1 if (n,alpha) removed
       his_name = baseA + "_TCutG_exclusion_nA";
-      if(q3>0){
-        if(!m_tcutg[his_name]->IsInside(q1,q2/q3)){
-          his_name = baseA + "_Q2Q3vQ1_nAexcluded";
-          m_phy_h2[his_name]->Fill(q1,q2/q3);
-        }     
+      if(q3>0 && !m_tcutg[his_name]-IsInside(e,q1))
+        his_name = baseA + "_Q2Q3vQ1_nAexcluded";
+        m_phy_h2[his_name]->Fill(q1,q2/q3);
       }
 
       // if fission at raw level : 
@@ -955,15 +953,15 @@ void EpicSpectra::FillPhy() {
           his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
         }
        
-      /////  // histograms per actinide
-      /////  name.str("");
-      /////  name.clear();
-      /////  name << "phy_det" << det << "_" << actinide[index];
-      /////  
-      /////  string prefix = name.str();
-      /////  his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
-      /////  his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
-      /////  
+        // histograms per actinide
+        name.str("");
+        name.clear();
+        name << "phy_det" << det << "_" << actinide[index];
+        
+        string prefix = name.str();
+        his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
+        his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+        
       /////  string his_name_N = his_name;
       /////  string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
       /////  his_name = prefix + "_Ew_ratioU235";

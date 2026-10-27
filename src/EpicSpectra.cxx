@@ -699,18 +699,18 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
         }
 
-        his_name = baseA + "_Ew_ratioU238";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_Eratio";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        m_phy_h1[his_name]->Draw();
-        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]){ 
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
-        }
-        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
-        }
+        //his_name = baseA + "_Ew_ratioU238";
+        //m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+        //m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+        //can_name = baseD + "_Eratio";
+        //m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+        //m_phy_h1[his_name]->Draw();
+        //if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]){ 
+        //    m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
+        //}
+        //if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
+        //    m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
+        //}
 
 
         his_name = baseA + "_Ew_ratioU235_Q1_high_thres";
@@ -930,14 +930,14 @@ void EpicSpectra::FillPhy() {
       baseA = name.str();
       his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
 
-      // histogram Q2/Q3 vs Q1 if (n,alpha) removed
-      his_name = baseA + "_TCutG_exclusion_nA";
-      if(q3>0){
-        if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
-          his_name = baseA + "_Q2Q3vQ1_nAexcluded";
-          m_phy_h2[his_name]->Fill(q1,q2/q3);
-        }     
-      }
+      //// histogram Q2/Q3 vs Q1 if (n,alpha) removed
+      //his_name = baseA + "_TCutG_exclusion_nA";
+      //if(q3>0){
+      //  if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
+      //    his_name = baseA + "_Q2Q3vQ1_nAexcluded";
+      //    m_phy_h2[his_name]->Fill(q1,q2/q3);
+      //  }     
+      //}
 
       // if fission at raw level : 
       if(m_Physics->GetIsFission()){
@@ -970,11 +970,11 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
         
-        his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
-        his_name = prefix + "_Ew_ratioU238";
-        m_phy_h1[his_name]->Reset();
-        m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-        m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+        //his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
+        //his_name = prefix + "_Ew_ratioU238";
+        //m_phy_h1[his_name]->Reset();
+        //m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+        //m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
         
         if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
           his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);

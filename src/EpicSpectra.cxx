@@ -933,7 +933,7 @@ void EpicSpectra::FillPhy() {
 
       // histogram Q2/Q3 vs Q1 if (n,alpha) removed
       his_name = baseA + "_TCutG_exclusion_nA";
-      if(q3>0 && m_tcutg[his_name]->IsInside(e,q1)==false){
+      if(q3>0 && !m_tcutg[his_name]->IsInside(e,q1) && e>0){
         his_name = baseA + "_Q2Q3vQ1_nAexcluded";
         m_phy_h2[his_name]->Fill(q1,q2/q3);
       }

@@ -639,9 +639,9 @@ EpicSpectra::EpicSpectra() {
       can_name = baseD + "_E_per_actinide";
       m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       
-      ////can_name = baseD + "_Eratio";
-      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
-      ////
+      can_name = baseD + "_Eratio";
+      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      
       ////can_name = baseD + "_E_per_actinide_Q1_high_thres";
       ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       ////

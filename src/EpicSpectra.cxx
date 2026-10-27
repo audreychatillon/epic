@@ -793,7 +793,6 @@ void EpicSpectra::FillRaw() {
                       if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormA";   
-                        cout << "Fill WaveFormA" << endl;
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
                       if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){

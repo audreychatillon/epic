@@ -686,18 +686,18 @@ EpicSpectra::EpicSpectra() {
       ////  gPad->SetLogy();
       ////  m_phy_h1[his_name]->Draw();
 
-      ////  his_name = baseA + "_Ew_ratioU235";
-      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-      ////  can_name = baseD + "_Eratio";
-      ////  m_phy_can[can_name]->cd(act+1);
-      ////  m_phy_h1[his_name]->Draw();
-      ////  if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-      ////  }
-      ////  if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-      ////  }
+        his_name = baseA + "_Ew_ratioU235";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+        can_name = baseD + "_Eratio";
+        m_phy_can[can_name]->cd(act+1);
+        m_phy_h1[his_name]->Draw();
+        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+        }
+        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+        }
 
       ////  //his_name = baseA + "_Ew_ratioU238";
       ////  //m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
@@ -962,12 +962,12 @@ void EpicSpectra::FillPhy() {
         his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
         his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
         
-      /////  string his_name_N = his_name;
-      /////  string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
-      /////  his_name = prefix + "_Ew_ratioU235";
-      /////  m_phy_h1[his_name]->Reset();
-      /////  m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-      /////  m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+        string his_name_N = his_name;
+        string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
+        his_name = prefix + "_Ew_ratioU235";
+        m_phy_h1[his_name]->Reset();
+        m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+        m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
       /////  
       /////  //his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
       /////  //his_name = prefix + "_Ew_ratioU238";

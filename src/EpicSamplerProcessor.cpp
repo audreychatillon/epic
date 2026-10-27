@@ -6,6 +6,7 @@
 #include "TApplication.h"
 #include "TSystem.h"
 #include <numeric>
+#include <cmath>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 EpicSamplerProcessor::EpicSamplerProcessor(const std::vector<double>& inputSamples, bool applyFilter_ =false) 

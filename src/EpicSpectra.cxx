@@ -896,7 +896,7 @@ void EpicSpectra::FillRaw() {
 ////////////////////////////////////////////////////////////////////////////////
 void EpicSpectra::FillPhy() {
   if(m_app->HasFlag("--input-phy")){
-  
+
     ostringstream name;
     string baseA;
     string his_name;
@@ -913,81 +913,83 @@ void EpicSpectra::FillPhy() {
     short  det    = m_Physics->GetDetNbr();
     
     if(det >= 0){
-      // Get Physics Data
-      short  anode  = m_Physics->GetAnodeNbr();
-      short  index  = m_detector->GetIndex(det, anode);
-      double tofraw = m_Physics->GetTofRaw();
-      double tofcal = m_Physics->GetTofCal();
-      double e      = m_Physics->GetE();
-      double q1     = m_Physics->GetQ1();
-      double q2     = m_Physics->GetQ2();
-      double q3     = m_Physics->GetQ3();
+      /////cout << "det = " << det << endl;
 
-      // histogram Q1vE
-      name.str("");
-      name.clear();
-      name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
-      baseA = name.str();
-      his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
+      /////// Get Physics Data
+      /////short  anode  = m_Physics->GetAnodeNbr();
+      /////short  index  = m_detector->GetIndex(det, anode);
+      /////double tofraw = m_Physics->GetTofRaw();
+      /////double tofcal = m_Physics->GetTofCal();
+      /////double e      = m_Physics->GetE();
+      /////double q1     = m_Physics->GetQ1();
+      /////double q2     = m_Physics->GetQ2();
+      /////double q3     = m_Physics->GetQ3();
 
-      //// histogram Q2/Q3 vs Q1 if (n,alpha) removed
-      //his_name = baseA + "_TCutG_exclusion_nA";
-      //if(q3>0){
-      //  if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
-      //    his_name = baseA + "_Q2Q3vQ1_nAexcluded";
-      //    m_phy_h2[his_name]->Fill(q1,q2/q3);
-      //  }     
-      //}
+      /////// histogram Q1vE
+      /////name.str("");
+      /////name.clear();
+      /////name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+      /////baseA = name.str();
+      /////his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
 
-      // if fission at raw level : 
-      if(m_Physics->GetIsFission()){
-        // histograms: Tof and E 
-        his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
-        his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
-        his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
-        his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
-       
-        // if fission and Q1>high_thres 
-        // histogram: Tof and E
-        if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
-          his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
-          his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
-        }
-       
-        // histograms per actinide
-        name.str("");
-        name.clear();
-        name << "phy_det" << det << "_" << actinide[index];
-        
-        string prefix = name.str();
-        his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
-        his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
-        
-        string his_name_N = his_name;
-        string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
-        his_name = prefix + "_Ew_ratioU235";
-        m_phy_h1[his_name]->Reset();
-        m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-        m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-        
-        //his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
-        //his_name = prefix + "_Ew_ratioU238";
-        //m_phy_h1[his_name]->Reset();
-        //m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-        //m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-        
-        if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
-          his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
-          his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
-          string his_name_N = his_name;
-          string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted_Q1_high_thres" ;
-          his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
-          m_phy_h1[his_name]->Reset();;
-          m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-          m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-        }
-      
-      }// end of if FF
+      ///////// histogram Q2/Q3 vs Q1 if (n,alpha) removed
+      ///////his_name = baseA + "_TCutG_exclusion_nA";
+      ///////if(q3>0){
+      ///////  if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
+      ///////    his_name = baseA + "_Q2Q3vQ1_nAexcluded";
+      ///////    m_phy_h2[his_name]->Fill(q1,q2/q3);
+      ///////  }     
+      ///////}
+
+      /////// if fission at raw level : 
+      /////if(m_Physics->GetIsFission()){
+      /////  // histograms: Tof and E 
+      /////  his_name = baseA + "_TofRaw";            m_phy_h1[his_name]->Fill(tofraw);
+      /////  his_name = baseA + "_TofRaw_cutF_zoom";  m_phy_h1[his_name]->Fill(tofraw);
+      /////  his_name = baseA + "_TofCal";            m_phy_h1[his_name]->Fill(tofcal);
+      /////  his_name = baseA + "_E";                 m_phy_h1[his_name]->Fill(e); // MeV
+      ///// 
+      /////  // if fission and Q1>high_thres 
+      /////  // histogram: Tof and E
+      /////  if(q1 >= m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
+      /////    his_name = baseA + "_TofCal_Q1_high_thres"; m_phy_h1[his_name]->Fill(tofcal);
+      /////    his_name = baseA + "_E_Q1_high_thres";      m_phy_h1[his_name]->Fill(e); // MeV
+      /////  }
+      ///// 
+      /////  // histograms per actinide
+      /////  name.str("");
+      /////  name.clear();
+      /////  name << "phy_det" << det << "_" << actinide[index];
+      /////  
+      /////  string prefix = name.str();
+      /////  his_name = prefix + "_E";               m_phy_h1[his_name]->Fill(e);
+      /////  his_name = prefix + "_Eweighted";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+      /////  
+      /////  string his_name_N = his_name;
+      /////  string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted" ;
+      /////  his_name = prefix + "_Ew_ratioU235";
+      /////  m_phy_h1[his_name]->Reset();
+      /////  m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+      /////  m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+      /////  
+      /////  //his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
+      /////  //his_name = prefix + "_Ew_ratioU238";
+      /////  //m_phy_h1[his_name]->Reset();
+      /////  //m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+      /////  //m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+      /////  
+      /////  if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
+      /////    his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);
+      /////    his_name = prefix + "_Eweighted_Q1_high_thres";       m_phy_h1[his_name]->Fill(e,1./mass_per_actinide[det-1][actinide[index]]);
+      /////    string his_name_N = his_name;
+      /////    string his_name_D = "phy_det" + to_string(det) + "_235U_Eweighted_Q1_high_thres" ;
+      /////    his_name = prefix + "_Ew_ratioU235_Q1_high_thres";
+      /////    m_phy_h1[his_name]->Reset();;
+      /////    m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+      /////    m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+      /////  }
+      /////
+      /////}// end of if FF
     } // end of else (det>=0)
   }// end of if --input-phy
 }

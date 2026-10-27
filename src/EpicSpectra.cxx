@@ -914,31 +914,31 @@ void EpicSpectra::FillPhy() {
     
     if(det >= 0){
 
-      /////// Get Physics Data
-      /////short  anode  = m_Physics->GetAnodeNbr();
-      /////short  index  = m_detector->GetIndex(det, anode);
-      /////double tofraw = m_Physics->GetTofRaw();
-      /////double tofcal = m_Physics->GetTofCal();
-      /////double e      = m_Physics->GetE();
-      /////double q1     = m_Physics->GetQ1();
-      /////double q2     = m_Physics->GetQ2();
-      /////double q3     = m_Physics->GetQ3();
+      // Get Physics Data
+      short  anode  = m_Physics->GetAnodeNbr();
+      short  index  = m_detector->GetIndex(det, anode);
+      double tofraw = m_Physics->GetTofRaw();
+      double tofcal = m_Physics->GetTofCal();
+      double e      = m_Physics->GetE();
+      double q1     = m_Physics->GetQ1();
+      double q2     = m_Physics->GetQ2();
+      double q3     = m_Physics->GetQ3();
 
-      /////// histogram Q1vE
-      /////name.str("");
-      /////name.clear();
-      /////name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
-      /////baseA = name.str();
-      /////his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
+      // histogram Q1vE
+      name.str("");
+      name.clear();
+      name << "phy_det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_" << actinide[index];
+      baseA = name.str();
+      his_name = baseA + "_Q1vE";                  m_phy_h2[his_name]->Fill(e,q1);
 
-      ///////// histogram Q2/Q3 vs Q1 if (n,alpha) removed
-      ///////his_name = baseA + "_TCutG_exclusion_nA";
-      ///////if(q3>0){
-      ///////  if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
-      ///////    his_name = baseA + "_Q2Q3vQ1_nAexcluded";
-      ///////    m_phy_h2[his_name]->Fill(q1,q2/q3);
-      ///////  }     
-      ///////}
+      // histogram Q2/Q3 vs Q1 if (n,alpha) removed
+      his_name = baseA + "_TCutG_exclusion_nA";
+      if(q3>0){
+        if(m_tcutg[his_name]->IsInside(q1,q2/q3)){
+          his_name = baseA + "_Q2Q3vQ1_nAexcluded";
+          m_phy_h2[his_name]->Fill(q1,q2/q3);
+        }     
+      }
 
       /////// if fission at raw level : 
       /////if(m_Physics->GetIsFission()){

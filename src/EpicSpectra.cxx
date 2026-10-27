@@ -969,11 +969,11 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
         
-        //his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
-        //his_name = prefix + "_Ew_ratioU238";
-        //m_phy_h1[his_name]->Reset();
-        //m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
-        //m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+        his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
+        his_name = prefix + "_Ew_ratioU238";
+        m_phy_h1[his_name]->Reset();
+        m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
+        m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
       /////  
       /////  if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
       /////    his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);

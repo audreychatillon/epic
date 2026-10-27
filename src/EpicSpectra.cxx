@@ -636,114 +636,114 @@ EpicSpectra::EpicSpectra() {
       } // end of loop over nAnodes[d-1]
       offset += nAnodes[det-1];
       
-      can_name = baseD + "_E_per_actinide";
-      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
-      
-      can_name = baseD + "_Eratio";
-      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
-      
-      can_name = baseD + "_E_per_actinide_Q1_high_thres";
-      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
-      
-      can_name = baseD + "_Eratio_U235_Q1_high_thres";
-      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      ////can_name = baseD + "_E_per_actinide";
+      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      ////
+      ////can_name = baseD + "_Eratio";
+      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      ////
+      ////can_name = baseD + "_E_per_actinide_Q1_high_thres";
+      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      ////
+      ////can_name = baseD + "_Eratio_U235_Q1_high_thres";
+      ////m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
 
-      for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
+      ////for(short act = 0 ; act < (short)actinides_per_det[det-1].size(); act++){
 
-        ostringstream name;
-        name << "phy_det" << det << "_" << actinides_per_det[det-1][act].name;
-        string baseA = name.str();
+      ////  ostringstream name;
+      ////  name << "phy_det" << det << "_" << actinides_per_det[det-1][act].name;
+      ////  string baseA = name.str();
 
-        his_name = baseA + "_E";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_E_per_actinide";
-        m_phy_can[can_name]->cd(act+1);
-        gPad->SetLogy();
-        m_phy_h1[his_name]->Draw();
+      ////  his_name = baseA + "_E";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_E_per_actinide";
+      ////  m_phy_can[can_name]->cd(act+1);
+      ////  gPad->SetLogy();
+      ////  m_phy_h1[his_name]->Draw();
 
-        his_name = baseA + "_E_Q1_high_thres";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_E_per_actinide_Q1_high_thres";
-        m_phy_can[can_name]->cd(act+1);
-        gPad->SetLogy();
-        m_phy_h1[his_name]->Draw();
+      ////  his_name = baseA + "_E_Q1_high_thres";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_E_per_actinide_Q1_high_thres";
+      ////  m_phy_can[can_name]->cd(act+1);
+      ////  gPad->SetLogy();
+      ////  m_phy_h1[his_name]->Draw();
 
-        his_name = baseA + "_Eweighted";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_E_per_actinide";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        gPad->SetLogy();
-        m_phy_h1[his_name]->Draw();
+      ////  his_name = baseA + "_Eweighted";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_E_per_actinide";
+      ////  m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+      ////  gPad->SetLogy();
+      ////  m_phy_h1[his_name]->Draw();
 
-        his_name = baseA + "_Eweighted_Q1_high_thres";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_E_per_actinide_Q1_high_thres";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        gPad->SetLogy();
-        m_phy_h1[his_name]->Draw();
+      ////  his_name = baseA + "_Eweighted_Q1_high_thres";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_E_per_actinide_Q1_high_thres";
+      ////  m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+      ////  gPad->SetLogy();
+      ////  m_phy_h1[his_name]->Draw();
 
-        his_name = baseA + "_Ew_ratioU235";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_Eratio";
-        m_phy_can[can_name]->cd(act+1);
-        m_phy_h1[his_name]->Draw();
-        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-        }
-        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-        }
+      ////  his_name = baseA + "_Ew_ratioU235";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_Eratio";
+      ////  m_phy_can[can_name]->cd(act+1);
+      ////  m_phy_h1[his_name]->Draw();
+      ////  if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////  }
+      ////  if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////  }
 
-        //his_name = baseA + "_Ew_ratioU238";
-        //m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        //m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        //can_name = baseD + "_Eratio";
-        //m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        //m_phy_h1[his_name]->Draw();
-        //if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]){ 
-        //    m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
-        //}
-        //if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
-        //    m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
-        //}
+      ////  //his_name = baseA + "_Ew_ratioU238";
+      ////  //m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  //m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  //can_name = baseD + "_Eratio";
+      ////  //m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+      ////  //m_phy_h1[his_name]->Draw();
+      ////  //if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]){ 
+      ////  //    m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
+      ////  //}
+      ////  //if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
+      ////  //    m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
+      ////  //}
 
 
-        his_name = baseA + "_Ew_ratioU235_Q1_high_thres";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
-        can_name = baseD + "_Eratio_Q1_high_thres";
-        m_phy_can[can_name]->cd(act+1);
-        m_phy_h1[his_name]->Draw();
-        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
-        }
-        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
-        }
+      ////  his_name = baseA + "_Ew_ratioU235_Q1_high_thres";
+      ////  m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  200, 0, 20);
+      ////  m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 100 keV / bin ");
+      ////  can_name = baseD + "_Eratio_Q1_high_thres";
+      ////  m_phy_can[can_name]->cd(act+1);
+      ////  m_phy_h1[his_name]->Draw();
+      ////  if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kRed);
+      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(2);
+      ////  }
+      ////  if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineColor(kBlack);
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineStyle(2);
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->SetLineWidth(3);
+      ////  }
 
-        can_name = baseD + "_Eratio_Q1_high_thres";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        m_phy_h1[his_name]->Draw("HIST");
-        his_name = baseA + "_Ew_ratioU235";
-        m_phy_h1[his_name]->Draw("HIST same");
-        
-        if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-        }
-        if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
-            m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
-        }
-      }// end of loop over the actinides per detector
+      ////  can_name = baseD + "_Eratio_Q1_high_thres";
+      ////  m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+      ////  m_phy_h1[his_name]->Draw("HIST");
+      ////  his_name = baseA + "_Ew_ratioU235";
+      ////  m_phy_h1[his_name]->Draw("HIST same");
+      ////  
+      ////  if(m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_JEFF_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////  }
+      ////  if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]){ 
+      ////      m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
+      ////  }
+      ////}// end of loop over the actinides per detector
     } // end of loop over nDets
   }// end of if --input-phy
 }

@@ -797,18 +797,18 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
             else{ 
                 m_RawData->SetIsFission(false);
             }
-	    if(Q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) *  m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGHEST_CH",0)){
-		m_RawData->SetHighThres(true);
-	    }
-	    else{
-		m_RawData->SetHighThres(false);
+	          if(Q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) *  m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGHEST_CH",0)){
+		          m_RawData->SetHighThres(true);
+	          }
+	          else{
+		          m_RawData->SetHighThres(false);
             }
 
             // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
             if(m_RawData->GetQmaxIndex() == -1){
                 if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
                 m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
-	     } 
+	          } 
             else {
                 if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
                     if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);

@@ -549,9 +549,9 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr[his_name]->SetName(his_name.c_str()); 
             m_phy_gr[his_name]->SetTitle(his_name.c_str());
             double tmp_q1 = m_Cal.GetValue("EPIC_"+to_string(det)+"_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0) ;
-	        m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
-	        m_phy_gr[his_name]->SetPoint(1,19.9,tmp_q1);
-	        m_phy_gr[his_name]->SetLineWidth(2) ;
+	          m_phy_gr[his_name]->SetPoint(0,0.1,tmp_q1);
+	          m_phy_gr[his_name]->SetPoint(1,19.9,tmp_q1);
+	          m_phy_gr[his_name]->SetLineWidth(2) ;
             m_phy_gr[his_name]->Draw("sameLP");
 
             his_name = prefix + "_Q2Q3vQ1_nAexcluded";
@@ -695,18 +695,17 @@ void EpicSpectra::FillRaw() {
         if (FC_mult > 0) {
           bool replay = m_Cal.GetValue("REPLAY_DATA",0);
           if (m_RawData->GetHFIndex()>=0) {
-          
-	    // to by-pass nponline bug
+	          // to by-pass nponline bug
             if(!replay){
 	            double t_hf = m_RawData->GetTimeHF(); 
  	            if( t_hf - timehf_ref_raw <= 0 && timehf_ref_raw !=0 ) return;
  	            else timehf_ref_raw = t_hf;
             }
-
-	    // fill spectra
+	          // fill spectra
             m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
             m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF()); //ns
-          } 
+          }
+
           if (m_RawData->GetQmaxIndex()>=0){
             // init
             int multPerFC[nDets];
@@ -722,7 +721,7 @@ void EpicSpectra::FillRaw() {
             // search for qmax per FC
             for (int i = 0; i < FC_mult; i++) {
 
-	          // to by-pass nponline bug 
+	            // to by-pass nponline bug 
               // this should be commented if processing several runs
               // at new runs restart t from 0
               if(!replay){
@@ -731,10 +730,11 @@ void EpicSpectra::FillRaw() {
  	              else timefc_ref_raw = t_fc;
               }
 
-
               if (m_RawData->GetPulserTrig(i))           continue;
+
               short det = m_RawData->GetDetNbr(i);
-              if (det < 0)          continue;
+              if (det < 0)                               continue;
+
               short anode = m_RawData->GetAnodeNbr(i);
               double qmax = m_RawData->GetQmax(i);
               multPerFC[det - 1]++;
@@ -790,16 +790,16 @@ void EpicSpectra::FillRaw() {
                   if (q3 > 0){
                       his_name = baseA + "_Q2Q3vQ1";       m_raw_h2[his_name]->Fill(q1, q2 / q3);
                       his_name = baseA + "_TCutG_discriA";
-                      //if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
-                      if(m_tcutg[his_name]->IsInside(q1, q2 / q3)) {
+                      if(m_tcutg[his_name]->IsInside(q1, q2 / q3) && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
-                        his_name = baseA + "_WaveFormA";    
+                        his_name = baseA + "_WaveFormA";   
+                        cout << "Fill WaveFormA" << endl;
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                       }
-                      //if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){
-                      if(b_fission){
+                      if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
+                        cout << "Fill WaveFormF" << endl;
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++)  m_raw_h2[his_name]->Fill(i*2,signal[i]);
                         his_name = baseA + "_TofRaw_cutF";         m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_TofRaw_cutF_zoom";    m_raw_h1[his_name]->Fill(tofraw);

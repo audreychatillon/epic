@@ -371,14 +371,18 @@ void EpicDetector::PrintConfig() {
     cout << "      calibration parameters " << endl;
     cout << "     ---- ----------------------------------------------------- ----" << endl; 
     // Q1 high threshold
-    cout << "          Q1 high threshold [ch] : ";
+    cout << "          Q1 high threshold [ch]                  : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_Q1_HIGH_THRESHOLD",0);
     cout << endl;
     // Gamma Peak
-    cout << "          Gamma Peak [ch]        : ";
+    cout << "          Gamma Peak at raw level[ch]             : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
-      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK",0);
+      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK_RAW",0);
+    cout << endl;
+    cout << "if HF in past/future, Gamma Peak at phy level[ch] : ";
+    for (size_t a = 0; a < m_nAnodes[d]; a++)
+      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK_PHY",0);
     cout << endl;
     cout << "     ==== ===================================================== ====" << endl; 
     cout << endl;
@@ -388,8 +392,6 @@ void EpicDetector::PrintConfig() {
     cout << "     ==== ===================================================== ====" << endl; 
     offset += m_nAnodes[d];
   }
-  cout << " (*) TofRawMax: if > 0, alpha filter on incoming TofRaw: tof_raw > TofRawMax are rejected " << endl;
-  cout << "                if < 0, no filter on TofRaw" << endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

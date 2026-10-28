@@ -371,12 +371,12 @@ void EpicDetector::PrintConfig() {
     cout << "      calibration parameters " << endl;
     cout << "     ---- ----------------------------------------------------- ----" << endl; 
     // Q1 high threshold
-    cout << "          Q1 high threshold [ch]                  : ";
+    cout << "Q1 high_thres [ch] is " << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_Q1_THRESHOLD_PERCENT",0) << " of highest channel : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
-      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_Q1_HIGH_THRESHOLD",0);
+      cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_Q1_HIGHEST_CH",0);
     cout << endl;
     // Gamma Peak
-    cout << "          Gamma Peak at raw level[ch]             : ";
+    cout << "                     Gamma Peak at raw level[ch] : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK_RAW",0);
     cout << endl;

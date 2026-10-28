@@ -211,7 +211,6 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q3_gate_start.resize(m_nAtot, 10.);
   m_Q3_gate_stop.resize(m_nAtot, 40.);
   m_Q4_gate_stop.resize(m_nAtot, 80.);
-  m_TofRaw_max.resize(m_nAtot, -1.); // ns
 
   // number of actinides per detector
   // TODO mass per actinide to normalize
@@ -288,7 +287,6 @@ void EpicDetector::ReadConversionConfig() {
       m_Q3_gate_start[index] = (double)block->GetInt("Q3_gate_start", 1);
       m_Q3_gate_stop[index] = (double)block->GetInt("Q3_gate_stop", 1);
       m_Q4_gate_stop[index] = (double)block->GetInt("Q4_gate_stop", 1);
-      m_TofRaw_max[index] = (double)block->GetInt("RawTof_MaxLimit", 1);
     }
   } else
     cout << "//// No EPIC conversion file found, using default parameters"
@@ -372,11 +370,6 @@ void EpicDetector::PrintConfig() {
     cout << "     ---- ----------------------------------------------------- ----" << endl; 
     cout << "      calibration parameters " << endl;
     cout << "     ---- ----------------------------------------------------- ----" << endl; 
-    // TofRaw max
-    cout << "          TofRawMax (*)          : ";
-    for (size_t a = 0; a < m_nAnodes[d]; a++)
-      cout << left << setw(colWidth) << m_TofRaw_max[offset + a];
-    cout << endl;
     // Q1 high threshold
     cout << "          Q1 high threshold [ch] : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
@@ -773,59 +766,57 @@ void EpicDetector::BuildRawEvent(const std::string &daq,
         if (Q1 != 0 && Q2 != 0 && Q3 != 0) {
           double TimeFC = (double)timestamp + (double)T_cfd - sampler_before_threshold_ns;
           double tof_raw = TimeFC - m_TimeHF_current;
-          if (tof_raw < m_TofRaw_max[index] || m_TofRaw_max[index] < 0) {
 
-            // fill vectors
-            m_RawData->SetDetNbr(det);   
-            m_RawData->SetAnodeNbr(anode); 
-            m_RawData->SetPulserTrig(false);
-            m_RawData->SetTimeFC(TimeFC);
-            m_RawData->SetTofRaw(tof_raw);
-            m_RawData->SetTimeCfd(T_cfd);
-            m_RawData->SetTimeQmax(T_qmax);
-            m_RawData->SetQmax(Qmax);
-            m_RawData->SetQ1(Q1);
-            m_RawData->SetQ2(Q2);
-            m_RawData->SetQ3(Q3);
-            m_RawData->SetQ4(Q4);
-            ostringstream name;
-            name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
-            string tcutg_name = name.str();
-            if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
-                m_RawData->SetIsFission(true);
-            }
-            else{ 
-                m_RawData->SetIsFission(false);
-            }
-	          if(Q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) *  m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGHEST_CH",0)){
-		          m_RawData->SetHighThres(true);
-	          }
-	          else{
-		          m_RawData->SetHighThres(false);
-            }
+          // fill vectors
+          m_RawData->SetDetNbr(det);   
+          m_RawData->SetAnodeNbr(anode); 
+          m_RawData->SetPulserTrig(false);
+          m_RawData->SetTimeFC(TimeFC);
+          m_RawData->SetTofRaw(tof_raw);
+          m_RawData->SetTimeCfd(T_cfd);
+          m_RawData->SetTimeQmax(T_qmax);
+          m_RawData->SetQmax(Qmax);
+          m_RawData->SetQ1(Q1);
+          m_RawData->SetQ2(Q2);
+          m_RawData->SetQ3(Q3);
+          m_RawData->SetQ4(Q4);
+          ostringstream name;
+          name << "det" << det << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
+          string tcutg_name = name.str();
+          if(m_tcutg[tcutg_name]->IsInside(Q1,Q2/Q3)){ 
+              m_RawData->SetIsFission(true);
+          }
+          else{ 
+              m_RawData->SetIsFission(false);
+          }
+	        if(Q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) *  m_Cal.GetValue("EPIC_"+ to_string(det) + "_ANODE_" + to_string(anode) + "Q1_HIGHEST_CH",0)){
+		        m_RawData->SetHighThres(true);
+	        }
+	        else{
+		        m_RawData->SetHighThres(false);
+          }
 
-            // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
-            if(m_RawData->GetQmaxIndex() == -1){
-                if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
-                m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
-	          } 
-            else {
-                if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
-                    if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
-                    m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
-                }
-            }
+          // search for Qmax : attention if HF is first in group QmaxIndex = -1 and FCMult>1
+          if(m_RawData->GetQmaxIndex() == -1){
+              if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
+              m_RawData->SetQmaxIndex(m_RawData->GetFCMult()-1);
+	        } 
+          else {
+              if (Qmax > m_RawData->GetQmax(m_RawData->GetQmaxIndex())) {
+                  if (m_Get_Sampler_Qmax == 1) m_RawData->SetSampler(Signal);
+                  m_RawData->SetQmaxIndex(m_RawData->GetFCMult() - 1);
+              }
+          }
 
-            // if first element in group init fHF non vector data to default values
-            // init fFC_LastTimeHF 
-            if (m_RawData->GetFCMult() == 1) {
-              m_RawData->SetTimeLastHF(m_TimeHF_current);
-              m_RawData->SetTimeHF(-1);
-              m_RawData->SetDeltaT(-1);
-              m_RawData->SetHFIndex(-1);
-            }
+          // if first element in group init fHF non vector data to default values
+          // init fFC_LastTimeHF 
+          if (m_RawData->GetFCMult() == 1) {
+            m_RawData->SetTimeLastHF(m_TimeHF_current);
+            m_RawData->SetTimeHF(-1);
+            m_RawData->SetDeltaT(-1);
+            m_RawData->SetHFIndex(-1);
+          }
             
-          } // end of rejection or not of events as a function of its tof_raw
         } // end if Qi>0
       } // If FC_Triggered && FC_Threshold && T_cfd
     } // end FC sampler

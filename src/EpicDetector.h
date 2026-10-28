@@ -89,7 +89,6 @@ class EpicDetector : public nptool::VDetector {
       vector<double> m_Q3_gate_start;
       vector<double> m_Q3_gate_stop;
       vector<double> m_Q4_gate_stop;
-      vector<double> m_TofRaw_max;
     
       void AddEpic(vector<double>& Pos, short nA, double zOff, vector<double>& dz);
     

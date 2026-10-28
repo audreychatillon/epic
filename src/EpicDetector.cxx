@@ -295,7 +295,7 @@ void EpicDetector::ReadConversionConfig() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::PrintConfig() {
-  constexpr int colWidth = 20;
+  constexpr int colWidth = 18;
   cout << "//// EpicDetector::PrintConversion Config" << endl;
   cout << "     Number of EPIC fission chamber found : " << m_nDets << endl;
   cout << "                   (Total number of anodes : " << m_nAtot << ")" << endl;
@@ -371,16 +371,17 @@ void EpicDetector::PrintConfig() {
     cout << "      calibration parameters " << endl;
     cout << "     ---- ----------------------------------------------------- ----" << endl; 
     // Q1 high threshold
-    cout << "Q1 high_thres [ch] is " << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_Q1_THRESHOLD_PERCENT",0) << " of highest channel : ";
+    cout << "          Q1 high_thres [ch] is " << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_Q1_THRESHOLD_PERCENT",0) << " of highest channel " << endl;
+    cout << "          Q1 highest channel     : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_Q1_HIGHEST_CH",0);
     cout << endl;
     // Gamma Peak
-    cout << "                     Gamma Peak at raw level[ch] : ";
+    cout << "          Gamma Peak raw [ch]    : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK_RAW",0);
     cout << endl;
-    cout << "if HF in past/future, Gamma Peak at phy level[ch] : ";
+    cout << "          Gamma Peak phy [ch]    : ";
     for (size_t a = 0; a < m_nAnodes[d]; a++)
       cout << left << setw(colWidth) << m_Cal.GetValue("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(m_AnodeNumber[offset + a]) + "_GAMMA_PEAK_PHY",0);
     cout << endl;

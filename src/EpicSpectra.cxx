@@ -396,13 +396,6 @@ EpicSpectra::EpicSpectra() {
         gPad->SetLogz(); 
         m_raw_h2[his_name]->Draw("colz");
 
-        can_name = baseD + "_Q";
-        his_name = baseA + "_Q1";
-        m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
-        m_raw_can[can_name]->cd(a+1);
-	     gPad->SetLogy();
-        m_raw_h1[his_name]->Draw();
-
         can_name = baseD + "_Q1";
         his_name = baseA + "_Q1";
         m_raw_can[can_name]->cd(a+1);
@@ -432,6 +425,13 @@ EpicSpectra::EpicSpectra() {
         can_name = baseD + "_Qmax";
         m_raw_can[can_name]->cd(a+1);
         gPad->SetLogy();
+        m_raw_h1[his_name]->Draw();
+
+        can_name = baseD + "_Q";
+        his_name = baseA + "_Q1";
+        m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
+        m_raw_can[can_name]->cd(a+1);
+	     gPad->SetLogy();
         m_raw_h1[his_name]->Draw();
 
         his_name = baseA + "_TofRaw";

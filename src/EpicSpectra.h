@@ -44,6 +44,7 @@ class EpicSpectra {
 	  std::map<std::string,TH2*> m_raw_h2;
 	  std::map<std::string,TH1*> m_phy_h1;
 	  std::map<std::string,TH2*> m_phy_h2;
+	  std::map<std::string,TGraph*> m_raw_gr;
 	  std::map<std::string,TGraph*> m_phy_gr;
 	  std::map<std::string,TCanvas*> m_raw_can;
 	  std::map<std::string,TCanvas*> m_phy_can;
@@ -62,7 +63,7 @@ class EpicSpectra {
    	double timehf_ref_raw; 
    	double timefc_ref_raw; 
    	double timefc_ref_phy;
-	
+
 	  TCanvas* CreateCanvas(const std::string& name, int ncol);
 	
 	

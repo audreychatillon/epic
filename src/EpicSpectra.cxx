@@ -358,6 +358,7 @@ EpicSpectra::EpicSpectra() {
         m_raw_gr[his_name] = new TGraph();
         m_raw_gr[his_name]->SetName(his_name.c_str());
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
+        m_raw_gr[his_name]->SetPoint(0,0,0);
         m_raw_gr[his_name]->SetMarkerStyle(20);
         m_raw_gr[his_name]->SetMarkerSize(1.4);
         m_raw_gr[his_name]->Draw("ALP");
@@ -366,6 +367,7 @@ EpicSpectra::EpicSpectra() {
         m_raw_gr[his_name] = new TGraph();
         m_raw_gr[his_name]->SetName(his_name.c_str());
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
+        m_raw_gr[his_name]->SetPoint(0,0,0);
         m_raw_gr[his_name]->Draw("sameLP");
 
 

@@ -232,6 +232,9 @@ EpicSpectra::EpicSpectra() {
       can_name = baseD + "_Q";
       m_raw_can[can_name] = CreateCanvas(can_name, ncol);
       
+      can_name = baseD + "_Q1";
+      m_raw_can[can_name] = CreateCanvas(can_name, ncol);
+      
       can_name = baseD + "_Q4";
       m_raw_can[can_name] = CreateCanvas(can_name, ncol);
       
@@ -332,14 +335,14 @@ EpicSpectra::EpicSpectra() {
         m_tcutg[his_name]->Draw("same");
 
         his_name = baseA + "_WaveFormA";
-        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 400, -1000, 3000);
+        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),50, -10, 90, 400, -1000, 3000);
         can_name = baseD + "_WaveformA";
         m_raw_can[can_name]->cd(a+1);
         gPad->SetLogz(); 
         m_raw_h2[his_name]->Draw("colz");
 
         his_name = baseA + "_WaveFormF";
-        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),110, -10, 210, 1300, -1000, 12000);
+        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),50, -10, 90, 1300, -1000, 12000);
         can_name = baseD + "_WaveformF";
         m_raw_can[can_name]->cd(a+1);
         gPad->SetLogz(); 
@@ -397,7 +400,13 @@ EpicSpectra::EpicSpectra() {
         his_name = baseA + "_Q1";
         m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
         m_raw_can[can_name]->cd(a+1);
-	      gPad->SetLogy();
+	     gPad->SetLogy();
+        m_raw_h1[his_name]->Draw();
+
+        can_name = baseD + "_Q1";
+        his_name = baseA + "_Q1";
+        m_raw_can[can_name]->cd(a+1);
+	     gPad->SetLogy();
         m_raw_h1[his_name]->Draw();
 
         his_name = baseA + "_Q2";

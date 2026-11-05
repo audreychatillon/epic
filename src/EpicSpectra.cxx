@@ -364,14 +364,14 @@ EpicSpectra::EpicSpectra() {
         m_raw_gr[his_name]->SetMarkerSize(1.4);
         cout << m_raw_gr[his_name]->GetN() << endl;
         m_raw_gr[his_name]->ls();
-        //m_raw_gr[his_name]->Draw("ALP");
+        m_raw_gr[his_name]->Draw("ALP");
 
-        //his_name = baseA + "_grTcfd";
-        //m_raw_gr[his_name] = new TGraph();
-        //m_raw_gr[his_name]->SetName(his_name.c_str());
-        //m_raw_gr[his_name]->SetTitle(his_name.c_str());
-        //m_raw_gr[his_name]->SetPoint(0,0,0);
-        //m_raw_gr[his_name]->Draw("sameLP");
+        his_name = baseA + "_grTcfd";
+        m_raw_gr[his_name] = new TGraph();
+        m_raw_gr[his_name]->SetName(his_name.c_str());
+        m_raw_gr[his_name]->SetTitle(his_name.c_str());
+        m_raw_gr[his_name]->SetPoint(0,0,0);
+        m_raw_gr[his_name]->Draw("sameLP");
 
 
         his_name = baseA + "_Q4QmaxvQ1";
@@ -422,11 +422,13 @@ EpicSpectra::EpicSpectra() {
         gPad->SetLogz(); 
         m_raw_h2[his_name]->Draw("colz");
 
-        can_name = baseD + "_Q1";
+        can_name = baseD + "_Q";
+
         his_name = baseA + "_Q1";
+        m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
+        m_raw_h1[his_name]->SetLineColor(8);
         m_raw_can[can_name]->cd(a+1);
-	     gPad->SetLogy();
-        m_raw_h1[his_name]->Draw();
+        m_raw_h1[his_name]->Draw("same");
 
         his_name = baseA + "_Q2";
         m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
@@ -453,9 +455,8 @@ EpicSpectra::EpicSpectra() {
         gPad->SetLogy();
         m_raw_h1[his_name]->Draw();
 
-        can_name = baseD + "_Q";
+        can_name = baseD + "_Q1";
         his_name = baseA + "_Q1";
-        m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
         m_raw_can[can_name]->cd(a+1);
 	     gPad->SetLogy();
         m_raw_h1[his_name]->Draw();
@@ -895,10 +896,10 @@ void EpicSpectra::FillRaw() {
                       if(b_fission && IndexMax[d]==m_RawData->GetQmaxIndex()){
                         vector<double> signal = m_RawData->GetSampler();
                         his_name = baseA + "_WaveFormF";    
-                        //gr_name = baseA + "_grWaveF";    
+                        gr_name = baseA + "_grWaveF";    
                         for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++){
                           m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                          //m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
+                          m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                         }
                         his_name = baseA + "_TofRaw_cutF";         m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_TofRaw_cutF_zoom";    m_raw_h1[his_name]->Fill(tofraw);

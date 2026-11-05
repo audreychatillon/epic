@@ -478,7 +478,7 @@ EpicSpectra::EpicSpectra() {
         int gp = (int)m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_GAMMA_PEAK_RAW",0);
 
         his_name = baseA + "_TofRaw_cutF_zoom";
-        m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  20000, gp-200, gp+1800);
+        m_raw_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(),  30000, gp-700, gp+2300);
         m_raw_h1[his_name]->GetXaxis()->SetTitle("Time [ns] 100ps / bin ");
         can_name = baseD + "_TofRaw_zoom";
         m_raw_can[can_name]->cd(a+1);

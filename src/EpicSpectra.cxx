@@ -338,14 +338,14 @@ EpicSpectra::EpicSpectra() {
         m_tcutg[his_name]->Draw("same");
 
         his_name = baseA + "_WaveFormA";
-        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),50, -10, 90, 400, -1000, 3000);
+        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),40, -10, 70, 400, -1000, 3000);
         can_name = baseD + "_WaveformA";
         m_raw_can[can_name]->cd(a+1);
         gPad->SetLogz(); 
         m_raw_h2[his_name]->Draw("colz");
 
         his_name = baseA + "_WaveFormF";
-        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),50, -10, 90, 1500, -3000, 12000);
+        m_raw_h2[his_name] = new TH2F(his_name.c_str(), his_name.c_str(),40, -10, 70, 1500, -3000, 12000);
         can_name = baseD + "_WaveformF";
         m_raw_can[can_name]->cd(a+1);
         gPad->SetLogz(); 
@@ -355,15 +355,12 @@ EpicSpectra::EpicSpectra() {
         m_raw_can[can_name]->cd(a+1);
 
         his_name = baseA + "_grWaveF";
-        cout << "his_name = " << his_name << endl;
         m_raw_gr[his_name] = new TGraph();
         m_raw_gr[his_name]->SetName(his_name.c_str());
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
         m_raw_gr[his_name]->SetPoint(0,0.,0.);
         m_raw_gr[his_name]->SetMarkerStyle(20);
         m_raw_gr[his_name]->SetMarkerSize(1.);
-        cout << m_raw_gr[his_name]->GetN() << endl;
-        m_raw_gr[his_name]->ls();
         m_raw_gr[his_name]->Draw("ALP");
 
         his_name = baseA + "_grTcfd";
@@ -904,6 +901,7 @@ void EpicSpectra::FillRaw() {
                           m_raw_h2[his_name]->Fill(i*2,signal[i]);
                           m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                         }
+                        m_raw_gr[gr_name]->GetYaxis()->UnZoom();
                         gr_name = baseA + "_grTcfd";
                         m_raw_gr[gr_name]->SetPoint(0,t_cfd,0);                         
                         m_raw_gr[gr_name]->SetPoint(1,t_cfd,qm);                         

@@ -63,37 +63,37 @@ EpicDetector::EpicDetector() {
   m_TimeHF_current = 0.;
 
   m_Get_Sampler_Qmax = 0;
-    
 
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::BuildEpicChannelMaps(){
-    cout << "//// EpicDetector::BuildEpicChannelMaps" << endl;
+  cout << "//// EpicDetector::BuildEpicChannelMaps" << endl;
 
-    m_anode2index.clear();
-    m_index2channel.clear();
-    m_anode2index.resize(m_nDets);
-    short global_index = 0 ;
-    short offset = 0;
-    for(short d = 0 ; d < m_nDets; d++){
-        short nA = m_nAnodes[d];
-        for(short a = 0 ; a < nA ; a++){
-            // channel maps
-            short anode = m_AnodeNumber[offset+a];
-            m_anode2index[d][anode] = global_index;
-            m_index2channel.push_back({d+1, anode});
-            global_index++;
+  m_anode2index.clear();
+  m_index2channel.clear();
+  m_anode2index.resize(m_nDets);
+  short global_index = 0 ;
+  short offset = 0;
+  for(short d = 0 ; d < m_nDets; d++){
+      short nA = m_nAnodes[d];
+      for(short a = 0 ; a < nA ; a++){
+          // channel maps
+          short anode = m_AnodeNumber[offset+a];
+          m_anode2index[d][anode] = global_index;
+          m_index2channel.push_back({d+1, anode});
+          global_index++;
 
-            // TCutG Fission
-            vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
-            vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
-            ostringstream name;
-            name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
-            string tcutg_name = name.str();
-            m_tcutg[tcutg_name] = new TCutG(tcutg_name.c_str(),xF.size(),xF.data(),yF.data());
-        } // end for(a)
-        offset += nA;
-    }// end for(d)
+          // TCutG Fission
+          vector<double> xF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_X");
+          vector<double> yF = m_Cal.GetCorrection("EPIC_" + to_string(d+1) + "_ANODE_" + to_string(anode) + "_TCUTG_DISCRI_F_Y");
+          ostringstream name;
+          name << "det" << d+1 << "_A" << std::setw(2) << std::setfill('0') << anode << "_2DdiscriF"; 
+          string tcutg_name = name.str();
+          m_tcutg[tcutg_name] = new TCutG(tcutg_name.c_str(),xF.size(),xF.data(),yF.data());
+      } // end for(a)
+      offset += nA;
+  }// end for(d)
 
 
     /*
@@ -112,8 +112,8 @@ void EpicDetector::BuildEpicChannelMaps(){
         offset += m_nAnodes[d];
     }
     */
-
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
 
@@ -213,30 +213,29 @@ void EpicDetector::ReadConfiguration(nptool::InputParser parser) {
   m_Q4_gate_stop.resize(m_nAtot, 80.);
 
   // number of actinides per detector
-  // TODO mass per actinide to normalize
   m_actinides_per_det.resize(m_nDets);
   m_mass_per_actinide.resize(m_nDets);
   short offset = 0;
   for (short d = 0; d < m_nDets; d++) {
     for (short a = 0 ; a < m_nAnodes[d]; a++){ 
-	string name_actinide = m_actinide[offset + a];
-        m_mass_per_actinide[d][name_actinide] += m_actinide_mass[offset+a];
-	short index = -1 ;
-      	for (short i = 0; i < m_actinides_per_det[d].size(); i++){
-	   if(m_actinides_per_det[d][i].name == name_actinide){
-		index = i;
-		break;
-	   }
-	}
-	if (index == -1){
-	   Actinide new_actinide;
-	   new_actinide.name = name_actinide;
-	   new_actinide.mass = m_actinide_mass[offset+a];
-	   m_actinides_per_det[d].push_back(new_actinide);
-	}
-	else{
-	   m_actinides_per_det[d][index].mass += m_actinide_mass[offset + a] ;
-	}
+	    string name_actinide = m_actinide[offset + a];
+      m_mass_per_actinide[d][name_actinide] += m_actinide_mass[offset+a];
+	    short index = -1 ;
+      for (short i = 0; i < m_actinides_per_det[d].size(); i++){
+	      if(m_actinides_per_det[d][i].name == name_actinide){
+		      index = i;
+		      break;
+	      }
+	    }
+	    if (index == -1){
+	      Actinide new_actinide;
+	      new_actinide.name = name_actinide;
+	      new_actinide.mass = m_actinide_mass[offset+a];
+	      m_actinides_per_det[d].push_back(new_actinide);
+	    }
+	    else{
+	      m_actinides_per_det[d][index].mass += m_actinide_mass[offset + a] ;
+	    }
     }
     offset += m_nAnodes[d];
   }// end of loop over m_nDets
@@ -497,8 +496,8 @@ void EpicDetector::BuildPhysicalEvent() {
             fc.q3 = m_RawData->GetQ3(imax);      
             fc.fission = m_RawData->GetIsFission(imax);
             fc.hf_index = m_currentHF;
-	    if(fc.det > 0 && fc.anode > 0) m_pendingFC.push_back(fc);
-	    else cout << "EpicDetector::BuildPhysicalEvent : could not push_back fc --> fc.det = " << fc.det << ", and fc.anode = " << fc.anode << endl;
+	          if(fc.det > 0 && fc.anode > 0) m_pendingFC.push_back(fc);
+	          else cout << "EpicDetector::BuildPhysicalEvent : could not push_back fc --> fc.det = " << fc.det << ", and fc.anode = " << fc.anode << endl;
         }
 
         // HF + FC case but with tFC < tHF

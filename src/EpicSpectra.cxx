@@ -253,7 +253,7 @@ EpicSpectra::EpicSpectra() {
       can_name = baseD + "_WaveformF";
       m_raw_can[can_name] = CreateCanvas(can_name, ncol);
       
-      can_name = baseD + "_GraphF";
+      can_name = baseD + "_ScopeF";
       m_raw_can[can_name] = CreateCanvas(can_name, ncol);
       
       can_name = baseD + "_Q2vQ1";
@@ -351,7 +351,7 @@ EpicSpectra::EpicSpectra() {
         gPad->SetLogz(); 
         m_raw_h2[his_name]->Draw("colz");
 
-        can_name = baseD + "_GraphF";
+        can_name = baseD + "_ScopeF";
         m_raw_can[can_name]->cd(a+1);
 
         his_name = baseA + "_grWaveF";
@@ -898,10 +898,10 @@ void EpicSpectra::FillRaw() {
                 gr_name = baseA + "_grWaveF";    
                 for(int i = 0 ; i < m_RawData->GetSamplerSize(); i++){
                   m_raw_h2[his_name]->Fill(i*2,signal[i]);
-                  if (q1 < m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_FISSION_GRAPH_Q1_MAX",0))
+                  if (q1 < m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_SCOPE_FISSION_Q1_MAX",0))
                     m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                 }
-                if (q1 < m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_FISSION_GRAPH_Q1_MAX",0)){
+                if (q1 < m_Cal.GetValue("EPIC_"+ to_string(det)+"_ANODE_"+to_string(anode) + "_SCOPE_FISSION_Q1_MAX",0)){
                   m_raw_gr[gr_name]->SetMinimum(-0.25*qm)  ;
                   m_raw_gr[gr_name]->SetMaximum(1.1*qm);   
                   gr_name = baseA + "_grTcfd";             

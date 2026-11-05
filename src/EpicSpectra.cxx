@@ -355,12 +355,15 @@ EpicSpectra::EpicSpectra() {
         m_raw_can[can_name]->cd(a+1);
 
         his_name = baseA + "_grWaveF";
+        cout << "his_name = " << his_name << endl;
         m_raw_gr[his_name] = new TGraph();
         m_raw_gr[his_name]->SetName(his_name.c_str());
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
-        m_raw_gr[his_name]->SetPoint(0,0,0);
+        m_raw_gr[his_name]->SetPoint(0,0.,0.);
         m_raw_gr[his_name]->SetMarkerStyle(20);
         m_raw_gr[his_name]->SetMarkerSize(1.4);
+        cout << m_raw_gr[his_name]->GetN() << endl;
+        m_raw_gr[his_name]->ls();
         //m_raw_gr[his_name]->Draw("ALP");
 
         //his_name = baseA + "_grTcfd";

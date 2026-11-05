@@ -361,7 +361,7 @@ EpicSpectra::EpicSpectra() {
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
         m_raw_gr[his_name]->SetPoint(0,0.,0.);
         m_raw_gr[his_name]->SetMarkerStyle(20);
-        m_raw_gr[his_name]->SetMarkerSize(1.4);
+        m_raw_gr[his_name]->SetMarkerSize(1.);
         cout << m_raw_gr[his_name]->GetN() << endl;
         m_raw_gr[his_name]->ls();
         m_raw_gr[his_name]->Draw("ALP");
@@ -370,6 +370,9 @@ EpicSpectra::EpicSpectra() {
         m_raw_gr[his_name] = new TGraph();
         m_raw_gr[his_name]->SetName(his_name.c_str());
         m_raw_gr[his_name]->SetTitle(his_name.c_str());
+        m_raw_gr[his_name]->SetLineStyle(9);
+        m_raw_gr[his_name]->SetLineWidth(2);
+        m_raw_gr[his_name]->SetLineColor(kRed);
         m_raw_gr[his_name]->SetPoint(0,0,0);
         m_raw_gr[his_name]->Draw("sameLP");
 
@@ -428,7 +431,7 @@ EpicSpectra::EpicSpectra() {
         m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
         m_raw_h1[his_name]->SetLineColor(8);
         m_raw_can[can_name]->cd(a+1);
-        m_raw_h1[his_name]->Draw("same");
+        m_raw_h1[his_name]->Draw();
 
         his_name = baseA + "_Q2";
         m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
@@ -901,6 +904,9 @@ void EpicSpectra::FillRaw() {
                           m_raw_h2[his_name]->Fill(i*2,signal[i]);
                           m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                         }
+                        gr_name = baseA + "_grTcfd";
+                        m_raw_gr[gr_name]->SetPoint(0,t_cfd,0);                         
+                        m_raw_gr[gr_name]->SetPoint(1,t_cfd,qm);                         
                         his_name = baseA + "_TofRaw_cutF";         m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_TofRaw_cutF_zoom";    m_raw_h1[his_name]->Fill(tofraw);
                         his_name = baseA + "_TofRaw_cutF_offset";  m_raw_h1[his_name]->Fill(tofraw);

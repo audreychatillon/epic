@@ -426,7 +426,6 @@ EpicSpectra::EpicSpectra() {
 
         his_name = baseA + "_Q1";
         m_raw_h1[his_name]  = new TH1F(his_name.c_str(), his_name.c_str(),25000, 0, 500000);
-        m_raw_h1[his_name]->SetLineColor(8);
         m_raw_can[can_name]->cd(a+1);
         m_raw_h1[his_name]->Draw();
 
@@ -901,7 +900,7 @@ void EpicSpectra::FillRaw() {
                           m_raw_h2[his_name]->Fill(i*2,signal[i]);
                           m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                         }
-                        m_raw_gr[gr_name]->SetMinimum(-300);
+                        m_raw_gr[gr_name]->SetMinimum(-0.25*qm);
                         m_raw_gr[gr_name]->SetMaximum(1.1*qm);
                         gr_name = baseA + "_grTcfd";
                         m_raw_gr[gr_name]->SetPoint(0,t_cfd,0);                         

@@ -901,7 +901,7 @@ void EpicSpectra::FillRaw() {
                           m_raw_h2[his_name]->Fill(i*2,signal[i]);
                           m_raw_gr[gr_name]->SetPoint(i,i*2,signal[i]);                         
                         }
-                        m_raw_gr[gr_name]->GetYaxis()->UnZoom();
+                        m_raw_gr[gr_name]->GetYaxis()->SetRangeUser(-300,1.1*qm);
                         gr_name = baseA + "_grTcfd";
                         m_raw_gr[gr_name]->SetPoint(0,t_cfd,0);                         
                         m_raw_gr[gr_name]->SetPoint(1,t_cfd,qm);                         

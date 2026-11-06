@@ -875,10 +875,11 @@ double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &t
   const double mn_MeV = 939.565;
   short index = GetIndex(det, anode);
   if(index>=0){
+    double gammapeak_raw = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_RAW",0);
+    if (tofraw < (gammapeak_raw - 5.)) tofraw += 1788.82 ; //TODO put a calibration parameter
     double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);
     double offset = m_posA[index].Z() / 299.792458 - gammapeak;
     tofcal = tofraw + offset;
-    if (tofcal < (gammapeak - 5.)) tofcal += 1788.82 ;
     double beta = (m_posA[index].Z() / tofcal) / 299.792458;
     double gamma = 1.0 / sqrt(1.0 - pow(beta, 2));
     return ((gamma - 1.0) * mn_MeV);

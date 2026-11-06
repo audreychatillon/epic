@@ -878,6 +878,7 @@ double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &t
     double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);
     double offset = m_posA[index].Z() / 299.792458 - gammapeak;
     tofcal = tofraw + offset;
+    if (tofcal < (gammapeak - 5.)) tofcal += 1788.82 ;
     double beta = (m_posA[index].Z() / tofcal) / 299.792458;
     double gamma = 1.0 / sqrt(1.0 - pow(beta, 2));
     return ((gamma - 1.0) * mn_MeV);

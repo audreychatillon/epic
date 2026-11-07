@@ -187,7 +187,7 @@ EpicSpectra::EpicSpectra() {
 
   m_TimeHFzoom = new TH1F("TimeHFzoom", "TimeHFzoom", 10000000, 0, 10000000);
   m_TimeHFzoom->GetXaxis()->SetTitle("TimeHF [us] 1us/bin");
-  m_canT0->cd(2); m_TimeHF->Draw();
+  m_canT0->cd(2); m_TimeHFzoom->Draw();
 
 
   m_canDeltaT0 = new TCanvas("DeltaT0", "DeltaT0", 1200, 800);

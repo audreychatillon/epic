@@ -175,21 +175,33 @@ EpicSpectra::EpicSpectra() {
   timehf_ref_raw = 0;
   timefc_ref_raw = 0;
   timefc_ref_phy = 0;
+  timehf_10s = 0;
 
   // general histograms
   m_canT0 = new TCanvas("T0", "T0", 1200, 800);
   m_canT0->Divide(1, 2);
 
   m_TimeHF = new TH1F("TimeHF", "TimeHF", 86400, 0, 86400);
-  //m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 5100, 0, 5100000);
-  m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 10000, 1780, 1790);
-  m_HF_DeltaTimeHF->SetLineColor(kBlack);
-
   m_TimeHF->GetXaxis()->SetTitle("TimeHF [s] 1s/bin");
-  m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ns] 1ps/bin");
-
   m_canT0->cd(1); m_TimeHF->Draw();
-  m_canT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); 
+
+  m_TimeHFzoom = new TH1F("TimeHFzoom", "TimeHFzoom", 10000000, 0, 10000000);
+  m_TimeHFzoom->GetXaxis()->SetTitle("TimeHF [us] 1us/bin");
+  m_canT0->cd(2); m_TimeHF->Draw();
+
+
+  m_canDeltaT0 = new TCanvas("DeltaT0", "DeltaT0", 1200, 800);
+  m_canDeltaT0->Divide(1, 2);
+
+  m_HF_DeltaTimeHF = new TH1F("DT_TimeHF_fHF_ifBeamOn", "DT_TimeHF_fHF_ifBeamOn", 200000, 0, 200);
+  m_HF_DeltaTimeHF->SetLineColor(kBlack);
+  m_HF_DeltaTimeHF->GetXaxis()->SetTitle("Delta TimeHF [ms] 1us/bin");
+  m_canDeltaT0->cd(1); gPad->SetLogy();  m_HF_DeltaTimeHF->Draw(); 
+
+  m_HF_DeltaTimeHFzoom = new TH1F("DTzoom_TimeHF_fHF_ifBeamOn", "DTzoom_TimeHF_fHF_ifBeamOn", 1000, 1780, 1790);
+  m_HF_DeltaTimeHFzoom->SetLineColor(kBlack);
+  m_HF_DeltaTimeHFzoom->GetXaxis()->SetTitle("Delta TimeHF [ns] 10ps/bin");
+  m_canDeltaT0->cd(2); gPad->SetLogy();  m_HF_DeltaTimeHFzoom->Draw(); 
 
   // loop over nDets for raw histos
   if(m_app->HasFlag("--input-raw")){
@@ -801,7 +813,15 @@ void EpicSpectra::FillRaw() {
         }
         // fill spectra
         m_TimeHF->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
-        m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF()); //ns
+        timehf_10s += m_RawData->GetDeltaTHF() * 1.e-03; //us
+        if (timehf_10s > 10000000) {
+          timehf_10s -= 10000000.;
+          m_TimeHFzoom->Reset();
+        }
+        m_TimeHFzoom->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
+
+        m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF() * 1.e-06); //ms
+        m_HF_DeltaTimeHFzoom->Fill(m_RawData->GetDeltaTHF()); //ns
       }
 
       if (m_RawData->GetQmaxIndex()>=0){

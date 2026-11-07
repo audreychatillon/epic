@@ -35,9 +35,13 @@ class EpicSpectra {
 	
 	
 	  // === general histograms and canvas
+	  // TODO to be changed in m_raw_h1
 	  TH1F * m_TimeHF;
+	  TH1F * m_TimeHFzoom;
 	  TH1F * m_HF_DeltaTimeHF;
+	  TH1F * m_HF_DeltaTimeHFzoom;
 	  TCanvas * m_canT0;
+	  TCanvas * m_canDeltaT0;
 	
 	  // === raw and phys histograms and canvas per FC and/or anode
 	  std::map<std::string,TH1*> m_raw_h1;
@@ -63,6 +67,7 @@ class EpicSpectra {
    	double timehf_ref_raw; 
    	double timefc_ref_raw; 
    	double timefc_ref_phy;
+    double timehf_10s;
 
 	  TCanvas* CreateCanvas(const std::string& name, int ncol);
 	

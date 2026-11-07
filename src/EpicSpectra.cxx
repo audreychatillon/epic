@@ -818,7 +818,7 @@ void EpicSpectra::FillRaw() {
           timehf_10s -= 10000000.;
           m_TimeHFzoom->Reset();
         }
-        m_TimeHFzoom->Fill(m_RawData->GetTimeHF() * 1.e-09); // s
+        m_TimeHFzoom->Fill(timehf_10s); // s
 
         m_HF_DeltaTimeHF->Fill(m_RawData->GetDeltaTHF() * 1.e-06); //ms
         m_HF_DeltaTimeHFzoom->Fill(m_RawData->GetDeltaTHF()); //ns

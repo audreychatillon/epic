@@ -876,7 +876,7 @@ double EpicDetector::TofRaw2Ene(short det, short anode, double tofraw, double &t
   short index = GetIndex(det, anode);
   if(index>=0){
     double gammapeak_raw = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_RAW",0);
-    if (tofraw < (gammapeak_raw - 5.)) tofraw += 894.41 ; // 1788.82 ; //TODO put a calibration parameter
+    if (tofraw < (gammapeak_raw - 5.)) tofraw += m_Cal.GetValue("BEAM_PERIOD_NS",0);      //894.41 ; // 1788.82 ; 
     double gammapeak = m_Cal.GetValue("EPIC_" + to_string(det) + "_ANODE_" + to_string(anode) + "_GAMMA_PEAK_PHY",0);
     double offset = m_posA[index].Z() / 299.792458 - gammapeak;
     tofcal = tofraw + offset;

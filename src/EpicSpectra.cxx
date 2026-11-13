@@ -1100,6 +1100,13 @@ void EpicSpectra::FillPhy() {
           if(m_phy_vEvalRatio[his_name_D][bin-1]!=0) 
             m_phy_h1[his_name]->SetBinContent(bin,m_phy_h1[his_name_N]->GetBinContent(bin)/m_phy_vEvalRatio[his_name_D][bin-1]);
 
+        his_name_D = "XSratio_BVIII_" + actinide[index] + "_235U" ;
+        his_name = prefix + "_RatioBVIII_Ew_ratioU235";
+        m_phy_h1[his_name]->Reset();
+        for(int bin = 1 ; bin <= m_phy_vEvalRatio[his_name_D].size() ; bin++) 
+          if(m_phy_vEvalRatio[his_name_D][bin-1]!=0) 
+            m_phy_h1[his_name]->SetBinContent(bin,m_phy_h1[his_name_N]->GetBinContent(bin)/m_phy_vEvalRatio[his_name_D][bin-1]);
+
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";
         m_phy_h1[his_name]->Reset();

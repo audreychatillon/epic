@@ -1069,12 +1069,12 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
-        //namegrJEFF.str("");  namegrBVIII.str(""); 
-        //namegrJEFF.clear();  namegrBVIII.clear();
-        //namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_235U"; 
-        //namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
-        //string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
-        //string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
+        namegrJEFF.str("");  namegrBVIII.str(""); 
+        namegrJEFF.clear();  namegrBVIII.clear();
+        namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_235U"; 
+        namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
+        string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
+        string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
         //for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
 
         //  double ene      = m_phy_h1[his_name]->GetBinCenter(bin);

@@ -690,6 +690,9 @@ EpicSpectra::EpicSpectra() {
       can_name = baseD + "_Eratio";
       m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       
+      can_name = baseD + "_RatioEratio";
+      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      
       can_name = baseD + "_E_per_actinide_Q1_high_thres";
       m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       
@@ -747,6 +750,13 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
         }
 
+        his_name = baseA + "_RatioEw_ratioU235";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
+        can_name = baseD + "_RatioEratio";
+        m_phy_can[can_name]->cd(act+1);
+        m_phy_h1[his_name]->Draw();
+
         his_name = baseA + "_Ew_ratioU238";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
         m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
@@ -759,6 +769,13 @@ EpicSpectra::EpicSpectra() {
         if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
         }
+
+        his_name = baseA + "_RatioEw_ratioU238";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
+        can_name = baseD + "_RatioEratio";
+        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+        m_phy_h1[his_name]->Draw();
 
         his_name = baseA + "_Ew_ratioU235_Q1_high_thres";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);

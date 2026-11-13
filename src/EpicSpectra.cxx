@@ -1069,46 +1069,46 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
-        namegrJEFF.str("");  namegrBVIII.str(""); 
-        namegrJEFF.clear();  namegrBVIII.clear();
-        namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_235U"; 
-        namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
-        string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
-        string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
-        for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
+        //namegrJEFF.str("");  namegrBVIII.str(""); 
+        //namegrJEFF.clear();  namegrBVIII.clear();
+        //namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_235U"; 
+        //namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
+        //string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
+        //string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
+        //for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
 
-          double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
-          double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
-          double ratioEval;
-          //std::map<std::string, TGraph*>::iterator it;
+        //  double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
+        //  double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
+        //  double ratioEval;
+        //  //std::map<std::string, TGraph*>::iterator it;
 
-          //it = m_phy_gr.find(namegrJEFF.str());
-          //if (it == m_phy_gr.end()) {
-          //    cout << "Graph not found: " << namegrJEFF.str() << endl;
-          //}
-          //else if (it->second == nullptr) {
-          //    std::cout << "Graph pointer is null!" << endl;
-          //}
-          //else {
-          //    cout << "Graph found: " << namegrJEFF.str() << endl;
-          //    ratioEval = it->second->Eval(ene);
-          //    cout << "ratioEval = " << ratioEval << " at ene = " << ene << endl;
-          //    if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
-          //}
-          //it = m_phy_gr.find(namegrBVIII.str());
-          //if (it == m_phy_gr.end()) {
-          //    std::cout << "Graph not found: "
-          //              << namegrBVIII.str() << std::endl;
-          //}
-          //else if (it->second == nullptr) {
-          //    std::cout << "Graph pointer is null!" << std::endl;
-          //}
-          //else {
-          //    ratioEval = it->second->Eval(ene);
-          //    if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
-          //}
+        //  //it = m_phy_gr.find(namegrJEFF.str());
+        //  //if (it == m_phy_gr.end()) {
+        //  //    cout << "Graph not found: " << namegrJEFF.str() << endl;
+        //  //}
+        //  //else if (it->second == nullptr) {
+        //  //    std::cout << "Graph pointer is null!" << endl;
+        //  //}
+        //  //else {
+        //  //    cout << "Graph found: " << namegrJEFF.str() << endl;
+        //  //    ratioEval = it->second->Eval(ene);
+        //  //    cout << "ratioEval = " << ratioEval << " at ene = " << ene << endl;
+        //  //    if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+        //  //}
+        //  //it = m_phy_gr.find(namegrBVIII.str());
+        //  //if (it == m_phy_gr.end()) {
+        //  //    std::cout << "Graph not found: "
+        //  //              << namegrBVIII.str() << std::endl;
+        //  //}
+        //  //else if (it->second == nullptr) {
+        //  //    std::cout << "Graph pointer is null!" << std::endl;
+        //  //}
+        //  //else {
+        //  //    ratioEval = it->second->Eval(ene);
+        //  //    if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+        //  //}
 
-        }
+        //}
 
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";

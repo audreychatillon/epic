@@ -1092,6 +1092,17 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
+        his_name_N = prefix + "_Ew_ratioU235";
+        cout << endl << his_name_N << endl;
+        m_phy_h1[his_name_N]->ls();
+        his_name_D = "XSratio_JEFF" + actinide[index] + "_235U" ;
+        cout << his_name_D << endl;
+        cout << "m_phy_vEvalRatio[" << his_name_D << "].size() = " << m_phy_vEvalRatio[his_name_D].size() << endl;
+        his_name = prefix + "_RatioJEFF_Ew_ratioU235";
+        cout << his_name << endl;
+        m_phy_h1[his_name]->ls();
+        
+
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";
         m_phy_h1[his_name]->Reset();

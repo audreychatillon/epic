@@ -1084,28 +1084,29 @@ void EpicSpectra::FillPhy() {
 
           it = m_phy_gr.find(namegrJEFF.str());
           if (it == m_phy_gr.end()) {
-              std::cout << "Graph not found: "
-                        << namegrJEFF.str() << std::endl;
+              cout << "Graph not found: " << namegrJEFF.str() << endl;
           }
           else if (it->second == nullptr) {
-              std::cout << "Graph pointer is null!" << std::endl;
+              std::cout << "Graph pointer is null!" << endl;
           }
           else {
+              cout << "Graph found: " << namegrJEFF.str() << endl;
               ratioEval = it->second->Eval(ene);
-                    if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+              cout << "ratioEval = " << ratioEval << " at ene = " << ene << endl;
+              if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
           }
-          it = m_phy_gr.find(namegrBVIII.str());
-          if (it == m_phy_gr.end()) {
-              std::cout << "Graph not found: "
-                        << namegrBVIII.str() << std::endl;
-          }
-          else if (it->second == nullptr) {
-              std::cout << "Graph pointer is null!" << std::endl;
-          }
-          else {
-              ratioEval = it->second->Eval(ene);
-              if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
-          }
+          //it = m_phy_gr.find(namegrBVIII.str());
+          //if (it == m_phy_gr.end()) {
+          //    std::cout << "Graph not found: "
+          //              << namegrBVIII.str() << std::endl;
+          //}
+          //else if (it->second == nullptr) {
+          //    std::cout << "Graph pointer is null!" << std::endl;
+          //}
+          //else {
+          //    ratioEval = it->second->Eval(ene);
+          //    if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+          //}
 
         }
 

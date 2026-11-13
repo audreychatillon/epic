@@ -789,20 +789,6 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
         }
 
-        his_name = baseA + "_RatioJEFF_Ew_ratioU235";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioJEFF_Eratio";
-        m_phy_can[can_name]->cd(act+1);
-        m_phy_h1[his_name]->Draw();
-
-        his_name = baseA + "_RatioBVIII_Ew_ratioU235";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioBVII_Eratio";
-        m_phy_can[can_name]->cd(act+1);
-        m_phy_h1[his_name]->Draw();
-
         his_name = baseA + "_Ew_ratioU238";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
         m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
@@ -815,20 +801,6 @@ EpicSpectra::EpicSpectra() {
         if(m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]){ 
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
         }
-
-        his_name = baseA + "_RatioJEFF_Ew_ratioU238";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioJEFF_Eratio";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        m_phy_h1[his_name]->Draw();
-
-        his_name = baseA + "_RatioBVIII_Ew_ratioU238";
-        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
-        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioBVIII_Eratio";
-        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
-        m_phy_h1[his_name]->Draw();
 
         his_name = baseA + "_Ew_ratioU235_Q1_high_thres";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), nbins_ene, lowedge_first, highedge_last);
@@ -1106,53 +1078,11 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
 
-        //string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
-        //string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
-        //for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
-
-        //  double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
-        //  double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
-        //  double ratioEval;
-        //  //std::map<std::string, TGraph*>::iterator it;
-
-        //  //it = m_phy_gr.find(namegrJEFF.str());
-        //  //if (it == m_phy_gr.end()) {
-        //  //    cout << "Graph not found: " << namegrJEFF.str() << endl;
-        //  //}
-        //  //else if (it->second == nullptr) {
-        //  //    std::cout << "Graph pointer is null!" << endl;
-        //  //}
-        //  //else {
-        //  //    cout << "Graph found: " << namegrJEFF.str() << endl;
-        //  //    ratioEval = it->second->Eval(ene);
-        //  //    cout << "ratioEval = " << ratioEval << " at ene = " << ene << endl;
-        //  //    if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
-        //  //}
-        //  //it = m_phy_gr.find(namegrBVIII.str());
-        //  //if (it == m_phy_gr.end()) {
-        //  //    std::cout << "Graph not found: "
-        //  //              << namegrBVIII.str() << std::endl;
-        //  //}
-        //  //else if (it->second == nullptr) {
-        //  //    std::cout << "Graph pointer is null!" << std::endl;
-        //  //}
-        //  //else {
-        //  //    ratioEval = it->second->Eval(ene);
-        //  //    if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
-        //  //}
-
-        //}
-
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";
         m_phy_h1[his_name]->Reset();
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-
-        namegrJEFF.str("");  namegrBVIII.str(""); 
-        namegrJEFF.clear();  namegrBVIII.clear();
-        namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_238U"; 
-        namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_238U"; 
         
         if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
           his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);

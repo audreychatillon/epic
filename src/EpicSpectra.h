@@ -54,7 +54,9 @@ class EpicSpectra {
 	  std::map<std::string,TCanvas*> m_phy_can;
 	  std::shared_ptr<nptool::Application> m_app;
 	  std::map<std::string,TCutG*> m_tcutg;
-	
+
+    std::map<std::string,vector<double>> m_phy_vEvalRatio;
+
 	  unsigned short nDets ;
 	  unsigned short nAnodesTot ;
 	  vector<unsigned short> nAnodes ;

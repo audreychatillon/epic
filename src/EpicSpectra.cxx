@@ -690,7 +690,10 @@ EpicSpectra::EpicSpectra() {
       can_name = baseD + "_Eratio";
       m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       
-      can_name = baseD + "_RatioEratio";
+      can_name = baseD + "_RatioJEFF_Eratio";
+      m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
+      
+      can_name = baseD + "_RatioBVIII_Eratio";
       m_phy_can[can_name] = CreateCanvas(can_name, (short)actinides_per_det[det-1].size());
       
       can_name = baseD + "_E_per_actinide_Q1_high_thres";
@@ -750,10 +753,17 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_235U"]->Draw("LP same");
         }
 
-        his_name = baseA + "_RatioEw_ratioU235";
+        his_name = baseA + "_RatioJEFF_Ew_ratioU235";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
         m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioEratio";
+        can_name = baseD + "_RatioJEFF_Eratio";
+        m_phy_can[can_name]->cd(act+1);
+        m_phy_h1[his_name]->Draw();
+
+        his_name = baseA + "_RatioBVIII_Ew_ratioU235";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
+        can_name = baseD + "_RatioBVII_Eratio";
         m_phy_can[can_name]->cd(act+1);
         m_phy_h1[his_name]->Draw();
 
@@ -770,10 +780,17 @@ EpicSpectra::EpicSpectra() {
             m_phy_gr["XSratio_BVIII_"+actinides_per_det[det-1][act].name+"_238U"]->Draw("LP same");
         }
 
-        his_name = baseA + "_RatioEw_ratioU238";
+        his_name = baseA + "_RatioJEFF_Ew_ratioU238";
         m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
         m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
-        can_name = baseD + "_RatioEratio";
+        can_name = baseD + "_RatioJEFF_Eratio";
+        m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
+        m_phy_h1[his_name]->Draw();
+
+        his_name = baseA + "_RatioBVIII_Ew_ratioU238";
+        m_phy_h1[his_name] = new TH1F(his_name.c_str(), his_name.c_str(), 100, 0.2, 20.2);
+        m_phy_h1[his_name]->GetXaxis()->SetTitle("Energy [MeV] 200 keV / bin ");
+        can_name = baseD + "_RatioBVIII_Eratio";
         m_phy_can[can_name]->cd((short)actinides_per_det[det-1].size()+act+1);
         m_phy_h1[his_name]->Draw();
 
@@ -981,7 +998,10 @@ void EpicSpectra::FillPhy() {
     ostringstream name;
     string baseA;
     string his_name;
-    
+
+    ostringstream namegrJEFF;
+    ostringstream namegrBVIII;
+
     // to by-pass nponline bug : comment this lines if you want to process several runs 
     bool replay = m_Cal.GetValue("REPLAY_DATA",0);
     if(!replay){
@@ -1048,12 +1068,36 @@ void EpicSpectra::FillPhy() {
         m_phy_h1[his_name]->Reset();
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
-        
+
+        namegrJEFF.str("");  namegrBVIII.str(""); 
+        namegrJEFF.clear();  namegrBVIII.clear();
+        namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_235U"; 
+        namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
+        string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
+        string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
+        for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
+
+          double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
+          double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
+          double ratioEval;
+
+          ratioEval = m_phy_gr[namegrJEFF.str()]->Eval(ene);
+          m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+
+          ratioEval = m_phy_gr[namegrBVIII.str()]->Eval(ene);
+          m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+        }
+
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";
         m_phy_h1[his_name]->Reset();
         m_phy_h1[his_name]->Add(m_phy_h1[his_name_N]);
         m_phy_h1[his_name]->Divide(m_phy_h1[his_name_D]);
+
+        namegrJEFF.str("");  namegrBVIII.str(""); 
+        namegrJEFF.clear();  namegrBVIII.clear();
+        namegrJEFF << "XSratio_JEFF_" << actinide[index] << "_238U"; 
+        namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_238U"; 
         
         if(q1 >= m_Cal.GetValue("EPIC_" + to_string(det) + "_Q1_THRESHOLD_PERCENT",0) * m_Cal.GetValue("EPIC_"+to_string(det)+"_ANODE_"+to_string(anode)+"_Q1_HIGHEST_CH",0)){
           his_name = prefix + "_E_Q1_high_thres";               m_phy_h1[his_name]->Fill(e);

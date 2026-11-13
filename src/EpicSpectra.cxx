@@ -1080,12 +1080,33 @@ void EpicSpectra::FillPhy() {
           double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
           double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
           double ratioEval;
+          std::map<std::string, TGraph*>::iterator it;
 
-          ratioEval = m_phy_gr[namegrJEFF.str()]->Eval(ene);
-          //if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+          it = m_phy_gr.find(namegrJEFF.str());
+          if (it == m_phy_gr.end()) {
+              std::cout << "Graph not found: "
+                        << namegrJEFF.str() << std::endl;
+          }
+          else if (it->second == nullptr) {
+              std::cout << "Graph pointer is null!" << std::endl;
+          }
+          else {
+              ratioEval = it->second->Eval(ene);
+                    if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+          }
+          it = m_phy_gr.find(namegrBVIII.str());
+          if (it == m_phy_gr.end()) {
+              std::cout << "Graph not found: "
+                        << namegrBVIII.str() << std::endl;
+          }
+          else if (it->second == nullptr) {
+              std::cout << "Graph pointer is null!" << std::endl;
+          }
+          else {
+              ratioEval = it->second->Eval(ene);
+              if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+          }
 
-          ratioEval = m_phy_gr[namegrBVIII.str()]->Eval(ene);
-          //if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
         }
 
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;

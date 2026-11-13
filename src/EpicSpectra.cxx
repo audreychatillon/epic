@@ -1075,18 +1075,18 @@ void EpicSpectra::FillPhy() {
         namegrBVIII << "XSratio_BVIII_" << actinide[index] << "_235U"; 
         string his_name_ratio_JEFF  = prefix + "_RatioJEFF_Ew_ratioU235";
         string his_name_ratio_BVIII = prefix + "_RatioBVIII_Ew_ratioU235";
-        for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
+        //for(short bin = 1 ; bin <= m_phy_h1[his_name]->GetNbinsX() ; bin++){
 
-          double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
-          double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
-          double ratioEval;
+        //  double ene      = m_phy_h1[his_name]->GetBinCenter(bin);
+        //  double ratioExp = m_phy_h1[his_name]->GetBinContent(bin);
+        //  double ratioEval;
 
-          ratioEval = m_phy_gr[namegrJEFF.str()]->Eval(ene);
-          m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+        //  ratioEval = m_phy_gr[namegrJEFF.str()]->Eval(ene);
+        //  m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
 
-          ratioEval = m_phy_gr[namegrBVIII.str()]->Eval(ene);
-          m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
-        }
+        //  ratioEval = m_phy_gr[namegrBVIII.str()]->Eval(ene);
+        //  m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+        //}
 
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
         his_name = prefix + "_Ew_ratioU238";

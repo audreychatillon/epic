@@ -1095,7 +1095,7 @@ void EpicSpectra::FillPhy() {
         his_name_N = prefix + "_Ew_ratioU235";
         cout << endl << his_name_N << endl;
         m_phy_h1[his_name_N]->ls();
-        his_name_D = "XSratio_JEFF" + actinide[index] + "_235U" ;
+        his_name_D = "XSratio_JEFF_" + actinide[index] + "_235U" ;
         cout << his_name_D << endl;
         cout << "m_phy_vEvalRatio[" << his_name_D << "].size() = " << m_phy_vEvalRatio[his_name_D].size() << endl;
         his_name = prefix + "_RatioJEFF_Ew_ratioU235";

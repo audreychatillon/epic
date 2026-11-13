@@ -1082,10 +1082,10 @@ void EpicSpectra::FillPhy() {
           double ratioEval;
 
           ratioEval = m_phy_gr[namegrJEFF.str()]->Eval(ene);
-          if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
+          //if (ratioEval > 0) m_phy_h1[his_name_ratio_JEFF]->SetBinContent(bin,ratioExp/ratioEval);
 
           ratioEval = m_phy_gr[namegrBVIII.str()]->Eval(ene);
-          if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
+          //if (ratioEval > 0) m_phy_h1[his_name_ratio_BVIII]->SetBinContent(bin,ratioExp/ratioEval);
         }
 
         his_name_D = "phy_det" + to_string(det) + "_238U_Eweighted" ;
